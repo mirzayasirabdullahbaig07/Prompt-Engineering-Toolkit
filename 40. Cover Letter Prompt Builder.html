@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cover Letter Prompt Builder</title>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #e8e8f8;
+  padding: 40px 20px;
+  color: #2d2d5e;
+}
+
+/* HEADER */
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.badge {
+  display: inline-block;
+  background: #7c3aed;
+  color: white;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  margin-bottom: 10px;
+}
+
+.header h1 {
+  font-size: 34px;
+  color: #5b21b6;
+  font-weight: 800;
+}
+
+.header p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.info {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+/* CARD */
+.card {
+  background: white;
+  border: 1.5px solid #e0dff5;
+  border-radius: 16px;
+  padding: 22px;
+  max-width: 900px;
+  margin: 0 auto 18px;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #7c3aed;
+  letter-spacing: 1.4px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* INPUTS */
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1.5px solid #ddd8f5;
+  background: #fafafa;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+/* BUTTONS */
+.btn {
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.primary {
+  background: #5b21b6;
+  color: white;
+}
+
+.secondary {
+  background: transparent;
+  border: 1.5px solid #c4b5fd;
+  color: #5b21b6;
+}
+
+/* OUTPUT */
+.output {
+  background: #fff;
+  border: 1.5px solid #e0dff5;
+  border-radius: 16px;
+  padding: 18px;
+  min-height: 220px;
+  white-space: pre-wrap;
+}
+
+.block {
+  background: #f5f3ff;
+  border-left: 4px solid #7c3aed;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+.title {
+  background: #ede9fe;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+/* HISTORY */
+.history-item {
+  background: #f5f3ff;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="badge">📄 Cover Letter Builder</div>
+  <h1>Cover Letter Prompt Generator</h1>
+
+  <div class="info">
+      Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+  </div>
+</div>
+
+<!-- INPUTS -->
+<div class="card">
+  <div class="section-label">Your Name</div>
+  <input id="name" placeholder="e.g. Hamna Munir"/>
+</div>
+
+<div class="card">
+  <div class="section-label">Job Title</div>
+  <input id="job" placeholder="e.g. Software Engineer / Teacher / Designer"/>
+</div>
+
+<div class="card">
+  <div class="section-label">Skills (comma separated)</div>
+  <input id="skills" placeholder="e.g. HTML, CSS, JavaScript, Communication"/>
+</div>
+
+<!-- BUTTONS -->
+<div class="card">
+  <button class="btn primary" onclick="generate()">Generate Cover Letter</button>
+  <button class="btn secondary" onclick="clearAll()">Clear</button>
+</div>
+
+<!-- OUTPUT -->
+<div class="card">
+  <div class="section-label">Generated Cover Letter</div>
+  <div class="output" id="output">
+    Your cover letter will appear here...
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div class="card">
+  <div class="section-label">History</div>
+  <div id="history"></div>
+</div>
+
+<script>
+let history = [];
+
+function generate() {
+  const name = document.getElementById("name").value;
+  const job = document.getElementById("job").value;
+  const skills = document.getElementById("skills").value;
+
+  if (!name || !job) return alert("Enter name and job title!");
+
+  const letter = buildLetter(name, job, skills);
+
+  render(letter);
+  save(job, letter);
+}
+
+function buildLetter(name, job, skills) {
+
+  return `
+COVER LETTER
+
+------------------------------------
+APPLICANT INFORMATION
+------------------------------------
+Name: ${name}
+Position Applied: ${job}
+
+------------------------------------
+INTRODUCTION
+------------------------------------
+Dear Hiring Manager,
+
+I am writing to express my interest in the ${job} position. I am passionate about this field and eager to contribute my skills.
+
+------------------------------------
+SKILLS & EXPERIENCE
+------------------------------------
+My key skills include:
+${skills ? skills.split(",").map(s => "- " + s.trim()).join("\n") : "- Problem Solving\n- Communication\n- Teamwork"}
+
+------------------------------------
+WHY ME
+------------------------------------
+I am a dedicated individual who is committed to delivering high-quality work. I am confident that my abilities make me a strong candidate for the ${job} role.
+
+------------------------------------
+CLOSING
+------------------------------------
+Thank you for considering my application. I look forward to the opportunity to contribute and grow.
+
+Sincerely,
+${name}
+`;
+}
+
+function render(text) {
+  const lines = text.split("\n");
+  let html = "";
+  let title = "";
+
+  lines.forEach(l => {
+    if (l.includes("COVER LETTER")) {
+      title = l;
+    }
+    if (l.trim()) {
+      html += `<div class="block">${l}</div>`;
+    }
+  });
+
+  document.getElementById("output").innerHTML =
+    html + `<div class="title">${title}</div>`;
+}
+
+function save(job, result) {
+  history.unshift({ job, result });
+  if (history.length > 10) history.pop();
+
+  const box = document.getElementById("history");
+  box.innerHTML = "";
+
+  history.forEach(h => {
+    const div = document.createElement("div");
+    div.className = "history-item";
+    div.innerText = "📄 " + h.job;
+    div.onclick = () => render(h.result);
+    box.appendChild(div);
+  });
+}
+
+function clearAll() {
+  document.getElementById("name").value = "";
+  document.getElementById("job").value = "";
+  document.getElementById("skills").value = "";
+  document.getElementById("output").innerText = "";
+}
+</script>
+
+</body>
+</html>

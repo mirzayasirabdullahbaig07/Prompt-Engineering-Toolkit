@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Case Study Prompt Builder</title>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #e8e8f8;
+  padding: 40px 20px;
+  color: #2d2d5e;
+}
+
+/* HEADER */
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.badge {
+  display: inline-block;
+  background: #7c3aed;
+  color: white;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  margin-bottom: 10px;
+}
+
+.header h1 {
+  font-size: 34px;
+  color: #5b21b6;
+  font-weight: 800;
+}
+
+.header p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.info {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+/* CARD */
+.card {
+  background: white;
+  border: 1.5px solid #e0dff5;
+  border-radius: 16px;
+  padding: 22px;
+  max-width: 900px;
+  margin: 0 auto 18px;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #7c3aed;
+  letter-spacing: 1.4px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* INPUTS */
+textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1.5px solid #ddd8f5;
+  background: #fafafa;
+  font-family: monospace;
+}
+
+/* BUTTONS */
+.btn {
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.primary {
+  background: #5b21b6;
+  color: white;
+}
+
+.secondary {
+  background: transparent;
+  border: 1.5px solid #c4b5fd;
+  color: #5b21b6;
+}
+
+/* OUTPUT */
+.output {
+  background: #fff;
+  border: 1.5px solid #e0dff5;
+  border-radius: 16px;
+  padding: 18px;
+  min-height: 200px;
+  white-space: pre-wrap;
+}
+
+.block {
+  background: #f5f3ff;
+  border-left: 4px solid #7c3aed;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+.title {
+  background: #ede9fe;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+/* HISTORY */
+.history-item {
+  background: #f5f3ff;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="badge">📊 Case Study Builder</div>
+  <h1>Case Study Prompt Generator</h1>
+
+  <div class="info">
+      Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+  </div>
+</div>
+
+<!-- INPUT -->
+<div class="card">
+  <div class="section-label">Case Study Topic</div>
+  <textarea id="topic" rows="3"
+  placeholder="e.g. Impact of Social Media on Students"></textarea>
+</div>
+
+<!-- BUTTONS -->
+<div class="card">
+  <button class="btn primary" onclick="generate()">Generate Case Study</button>
+  <button class="btn secondary" onclick="clearAll()">Clear</button>
+</div>
+
+<!-- OUTPUT -->
+<div class="card">
+  <div class="section-label">Generated Case Study</div>
+  <div class="output" id="output">
+    Your case study will appear here...
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div class="card">
+  <div class="section-label">History</div>
+  <div id="history"></div>
+</div>
+
+<script>
+let history = [];
+
+function generate() {
+  const topic = document.getElementById("topic").value;
+
+  if (!topic) return alert("Enter a case study topic!");
+
+  const result = buildCaseStudy(topic);
+
+  render(result);
+  save(topic, result);
+}
+
+function buildCaseStudy(topic) {
+
+  return `
+CASE STUDY: ${topic}
+
+---------------------------------
+1. INTRODUCTION
+---------------------------------
+This case study explores ${topic} and its real-world impact.
+
+---------------------------------
+2. PROBLEM STATEMENT
+---------------------------------
+What issues are related to ${topic}?
+- Lack of awareness
+- Negative impact on users
+- Real-world challenges
+
+---------------------------------
+3. ANALYSIS
+---------------------------------
+- Identify causes of the problem
+- Study affected groups
+- Evaluate severity of issue
+
+---------------------------------
+4. SOLUTION
+---------------------------------
+- Awareness programs
+- Policy improvements
+- Technological solutions
+- Behavioral changes
+
+---------------------------------
+5. OUTCOME
+---------------------------------
+Expected improvements after applying solutions:
+- Better understanding
+- Reduced negative effects
+- Improved outcomes
+
+---------------------------------
+6. CONCLUSION
+---------------------------------
+${topic} has both positive and negative impacts that must be managed carefully.
+`;
+}
+
+function render(text) {
+  const lines = text.split("\n");
+  let html = "";
+  let title = "";
+
+  lines.forEach(l => {
+    if (l.includes("CASE STUDY")) {
+      title = l;
+    }
+    if (l.trim()) {
+      html += `<div class="block">${l}</div>`;
+    }
+  });
+
+  document.getElementById("output").innerHTML =
+    html + `<div class="title">${title}</div>`;
+}
+
+function save(topic, result) {
+  history.unshift({ topic, result });
+  if (history.length > 10) history.pop();
+
+  const box = document.getElementById("history");
+  box.innerHTML = "";
+
+  history.forEach(h => {
+    const div = document.createElement("div");
+    div.className = "history-item";
+    div.innerText = "📘 " + h.topic;
+    div.onclick = () => render(h.result);
+    box.appendChild(div);
+  });
+}
+
+function clearAll() {
+  document.getElementById("topic").value = "";
+  document.getElementById("output").innerText = "";
+}
+</script>
+
+</body>
+</html>

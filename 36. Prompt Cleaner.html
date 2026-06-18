@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Cleaner Pro – Hamna Munir</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg:       #f5f3ff;
+    --surface:  #ffffff;
+    --panel:    #faf5ff;
+    --border:   #ddd6fe;
+    --accent:   #7c3aed;
+    --accent2:  #6d28d9;
+    --glow:     rgba(124,58,237,0.12);
+    --green:    #059669;
+    --amber:    #d97706;
+    --red:      #dc2626;
+    --text:     #2d1b69;
+    --muted:    #7c3aed99;
+    --mono:     'JetBrains Mono', monospace;
+    --sans:     'Inter', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: linear-gradient(135deg, #f5f3ff, #ede9fe, #faf5ff);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 32px 20px 60px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--glow);
+    border: 1px solid var(--accent);
+    color: var(--accent2);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 800;
+    background: linear-gradient(120deg, #7c3aed, #5b21b6, #6d28d9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+  .subtitle { color: var(--muted); font-size: 15px; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .card-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* ── TEXTAREA ── */
+  textarea {
+    width: 100%;
+    min-height: 130px;
+    background: #faf5ff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.7;
+    resize: vertical;
+    outline: none;
+    transition: border-color .2s;
+  }
+  textarea:focus { border-color: var(--accent); }
+  textarea::placeholder { color: #a78bfa; }
+
+  /* ── CHAR COUNT ── */
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* ── BUTTONS ── */
+  .btn-row { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 11px 22px;
+    border: none;
+    border-radius: 9px;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity .15s, transform .1s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 4px 20px var(--glow);
+  }
+  .btn-primary:hover:not(:disabled) { opacity: .88; }
+  .btn-ghost {
+    background: #ede9fe;
+    color: #5b21b6;
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--accent); }
+  .btn-copy {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--border);
+    padding: 7px 14px;
+    font-size: 12px;
+    border-radius: 7px;
+  }
+  .btn-copy:hover { background: #ede9fe; }
+
+  /* ── SCORE RING ── */
+  .score-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .ring-wrap { position: relative; width: 110px; height: 110px; flex-shrink: 0; }
+  .ring-wrap svg { transform: rotate(-90deg); }
+  .ring-bg { fill: none; stroke: #ede9fe; stroke-width: 8; }
+  .ring-fill {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 283;
+    stroke-dashoffset: 283;
+    transition: stroke-dashoffset 1s ease, stroke .4s;
+  }
+  .ring-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .ring-pct {
+    font-size: 24px;
+    font-weight: 800;
+    color: #5b21b6;
+    line-height: 1;
+  }
+  .ring-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .score-stats { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .stat-box {
+    background: #faf5ff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .stat-val { font-size: 22px; font-weight: 800; color: var(--accent); }
+  .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* ── TWO-COL GRID ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+
+  /* ── OUTPUT PANEL ── */
+  .output-box {
+    background: #faf5ff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    min-height: 180px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  /* ── TAGS ── */
+  .tag-list { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 6px; }
+  .tag {
+    font-size: 12px;
+    font-family: var(--mono);
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: #ede9fe;
+    border: 1px solid var(--border);
+    color: #5b21b6;
+  }
+  .tag.bad { border-color: var(--red); color: var(--red); background: rgba(248,113,113,.08); }
+  .tag.warn { border-color: var(--amber); color: var(--amber); background: rgba(245,158,11,.08); }
+  .tag.ok { border-color: var(--green); color: var(--green); background: rgba(34,211,160,.08); }
+
+  /* ── ISSUE LIST ── */
+  .issue-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 10px 12px;
+    border-radius: 9px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .issue-item.error { background: rgba(248,113,113,.1); border: 1px solid rgba(248,113,113,.25); }
+  .issue-item.warning { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.25); }
+  .issue-item.info { background: rgba(124,92,252,.1); border: 1px solid rgba(124,92,252,.25); }
+  .issue-item.success { background: rgba(34,211,160,.08); border: 1px solid rgba(34,211,160,.2); }
+  .issue-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── LOADER ── */
+  .loader {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 14px;
+  }
+  .loader.show { display: flex; }
+  .spinner {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 40px;
+  }
+  .footer strong { color: var(--accent2); }
+
+  /* ── PLACEHOLDER TEXT ── */
+  .placeholder-text {
+    color: var(--muted);
+    font-style: italic;
+    font-family: var(--sans);
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty { color: var(--muted); font-size: 13px; font-style: italic; padding: 8px 0; }
+
+  @media (max-width: 700px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .score-stats { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div style="max-width:1000px;margin:auto">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="badge">✦ AI-Powered</div>
+    <h1>Prompt Cleaner Pro</h1>
+    <p class="subtitle">Paste any prompt — get a professional rewrite with detailed analysis</p>
+  </div>
+
+  <!-- INPUT -->
+  <div class="card">
+    <div class="card-title"><span class="dot"></span> Your Prompt</div>
+    <textarea id="input" placeholder="Paste your messy or unclear prompt here…&#10;&#10;e.g. &quot;basically just write me something about like AI and stuff, maybe make it very good&quot;"></textarea>
+    <div class="meta-row">
+      <span id="char-count">0 characters · 0 words</span>
+      <span id="complexity-badge"></span>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="clean-btn" onclick="cleanPrompt()">
+        ✦ Clean &amp; Analyze
+      </button>
+      <button class="btn btn-ghost" onclick="resetTool()">↺ Reset</button>
+      <button class="btn btn-ghost" onclick="loadExample()">⚡ Try Example</button>
+    </div>
+    <div class="loader" id="loader">
+      <div class="spinner"></div>
+      <span id="loader-text">Analyzing prompt with AI…</span>
+    </div>
+  </div>
+
+  <!-- SCORE -->
+  <div class="card" id="score-card" style="display:none">
+    <div class="card-title"><span class="dot"></span> Quality Score</div>
+    <div class="score-wrapper">
+      <div class="ring-wrap">
+        <svg width="110" height="110" viewBox="0 0 110 110">
+          <circle class="ring-bg" cx="55" cy="55" r="45"/>
+          <circle class="ring-fill" id="ring" cx="55" cy="55" r="45"/>
+        </svg>
+        <div class="ring-label">
+          <div class="ring-pct" id="score-pct">0%</div>
+          <div class="ring-sub">QUALITY</div>
+        </div>
+      </div>
+      <div class="score-stats">
+        <div class="stat-box">
+          <div class="stat-val" id="stat-words">—</div>
+          <div class="stat-lbl">Word Count</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-fillers">—</div>
+          <div class="stat-lbl">Fillers Removed</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-issues">—</div>
+          <div class="stat-lbl">Issues Found</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-improvement">—</div>
+          <div class="stat-lbl">Improvement</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BEFORE / AFTER -->
+  <div class="grid-2" id="compare-grid" style="display:none">
+    <div class="card">
+      <div class="output-header">
+        <div class="card-title" style="margin:0"><span class="dot" style="background:#f87171"></span> Original</div>
+      </div>
+      <div class="output-box" id="before"></div>
+    </div>
+    <div class="card">
+      <div class="output-header">
+        <div class="card-title" style="margin:0"><span class="dot" style="background:#22d3a0"></span> Cleaned Prompt</div>
+        <button class="btn-copy" onclick="copyOutput()">Copy ↗</button>
+      </div>
+      <div class="output-box" id="after"></div>
+    </div>
+  </div>
+
+  <!-- FILLER WORDS + ISSUES -->
+  <div class="grid-2" id="analysis-grid" style="display:none">
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--amber)"></span> Filler Words Detected</div>
+      <div id="fillers-output"><div class="empty">Run an analysis first.</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--red)"></span> Issues &amp; Suggestions</div>
+      <div id="issues-output"><div class="empty">Run an analysis first.</div></div>
+    </div>
+  </div>
+
+  <!-- AI EXPLANATION -->
+  <div class="card" id="explanation-card" style="display:none">
+    <div class="card-title"><span class="dot" style="background:var(--green)"></span> AI Explanation</div>
+    <div id="explanation-output" style="font-size:14px;line-height:1.8;color:var(--text)"></div>
+  </div>
+
+  <div class="footer">
+    Developed by <strong>Hamna Munir</strong> &nbsp;·&nbsp; <strong>Mirza Yasir Abdullah Baig</strong>
+  </div>
+</div>
+
+<script>
+// ── FILLER WORD DICTIONARY ──────────────────────────────────────────────────
+const FILLERS = [
+  // vague nouns
+  'something','stuff','things','thing','anything','everything',
+  // hedging
+  'basically','actually','really','very','just','kind of','kinda',
+  'sort of','sorta','like','literally','honestly','simply',
+  // soft modifiers
+  'maybe','perhaps','possibly','probably','might',
+  // redundant openers
+  'so','well','you know','i mean','um','uh','okay',
+  // bloat
+  'quite','rather','fairly','pretty much','a bit','a little',
+  'in order to','in terms of','the fact that','due to the fact',
+  'at the end of the day','as a matter of fact','needless to say',
+];
+
+const FILLER_REGEX = FILLERS.map(f => ({
+  word: f,
+  re: new RegExp(`\\b${f.replace(/ /g,'\\s+')}\\b`, 'gi')
+}));
+
+// ── ISSUES CHECKLIST ───────────────────────────────────────────────────────
+function detectIssues(text) {
+  const words = text.trim().split(/\s+/).filter(Boolean);
+  const issues = [];
+
+  if (words.length < 5)
+    issues.push({ type: 'error', icon: '✗', text: 'Prompt is too short (fewer than 5 words). Add more context.' });
+  if (words.length > 300)
+    issues.push({ type: 'warning', icon: '⚠', text: 'Prompt is very long. Consider breaking it into sub-prompts.' });
+  if (!/[?!.;]/.test(text))
+    issues.push({ type: 'warning', icon: '⚠', text: 'No ending punctuation detected. Clear sentences improve AI understanding.' });
+  if (/\b(write|create|make|generate|give me|tell me)\b/i.test(text) && !/\b(format|tone|style|audience|length|purpose)\b/i.test(text))
+    issues.push({ type: 'warning', icon: '⚠', text: 'Missing constraints — no tone, format, or audience specified.' });
+  if (!/\b(you are|act as|you are a|behave as|imagine you are)\b/i.test(text))
+    issues.push({ type: 'info', icon: '✦', text: 'Consider adding a role instruction (e.g. "You are a…") for more focused output.' });
+  if (text === text.toUpperCase() && text.length > 20)
+    issues.push({ type: 'warning', icon: '⚠', text: 'Entire prompt is uppercase. This can confuse AI models.' });
+  if (/(.)\1{4,}/.test(text))
+    issues.push({ type: 'warning', icon: '⚠', text: 'Repeated characters detected. Clean up accidental key repeats.' });
+  if (!/\d/.test(text) && words.length > 10)
+    issues.push({ type: 'info', icon: '✦', text: 'No numbers found. Adding measurable specifics (length, count) improves output.' });
+  if (/[^\x00-\x7F]/.test(text) && !/[\u0600-\u06FF\u0900-\u097F]/.test(text))
+    issues.push({ type: 'info', icon: '✦', text: 'Unusual characters detected. Verify special symbols are intentional.' });
+
+  if (issues.length === 0)
+    issues.push({ type: 'success', icon: '✓', text: 'No structural issues found — solid prompt foundation!' });
+
+  return issues;
+}
+
+// ── SCORING ────────────────────────────────────────────────────────────────
+function calcScore(original, cleaned, fillerCount, issues) {
+  let s = 50;
+
+  const words = original.trim().split(/\s+/).length;
+  if (words >= 5 && words <= 30) s += 10;
+  else if (words > 30 && words <= 80) s += 5;
+
+  if (/[?!.;]/.test(original)) s += 8;
+  if (/\b(you are|act as)\b/i.test(original)) s += 10;
+  if (/\b(format|tone|style|audience|length)\b/i.test(original)) s += 10;
+  if (/\d/.test(original)) s += 7;
+
+  s -= fillerCount * 4;
+  const errors = issues.filter(i => i.type === 'error').length;
+  const warnings = issues.filter(i => i.type === 'warning').length;
+  s -= errors * 8;
+  s -= warnings * 4;
+
+  return Math.max(5, Math.min(100, Math.round(s)));
+}
+
+// ── RING ANIMATION ─────────────────────────────────────────────────────────
+function animateRing(pct) {
+  const ring = document.getElementById('ring');
+  const circumference = 283;
+  const offset = circumference - (pct / 100) * circumference;
+  ring.style.strokeDashoffset = offset;
+
+  if (pct >= 75) ring.style.stroke = '#22d3a0';
+  else if (pct >= 50) ring.style.stroke = '#f59e0b';
+  else ring.style.stroke = '#f87171';
+
+  const el = document.getElementById('score-pct');
+  let cur = 0;
+  const step = Math.ceil(pct / 40);
+  const iv = setInterval(() => {
+    cur = Math.min(cur + step, pct);
+    el.textContent = cur + '%';
+    if (cur >= pct) clearInterval(iv);
+  }, 30);
+}
+
+// ── CHAR / WORD COUNT ──────────────────────────────────────────────────────
+document.getElementById('input').addEventListener('input', function () {
+  const v = this.value;
+  const words = v.trim() ? v.trim().split(/\s+/).length : 0;
+  document.getElementById('char-count').textContent = `${v.length} characters · ${words} words`;
+  const badge = document.getElementById('complexity-badge');
+  if (!v.trim()) { badge.textContent = ''; return; }
+  if (words < 5) badge.innerHTML = '<span style="color:var(--red);font-size:12px">Too short</span>';
+  else if (words < 20) badge.innerHTML = '<span style="color:var(--amber);font-size:12px">Simple</span>';
+  else if (words < 60) badge.innerHTML = '<span style="color:var(--accent2);font-size:12px">Moderate</span>';
+  else badge.innerHTML = '<span style="color:var(--green);font-size:12px">Detailed</span>';
+});
+
+// ── LOAD EXAMPLE ───────────────────────────────────────────────────────────
+function loadExample() {
+  document.getElementById('input').value =
+    "basically just write me something about like AI and machine learning stuff, maybe make it very very detailed and kind of interesting, i mean like really make it good and stuff, just include everything important";
+  document.getElementById('input').dispatchEvent(new Event('input'));
+}
+
+// ── COPY ───────────────────────────────────────────────────────────────────
+function copyOutput() {
+  const text = document.getElementById('after').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.btn-copy');
+    btn.textContent = 'Copied ✓';
+    setTimeout(() => btn.textContent = 'Copy ↗', 2000);
+  });
+}
+
+// ── RESET ──────────────────────────────────────────────────────────────────
+function resetTool() {
+  document.getElementById('input').value = '';
+  document.getElementById('char-count').textContent = '0 characters · 0 words';
+  document.getElementById('complexity-badge').textContent = '';
+  ['score-card','compare-grid','analysis-grid','explanation-card'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  document.getElementById('loader').classList.remove('show');
+  document.getElementById('clean-btn').disabled = false;
+}
+
+// ── MAIN CLEAN FUNCTION ────────────────────────────────────────────────────
+async function cleanPrompt() {
+  const raw = document.getElementById('input').value.trim();
+  if (!raw) { alert('Please enter a prompt first.'); return; }
+
+  // Show loader
+  document.getElementById('clean-btn').disabled = true;
+  document.getElementById('loader').classList.add('show');
+  document.getElementById('loader-text').textContent = 'Analyzing with AI…';
+
+  // 1. Local filler detection
+  let localCleaned = raw;
+  const foundFillers = [];
+  FILLER_REGEX.forEach(({ word, re }) => {
+    re.lastIndex = 0;
+    if (re.test(localCleaned)) foundFillers.push(word);
+    re.lastIndex = 0;
+    localCleaned = localCleaned.replace(re, ' ');
+  });
+  localCleaned = localCleaned.replace(/\s{2,}/g, ' ').trim();
+  if (localCleaned.length) localCleaned = localCleaned[0].toUpperCase() + localCleaned.slice(1);
+
+  // 2. Issues
+  const issues = detectIssues(raw);
+
+  // 3. Score
+  const score = calcScore(raw, localCleaned, foundFillers.length, issues);
+  const origWords = raw.trim().split(/\s+/).length;
+  const cleanWords = localCleaned.trim().split(/\s+/).length;
+  const improvement = Math.max(0, origWords - cleanWords);
+
+  // 4. Call Claude API
+  document.getElementById('loader-text').textContent = 'Rewriting with Claude AI…';
+  let aiCleaned = localCleaned;
+  let aiExplanation = '';
+
+  try {
+    const systemMsg = `You are an expert prompt engineer. Your job is to rewrite user prompts to be:
+- Clear, specific, and actionable
+- Free of filler words and vague language
+- Structured with a role, task, context, and output format where appropriate
+- Professional and precise
+
+Return a JSON object with exactly two keys:
+  "cleaned": the rewritten prompt (string)
+  "explanation": a short 2-3 sentence explanation of what you changed and why (string)
+No markdown, no extra keys, no preamble.`;
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: systemMsg,
+        messages: [{ role: 'user', content: `Rewrite this prompt:\n\n"${raw}"` }]
+      })
+    });
+
+    const data = await res.json();
+    const textContent = data.content?.find(b => b.type === 'text')?.text || '';
+    const jsonStr = textContent.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(jsonStr);
+    if (parsed.cleaned) aiCleaned = parsed.cleaned;
+    if (parsed.explanation) aiExplanation = parsed.explanation;
+  } catch (e) {
+    console.warn('Claude API issue, using local clean:', e);
+    aiExplanation = 'AI rewrite unavailable. Showing locally cleaned version with filler words removed.';
+    aiCleaned = localCleaned;
+  }
+
+  // 5. Render everything
+  document.getElementById('loader').classList.remove('show');
+  document.getElementById('clean-btn').disabled = false;
+
+  // Score card
+  document.getElementById('score-card').style.display = 'block';
+  animateRing(score);
+  document.getElementById('stat-words').textContent = origWords;
+  document.getElementById('stat-fillers').textContent = foundFillers.length;
+  document.getElementById('stat-issues').textContent = issues.filter(i => i.type !== 'success').length;
+  document.getElementById('stat-improvement').textContent = improvement > 0 ? `-${improvement}w` : '—';
+
+  // Before/After
+  document.getElementById('compare-grid').style.display = 'grid';
+  document.getElementById('before').textContent = raw;
+  document.getElementById('after').textContent = aiCleaned;
+
+  // Filler tags
+  document.getElementById('analysis-grid').style.display = 'grid';
+  const fillerEl = document.getElementById('fillers-output');
+  if (foundFillers.length === 0) {
+    fillerEl.innerHTML = '<div class="empty">No filler words detected — great!</div>';
+  } else {
+    fillerEl.innerHTML = '<div class="tag-list">' +
+      foundFillers.map(w => `<span class="tag bad">${w}</span>`).join('') +
+      '</div><div style="margin-top:10px;font-size:12px;color:var(--muted)">' +
+      foundFillers.length + ' filler word(s) found and removed.</div>';
+  }
+
+  // Issues
+  const issueEl = document.getElementById('issues-output');
+  issueEl.innerHTML = issues.map(i =>
+    `<div class="issue-item ${i.type}"><span class="issue-icon">${i.icon}</span><span>${i.text}</span></div>`
+  ).join('');
+
+  // Explanation
+  document.getElementById('explanation-card').style.display = 'block';
+  document.getElementById('explanation-output').textContent = aiExplanation || 'No explanation provided.';
+}
+</script>
+</body>
+</html>

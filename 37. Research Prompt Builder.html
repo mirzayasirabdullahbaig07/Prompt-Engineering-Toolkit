@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Research Prompt Builder</title>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #e8e8f8;
+  min-height: 100vh;
+  padding: 40px 20px;
+  color: #2d2d5e;
+}
+
+/* HEADER */
+.header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.badge {
+  display: inline-block;
+  background: #7c3aed;
+  color: white;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-bottom: 10px;
+}
+
+.header h1 {
+  font-size: 34px;
+  color: #5b21b6;
+}
+
+.header p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.info {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+/* CARD */
+.card {
+  background: white;
+  border: 1.5px solid #e0dff5;
+  border-radius: 16px;
+  padding: 22px;
+  max-width: 900px;
+  margin: 0 auto 18px;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #7c3aed;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  margin-bottom: 10px;
+}
+
+/* INPUTS */
+textarea, select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1.5px solid #ddd8f5;
+  background: #fafafa;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+/* BUTTONS */
+.btn {
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.primary {
+  background: #5b21b6;
+  color: white;
+}
+
+.secondary {
+  background: transparent;
+  border: 1.5px solid #c4b5fd;
+  color: #5b21b6;
+}
+
+/* OUTPUT */
+.output {
+  background: #fff;
+  border: 1.5px solid #e0dff5;
+  border-radius: 16px;
+  padding: 18px;
+  min-height: 180px;
+  white-space: pre-wrap;
+}
+
+.block {
+  background: #f5f3ff;
+  border-left: 4px solid #7c3aed;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+.final {
+  background: #ede9fe;
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+/* GRID */
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* HISTORY */
+.history-item {
+  background: #f5f3ff;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="badge">📚 Research Builder</div>
+  <h1>Research Prompt Generator</h1>
+
+  <div class="info">
+      Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+   </div>
+</div>
+
+<!-- TOP INPUT -->
+<div class="card">
+  <div class="section-label">Research Topic</div>
+  <textarea id="topic" rows="3"
+  placeholder="e.g. Artificial Intelligence in Education"></textarea>
+</div>
+
+<!-- SETTINGS -->
+<div class="card">
+  <div class="section-label">Research Mode</div>
+
+  <div class="row">
+    <select id="depth">
+      <option>Basic Overview</option>
+      <option>Intermediate Analysis</option>
+      <option>Deep Research</option>
+    </select>
+
+    <select id="format">
+      <option>Summary</option>
+      <option>Bullet Notes</option>
+      <option>Step-by-Step Report</option>
+    </select>
+  </div>
+
+  <br>
+  <button class="btn primary" onclick="generate()">Generate Research Prompt</button>
+  <button class="btn secondary" onclick="clearAll()">Clear</button>
+</div>
+
+<!-- OUTPUT -->
+<div class="card">
+  <div class="section-label">Generated Research Framework</div>
+  <div class="output" id="output">
+    Your research structure will appear here...
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div class="card">
+  <div class="section-label">History</div>
+  <div id="history"></div>
+</div>
+
+<script>
+let history = [];
+
+function generate() {
+  const topic = document.getElementById("topic").value;
+  const depth = document.getElementById("depth").value;
+  const format = document.getElementById("format").value;
+
+  if (!topic) return alert("Enter a research topic!");
+
+  const framework = buildResearchPrompt(topic, depth, format);
+
+  render(framework);
+  save(topic, framework);
+}
+
+function buildResearchPrompt(topic, depth, format) {
+
+  let structure = `
+RESEARCH TOPIC:
+${topic}
+
+RESEARCH DEPTH:
+${depth}
+
+OUTPUT FORMAT:
+${format}
+
+-----------------------------
+RESEARCH FRAMEWORK
+-----------------------------
+
+1. Introduction to ${topic}
+
+2. Key Concepts:
+- Define core ideas
+- Background information
+
+3. Subtopics to Explore:
+- History
+- Current trends
+- Applications
+- Advantages & disadvantages
+
+4. Research Questions:
+- What is ${topic}?
+- Why is it important?
+- How is it used in real life?
+
+5. Case Studies / Examples:
+- Real-world applications
+- Industry use cases
+
+6. Future Scope:
+- Future developments
+- Predictions
+
+7. Conclusion:
+- Summary of findings
+`;
+
+  return structure;
+}
+
+function render(text) {
+  const lines = text.split("\n");
+  let html = "";
+  let final = "";
+
+  lines.forEach(l => {
+    if (l.toLowerCase().includes("conclusion")) {
+      final += l;
+    } else if (l.trim()) {
+      html += `<div class="block">${l}</div>`;
+    }
+  });
+
+  document.getElementById("output").innerHTML =
+    html + `<div class="final">${final}</div>`;
+}
+
+function save(topic, result) {
+  history.unshift({ topic, result });
+  if (history.length > 10) history.pop();
+
+  const box = document.getElementById("history");
+  box.innerHTML = "";
+
+  history.forEach(h => {
+    const div = document.createElement("div");
+    div.className = "history-item";
+    div.innerText = "📘 " + h.topic;
+    div.onclick = () => render(h.result);
+    box.appendChild(div);
+  });
+}
+
+function clearAll() {
+  document.getElementById("topic").value = "";
+  document.getElementById("output").innerText = "";
+}
+</script>
+
+</body>
+</html>
