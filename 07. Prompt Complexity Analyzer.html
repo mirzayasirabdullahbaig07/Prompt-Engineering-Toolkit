@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<!-- saved from url=(0051)file:///D:/Download/Prompt_Complexity_Analyzer.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Complexity Analyzer</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(135deg,#f3f0ff,#ede9fe,#faf5ff);
+min-height:100vh;color:#1e1b4b;padding:20px
+}
+.container{max-width:1100px;margin:auto}
+.header{text-align:center;padding:25px}
+.badge{display:inline-block;background:linear-gradient(90deg,#7c3aed,#a855f7);color:#fff;padding:6px 16px;border-radius:20px;font-size:12px}
+h1{margin-top:12px;font-size:2.5rem;background:linear-gradient(90deg,#5b21b6,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{color:#6b7280;margin-top:8px}
+.card{background:#fff;border:1px solid #d8b4fe;border-radius:18px;padding:24px;margin-bottom:20px;box-shadow:0 4px 18px rgba(124,58,237,.1)}
+label{display:block;margin-bottom:10px;color:#6d28d9;font-weight:700}
+textarea{width:100%;height:160px;border:1px solid #c4b5fd;border-radius:12px;padding:14px;background:#faf5ff}
+.btns{margin-top:15px;display:flex;gap:10px}
+button{border:none;padding:12px 22px;border-radius:10px;cursor:pointer;font-weight:700}
+.primary{background:linear-gradient(135deg,#7c3aed,#5b21b6);color:white}
+.secondary{background:#ede9fe;color:#6d28d9}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.stat{font-size:28px;font-weight:800;color:#6d28d9}
+.small{color:#6b7280}
+.progress{height:10px;background:#ede9fe;border-radius:20px;overflow:hidden;margin-top:8px}
+.fill{height:100%;background:linear-gradient(90deg,#7c3aed,#c084fc)}
+#results{display:none}
+.footer{text-align:center;padding:20px;color:#6b7280}
+.word{display:inline-block;background:#ede9fe;color:#6d28d9;padding:6px 10px;border-radius:20px;margin:4px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<div class="badge">AI Prompt Engineering Suite</div>
+<h1>Prompt Complexity Analyzer</h1>
+
+</div>
+
+<div class="card">
+<label>Enter Prompt</label>
+<textarea id="prompt"></textarea>
+<div class="btns">
+<button class="primary" onclick="analyze()">Analyze Complexity</button>
+<button class="secondary" onclick="clr()">Clear</button>
+</div>
+</div>
+
+<div id="results" style="display: none;">
+<div class="grid">
+<div class="card">
+<div class="small">Complexity Score</div>
+<div class="stat" id="score">10%</div>
+<p id="level">Basic Complexity</p>
+</div>
+
+<div class="card">
+<div class="small">Prompt Statistics</div>
+<p id="stats">Words: 9<br>Sentences: 1<br>Instructions: 1<br>Constraints: 0</p>
+</div>
+</div>
+
+<div class="card">
+<h3>Complexity Dimensions</h3><br>
+<p>Length <span id="l1">9%</span></p>
+<div class="progress"><div id="b1" class="fill" style="width: 9%;"></div></div><br>
+
+<p>Instruction Density <span id="l2">10%</span></p>
+<div class="progress"><div id="b2" class="fill" style="width: 10%;"></div></div><br>
+
+<p>Reasoning Demand <span id="l3">12%</span></p>
+<div class="progress"><div id="b3" class="fill" style="width: 12%;"></div></div><br>
+
+<p>Constraint Level <span id="l4">0%</span></p>
+<div class="progress"><div id="b4" class="fill" style="width: 0%;"></div></div>
+</div>
+
+<div class="card">
+<h3>Keyword Analysis</h3><br>
+<div id="keywords"><span class="word">write</span><span class="word">machine</span><span class="word">learning</span><span class="word">health</span></div>
+</div>
+
+<div class="card">
+<h3>Optimization Suggestions</h3><br>
+<div id="tips">Add more context and details.<br>Use clearer action instructions.<br>Specify output requirements.</div>
+</div>
+</div>
+
+<div class="footer">
+Prompt Complexity Analyzer v1.0<br>
+Developed by Hamna Munir | Mirza Yasir Abdullah Baig
+</div>
+</div>
+
+<script>
+function analyze(){
+let t=document.getElementById("prompt").value.trim();
+if(!t){alert("Enter a prompt");return;}
+document.getElementById("results").style.display="block";
+
+let words=t.split(/\s+/).filter(Boolean);
+let wc=words.length;
+let sc=t.split(/[.!?]+/).filter(x=>x.trim()).length;
+
+let instructions=(t.match(/create|write|generate|analyze|explain|compare|design|build|develop|list/gi)||[]).length;
+let constraints=(t.match(/must|should|required|exactly|only|without|include/gi)||[]).length;
+
+let score=Math.min(100,Math.round((wc*0.4)+(instructions*6)+(constraints*5)));
+let level="Basic";
+if(score>=80) level="Expert";
+else if(score>=60) level="Advanced";
+else if(score>=40) level="Moderate";
+
+document.getElementById("score").innerText=score+"%";
+document.getElementById("level").innerText=level+" Complexity";
+
+document.getElementById("stats").innerHTML=
+"Words: "+wc+"<br>Sentences: "+sc+"<br>Instructions: "+instructions+"<br>Constraints: "+constraints;
+
+let len=Math.min(100,wc);
+let dens=Math.min(100,instructions*10);
+let reason=Math.min(100,(instructions*12)+(constraints*5));
+let cons=Math.min(100,constraints*12);
+
+setBar("b1","l1",len);
+setBar("b2","l2",dens);
+setBar("b3","l3",reason);
+setBar("b4","l4",cons);
+
+let freq={};
+words.forEach(w=>{
+w=w.toLowerCase().replace(/[^a-z]/g,'');
+if(w.length>4) freq[w]=(freq[w]||0)+1;
+});
+let top=Object.keys(freq).sort((a,b)=>freq[b]-freq[a]).slice(0,12);
+document.getElementById("keywords").innerHTML=top.map(x=>'<span class="word">'+x+'</span>').join('');
+
+let tips=[];
+if(wc<20) tips.push("Add more context and details.");
+if(instructions<2) tips.push("Use clearer action instructions.");
+if(constraints<1) tips.push("Specify output requirements.");
+if(tips.length===0) tips.push("Prompt structure looks strong.");
+document.getElementById("tips").innerHTML=tips.join("<br>");
+}
+
+function setBar(id,label,val){
+document.getElementById(id).style.width=val+"%";
+document.getElementById(label).innerText=val+"%";
+}
+
+function clr(){
+document.getElementById("prompt").value="";
+document.getElementById("results").style.display="none";
+}
+</script>
+
+
+</body></html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Missing Context Detector</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
+  background:linear-gradient(135deg,#f3f0ff,#ede9fe,#faf5ff);
+  min-height:100vh;
+  padding:20px;
+  color:#1e1b4b;
+}
+
+.container{max-width:1100px;margin:auto;}
+
+/* HEADER */
+.header{text-align:center;padding:30px 20px;}
+.badge{
+  display:inline-block;
+  background:linear-gradient(90deg,#7c3aed,#a855f7);
+  color:#fff;
+  padding:6px 16px;
+  border-radius:20px;
+  font-size:12px;
+  letter-spacing:2px;
+  margin-bottom:12px;
+}
+.header h1{
+  font-size:2.4rem;
+  font-weight:800;
+  background:linear-gradient(90deg,#5b21b6,#7c3aed,#a855f7);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.header p{color:#6b7280;margin-top:8px;}
+
+/* CARD */
+.card{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:18px;
+  padding:25px;
+  margin-bottom:20px;
+  box-shadow:0 4px 20px rgba(124,58,237,0.1);
+}
+
+label{
+  font-size:12px;
+  font-weight:700;
+  color:#7c3aed;
+  letter-spacing:1.5px;
+  display:block;
+  margin-bottom:10px;
+}
+
+textarea{
+  width:100%;
+  height:150px;
+  padding:14px;
+  border-radius:12px;
+  border:1.5px solid #ddd6fe;
+  background:#faf5ff;
+  font-size:1rem;
+  outline:none;
+  resize:vertical;
+}
+textarea:focus{
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+
+button{
+  padding:10px 20px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.primary{
+  background:linear-gradient(135deg,#7c3aed,#5b21b6);
+  color:#fff;
+}
+.clear{
+  background:#ede9fe;
+  color:#6d28d9;
+  border:1px solid #c4b5fd;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+@media(max-width:800px){.grid{grid-template-columns:1fr;}}
+
+/* SCORE */
+.circle{
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:2rem;
+  font-weight:800;
+  background:conic-gradient(#7c3aed 0deg,#ede9fe 0deg);
+}
+
+.score-box{text-align:center;}
+.score-label{
+  margin-top:10px;
+  font-weight:700;
+  color:#5b21b6;
+}
+
+/* LIST */
+.item{
+  padding:10px 0;
+  border-bottom:1px solid #ede9fe;
+  font-size:0.9rem;
+}
+.item span{color:#7c3aed;font-weight:700;}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  margin-top:25px;
+  font-size:12px;
+  color:#9ca3af;
+  border-top:1px solid #ddd6fe;
+  padding-top:15px;
+}
+.footer span{color:#7c3aed;font-weight:700;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="badge">AI TOOL</div>
+    <h1>Missing Context Detector</h1>
+    <p>Detect missing details that make prompts incomplete or unclear</p>
+  </div>
+
+  <!-- INPUT -->
+  <div class="card">
+    <label>ENTER YOUR PROMPT</label>
+    <textarea id="text" placeholder="Type your prompt here..."></textarea>
+
+    <div class="btn-row">
+      <button class="primary" onclick="analyze()">Analyze</button>
+      <button class="clear" onclick="clearAll()">Clear</button>
+    </div>
+  </div>
+
+  <!-- SCORE -->
+  <div class="card score-box">
+    <div class="circle" id="circle">0%</div>
+    <div class="score-label" id="label">No Analysis</div>
+  </div>
+
+  <!-- DETAILS -->
+  <div class="grid">
+
+    <div class="card">
+      <h3>📌 Missing Context</h3>
+      <div id="missing"></div>
+    </div>
+
+    <div class="card">
+      <h3>📊 Prompt Stats</h3>
+      <div class="item">Words: <span id="words">0</span></div>
+      <div class="item">Sentences: <span id="sent">0</span></div>
+      <div class="item">Missing Fields: <span id="miss">0</span></div>
+      <div class="item">Context Level: <span id="level">-</span></div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+  </div>
+
+</div>
+
+<script>
+const ACTIONS = ["write","create","generate","explain","analyze","list","make","design","build"];
+const AUDIENCE = ["student","professional","beginner","expert","developer","general","audience"];
+const FORMAT = ["bullet","list","table","paragraph","steps","json","html","markdown"];
+const CONTEXT_HINT = ["for","about","regarding","based","using","on"];
+const TIME = ["today","yesterday","future","now","2024","2025","2026"];
+const AMBIG = ["it","this","that","they","them","something","stuff"];
+
+function words(t){return t.toLowerCase().split(/\W+/).filter(w=>w);}
+
+function analyze(){
+  let text=document.getElementById("text").value.trim();
+  if(!text){alert("Enter prompt");return;}
+
+  let w=words(text);
+  let sentences=text.split(/[.!?]+/).filter(s=>s.trim());
+
+  let missing=[];
+
+  if(!ACTIONS.some(a=>w.includes(a))) missing.push("❌ Missing Action (write, create, explain)");
+  if(!AUDIENCE.some(a=>w.includes(a))) missing.push("❌ Missing Audience (for whom?)");
+  if(!FORMAT.some(f=>w.includes(f))) missing.push("❌ Missing Output Format");
+  if(!/\d/.test(text)) missing.push("❌ Missing Quantity / Limit");
+  if(!CONTEXT_HINT.some(c=>w.includes(c))) missing.push("❌ Missing Context Purpose");
+  if(!TIME.some(t=>w.includes(t))) missing.push("⚠️ No Time Reference");
+  if(AMBIG.some(a=>w.includes(a))) missing.push("⚠️ Ambiguous Words Present");
+
+  let score = 100 - missing.length*12;
+  score=Math.max(0,Math.min(100,score));
+
+  let level = score>80?"Strong Context":score>60?"Moderate Context":score>40?"Weak Context":"Very Missing Context";
+
+  // circle
+  let circle=document.getElementById("circle");
+  circle.textContent=score+"%";
+  circle.style.background=`conic-gradient(#7c3aed ${score*3.6}deg,#ede9fe 0deg)`;
+
+  document.getElementById("label").textContent=level;
+
+  document.getElementById("words").textContent=w.length;
+  document.getElementById("sent").textContent=sentences.length;
+  document.getElementById("miss").textContent=missing.length;
+  document.getElementById("level").textContent=level;
+
+  let html="";
+  if(missing.length===0){
+    html="<div class='item'>✅ All key context elements present</div>";
+  }else{
+    missing.forEach(m=>{
+      html+=`<div class='item'>${m}</div>`;
+    });
+  }
+
+  document.getElementById("missing").innerHTML=html;
+}
+
+function clearAll(){
+  document.getElementById("text").value="";
+  document.getElementById("circle").textContent="0%";
+  document.getElementById("label").textContent="No Analysis";
+  document.getElementById("words").textContent="0";
+  document.getElementById("sent").textContent="0";
+  document.getElementById("miss").textContent="0";
+  document.getElementById("level").textContent="-";
+  document.getElementById("missing").innerHTML="";
+}
+</script>
+
+</body>
+</html>

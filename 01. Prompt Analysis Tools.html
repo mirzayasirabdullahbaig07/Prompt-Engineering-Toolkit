@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prompt Analysis Tool</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f3f0ff, #ede9fe, #faf5ff);
+      min-height: 100vh;
+      color: #1e1b4b;
+      padding: 20px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 30px 20px 20px;
+      margin-bottom: 30px;
+    }
+    .header .badge {
+      display: inline-block;
+      background: linear-gradient(90deg, #7c3aed, #a855f7);
+      padding: 5px 18px;
+      border-radius: 20px;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      color: #fff;
+    }
+    .header h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #5b21b6, #7c3aed, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    .header p {
+      color: #6b7280;
+      font-size: 1rem;
+    }
+
+    /* Main layout */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Input card */
+    .input-card {
+      background: #ffffff;
+      border: 1.5px solid #c4b5fd;
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 24px rgba(124,58,237,0.10);
+    }
+    .input-card label {
+      display: block;
+      font-size: 0.85rem;
+      color: #7c3aed;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    .input-card textarea {
+      width: 100%;
+      height: 160px;
+      background: #faf5ff;
+      border: 1.5px solid #ddd6fe;
+      border-radius: 12px;
+      padding: 16px;
+      color: #1e1b4b;
+      font-size: 1rem;
+      resize: vertical;
+      outline: none;
+      transition: border 0.3s;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .input-card textarea:focus {
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+    }
+    .input-card textarea::placeholder { color: #a78bfa; }
+
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 12px 28px;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s;
+      letter-spacing: 0.5px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #7c3aed, #5b21b6);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(124,58,237,0.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(124,58,237,0.5); }
+    .btn-clear {
+      background: #ede9fe;
+      color: #6d28d9;
+      border: 1.5px solid #c4b5fd;
+    }
+    .btn-clear:hover { background: #ddd6fe; }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: #ffffff;
+      border: 1.5px solid #c4b5fd;
+      border-radius: 16px;
+      padding: 20px 16px;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 12px rgba(124,58,237,0.08);
+    }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(124,58,237,0.15); }
+    .stat-card .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .stat-card .stat-label {
+      font-size: 0.78rem;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .c1 { color: #7c3aed; }
+    .c2 { color: #6d28d9; }
+    .c3 { color: #8b5cf6; }
+    .c4 { color: #a855f7; }
+    .c5 { color: #5b21b6; }
+    .c6 { color: #7c3aed; }
+
+    /* Analysis sections */
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media(max-width: 700px) { .analysis-grid { grid-template-columns: 1fr; } }
+
+    .analysis-card {
+      background: #ffffff;
+      border: 1.5px solid #c4b5fd;
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 2px 12px rgba(124,58,237,0.07);
+    }
+    .analysis-card h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #5b21b6;
+      font-weight: 700;
+    }
+    .icon { font-size: 1.1rem; }
+
+    /* Score bar */
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .score-label { width: 110px; font-size: 0.82rem; color: #4b5563; }
+    .score-bar-wrap {
+      flex: 1;
+      background: #ede9fe;
+      border-radius: 10px;
+      height: 10px;
+      overflow: hidden;
+    }
+    .score-bar {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.8s ease;
+    }
+    .score-num { width: 36px; font-size: 0.82rem; text-align: right; color: #5b21b6; font-weight: 700; }
+
+    /* Tags */
+    .tag-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* Sentiment */
+    .sentiment-box {
+      text-align: center;
+      padding: 16px;
+      border-radius: 14px;
+      margin-bottom: 14px;
+    }
+    .sentiment-box .s-emoji { font-size: 2.5rem; margin-bottom: 6px; }
+    .sentiment-box .s-label { font-size: 1.1rem; font-weight: 700; color: #3b0764; }
+    .sentiment-box .s-sub { font-size: 0.8rem; color: #6b7280; margin-top: 4px; }
+
+    /* Suggestions */
+    .suggestion-list { list-style: none; }
+    .suggestion-list li {
+      padding: 9px 0;
+      border-bottom: 1px solid #ede9fe;
+      font-size: 0.88rem;
+      color: #374151;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .suggestion-list li:last-child { border-bottom: none; }
+    .suggestion-list li span.bullet {
+      color: #7c3aed;
+      font-size: 1rem;
+      margin-top: 1px;
+      font-weight: 700;
+    }
+
+    /* Full-width card */
+    .full-card {
+      background: #ffffff;
+      border: 1.5px solid #c4b5fd;
+      border-radius: 16px;
+      padding: 22px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 12px rgba(124,58,237,0.07);
+    }
+    .full-card h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #5b21b6;
+      font-weight: 700;
+    }
+
+    /* Keyword highlight */
+    .highlighted-prompt {
+      background: #faf5ff;
+      border: 1px solid #ddd6fe;
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      word-break: break-word;
+      color: #1e1b4b;
+    }
+    .kw-action   { background: rgba(124,58,237,0.18); border-radius: 4px; padding: 1px 5px; color: #5b21b6; font-weight: 600; }
+    .kw-context  { background: rgba(167,139,250,0.25); border-radius: 4px; padding: 1px 5px; color: #6d28d9; }
+    .kw-object   { background: rgba(196,181,253,0.40); border-radius: 4px; padding: 1px 5px; color: #4c1d95; }
+    .kw-question { background: rgba(221,214,254,0.60); border-radius: 4px; padding: 1px 5px; color: #7c3aed; }
+
+    .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.78rem; color: #6b7280; }
+    .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+
+    /* Hidden state */
+    #results { display: none; }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #a78bfa;
+    }
+    .empty-state .big-icon { font-size: 4rem; margin-bottom: 14px; opacity: 0.5; }
+    .empty-state p { font-size: 1rem; color: #6b7280; }
+    .empty-state strong { color: #7c3aed; }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 30px 0 10px;
+      color: #9ca3af;
+      font-size: 0.82rem;
+      border-top: 1.5px solid #ddd6fe;
+      margin-top: 10px;
+    }
+    .footer span { color: #7c3aed; font-weight: 700; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f3f0ff; }
+    ::-webkit-scrollbar-thumb { background: #c4b5fd; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #7c3aed; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="badge">🔬 AI Tools Suite</div>
+    <h1>Prompt Analysis Tool</h1>
+    <p>Analyze, evaluate and optimize your AI prompts with deep intelligence</p>
+  </div>
+
+  <!-- Input -->
+  <div class="input-card">
+    <label>📝 Enter Your Prompt</label>
+    <textarea id="promptInput" placeholder="Type or paste your AI prompt here... e.g. 'Write a detailed blog post about the benefits of machine learning in healthcare for a general audience.'"></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="analyzePrompt()">🔍 Analyze Prompt</button>
+      <button class="btn btn-clear" onclick="clearAll()">✕ Clear</button>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div id="emptyState">
+    <div class="empty-state">
+      <div class="big-icon">🧠</div>
+      <p>Enter a prompt above and click <strong>Analyze Prompt</strong> to get started</p>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results">
+
+    <!-- Stats Row -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value c1" id="statWords">0</div>
+        <div class="stat-label">Words</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value c2" id="statChars">0</div>
+        <div class="stat-label">Characters</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value c3" id="statSentences">0</div>
+        <div class="stat-label">Sentences</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value c4" id="statTokens">0</div>
+        <div class="stat-label">Est. Tokens</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value c5" id="statReadability">0</div>
+        <div class="stat-label">Readability</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value c6" id="statScore">0</div>
+        <div class="stat-label">Quality Score</div>
+      </div>
+    </div>
+
+    <!-- Analysis Grid -->
+    <div class="analysis-grid">
+
+      <!-- Quality Scores -->
+      <div class="analysis-card">
+        <h3><span class="icon">📊</span> Quality Dimensions</h3>
+        <div id="qualityBars"></div>
+      </div>
+
+      <!-- Sentiment -->
+      <div class="analysis-card">
+        <h3><span class="icon">💬</span> Tone & Sentiment</h3>
+        <div id="sentimentBox"></div>
+        <div id="toneTagsWrap"></div>
+      </div>
+
+      <!-- Keywords -->
+      <div class="analysis-card">
+        <h3><span class="icon">🏷️</span> Key Terms Detected</h3>
+        <div id="keywordTags" class="tag-wrap"></div>
+      </div>
+
+      <!-- Suggestions -->
+      <div class="analysis-card">
+        <h3><span class="icon">💡</span> Improvement Suggestions</h3>
+        <ul class="suggestion-list" id="suggestionList"></ul>
+      </div>
+
+    </div>
+
+    <!-- Highlighted Prompt -->
+    <div class="full-card">
+      <h3><span class="icon">🎨</span> Prompt Token Highlight</h3>
+      <div class="highlighted-prompt" id="highlightedPrompt"></div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(124,58,237,0.6)"></div> Action Words</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(167,139,250,0.6)"></div> Context Words</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(196,181,253,0.8)"></div> Subject/Object</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(221,214,254,1.0)"></div> Question Words</div>
+      </div>
+    </div>
+
+    <!-- Prompt Type -->
+    <div class="full-card">
+      <h3><span class="icon">🔖</span> Prompt Classification</h3>
+      <div id="classificationBox"></div>
+    </div>
+
+  </div><!-- /results -->
+
+  <!-- Footer -->
+  <div class="footer">
+    Developed by <span>Hamna Munir</span> &nbsp;|&nbsp; <span>Mirza Yasir Abdullah Baig</span> &nbsp;|&nbsp; Prompt Analysis Tool v1.0
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  const ACTION_WORDS = ['write','create','generate','explain','summarize','analyze','describe','list','compare','define','give','make','build','design','suggest','recommend','identify','evaluate','provide','discuss','tell','show','find','calculate','convert','translate','improve','review','check','fix','debug','plan','draft','outline','predict','classify','extract'];
+  const CONTEXT_WORDS = ['detailed','brief','simple','professional','formal','informal','creative','technical','comprehensive','concise','clear','accurate','engaging','persuasive','friendly','for','about','in','using','with','based','according','as','like','such'];
+  const QUESTION_WORDS = ['what','who','where','when','why','how','which','whose','whom','is','are','can','could','would','should','does','do','did','will'];
+  const SUBJECT_NOUNS = ['blog','post','article','email','report','code','program','function','script','story','poem','essay','letter','summary','list','data','model','image','website','app','tool','system','guide','tutorial','example','template','document','analysis','plan','strategy'];
+
+  function analyzePrompt() {
+    const text = document.getElementById('promptInput').value.trim();
+    if (!text) { alert('Please enter a prompt first!'); return; }
+
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+
+    const words = text.split(/\s+/).filter(w => w.length > 0);
+    const chars = text.length;
+    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
+    const tokens = Math.ceil(chars / 4);
+    const avgWordLen = chars / (words.length || 1);
+    const readability = Math.min(100, Math.max(0, Math.round(100 - (avgWordLen - 3) * 8)));
+
+    // Quality dimensions
+    const clarity = scoreClarity(text, words);
+    const specificity = scoreSpecificity(text, words);
+    const context = scoreContext(text, words);
+    const actionability = scoreActionability(text, words);
+    const complexity = scoreComplexity(words);
+    const overall = Math.round((clarity + specificity + context + actionability) / 4);
+
+    document.getElementById('statWords').textContent = words.length;
+    document.getElementById('statChars').textContent = chars;
+    document.getElementById('statSentences').textContent = sentences;
+    document.getElementById('statTokens').textContent = tokens;
+    document.getElementById('statReadability').textContent = readability + '%';
+    document.getElementById('statScore').textContent = overall + '%';
+
+    renderQualityBars([
+      { label: 'Clarity', val: clarity, color: '#7c3aed' },
+      { label: 'Specificity', val: specificity, color: '#6d28d9' },
+      { label: 'Context', val: context, color: '#8b5cf6' },
+      { label: 'Actionability', val: actionability, color: '#a855f7' },
+      { label: 'Complexity', val: complexity, color: '#5b21b6' },
+    ]);
+
+    renderSentiment(text);
+    renderKeywords(words);
+    renderSuggestions(text, words, clarity, specificity, context, actionability);
+    renderHighlight(text);
+    renderClassification(text, words);
+  }
+
+  function scoreClarity(text, words) {
+    let s = 50;
+    if (words.length >= 10) s += 15;
+    if (words.length >= 20) s += 10;
+    if (/[.!?]/.test(text)) s += 10;
+    if (text.length > 30) s += 15;
+    return Math.min(100, s);
+  }
+  function scoreSpecificity(text, words) {
+    let s = 30;
+    const lower = text.toLowerCase();
+    SUBJECT_NOUNS.forEach(n => { if(lower.includes(n)) s += 8; });
+    if (/\d+/.test(text)) s += 15;
+    if (/["'"]/.test(text)) s += 10;
+    return Math.min(100, s);
+  }
+  function scoreContext(text, words) {
+    let s = 30;
+    const lower = text.toLowerCase();
+    CONTEXT_WORDS.forEach(w => { if(lower.includes(w)) s += 5; });
+    if (lower.includes('for') || lower.includes('audience') || lower.includes('purpose')) s += 15;
+    return Math.min(100, s);
+  }
+  function scoreActionability(text, words) {
+    let s = 20;
+    const lower = text.toLowerCase();
+    ACTION_WORDS.forEach(w => { if(lower.split(/\W+/).includes(w)) s += 10; });
+    return Math.min(100, s);
+  }
+  function scoreComplexity(words) {
+    const long = words.filter(w => w.length > 7).length;
+    return Math.min(100, Math.round((long / (words.length || 1)) * 100 * 2));
+  }
+
+  function renderQualityBars(items) {
+    let html = '';
+    items.forEach(item => {
+      html += `<div class="score-row">
+        <div class="score-label">${item.label}</div>
+        <div class="score-bar-wrap">
+          <div class="score-bar" style="width:${item.val}%;background:linear-gradient(90deg,${item.color},#c4b5fd)"></div>
+        </div>
+        <div class="score-num">${item.val}%</div>
+      </div>`;
+    });
+    document.getElementById('qualityBars').innerHTML = html;
+  }
+
+  function renderSentiment(text) {
+    const lower = text.toLowerCase();
+    const positiveWords = ['good','great','best','amazing','excellent','helpful','positive','benefit','improve','better','success','effective','efficient','creative','innovative','powerful','detailed','comprehensive'];
+    const negativeWords = ['bad','wrong','error','fail','issue','problem','fix','bug','broken','invalid','incorrect','remove','delete','stop','avoid'];
+    const neutralWords = ['create','write','analyze','explain','list','compare','describe','define','generate','summarize'];
+
+    let pos = 0, neg = 0, neu = 0;
+    lower.split(/\W+/).forEach(w => {
+      if (positiveWords.includes(w)) pos++;
+      else if (negativeWords.includes(w)) neg++;
+      else if (neutralWords.includes(w)) neu++;
+    });
+
+    let emoji, label, sub, bg;
+    if (pos > neg && pos > neu) { emoji='😊'; label='Positive'; sub='Encouraging, optimistic tone'; bg='rgba(167,139,250,0.15)'; }
+    else if (neg > pos && neg > 0) { emoji='🔧'; label='Corrective'; sub='Problem-solving, fix-oriented'; bg='rgba(196,181,253,0.2)'; }
+    else if (neu >= pos && neu >= neg) { emoji='🎯'; label='Neutral / Directive'; sub='Task-focused, instructional'; bg='rgba(124,58,237,0.08)'; }
+    else { emoji='📝'; label='Informational'; sub='Descriptive, knowledge-seeking'; bg='rgba(221,214,254,0.4)'; }
+
+    document.getElementById('sentimentBox').innerHTML = `
+      <div class="sentiment-box" style="background:${bg}">
+        <div class="s-emoji">${emoji}</div>
+        <div class="s-label">${label}</div>
+        <div class="s-sub">${sub}</div>
+      </div>`;
+
+    const tones = [];
+    if (pos > 0) tones.push({ label: 'Positive', color: '#7c3aed' });
+    if (neg > 0) tones.push({ label: 'Corrective', color: '#6d28d9' });
+    if (neu > 0) tones.push({ label: 'Directive', color: '#8b5cf6' });
+    if (/\?/.test(lower)) tones.push({ label: 'Interrogative', color: '#a855f7' });
+    if (/!/.test(lower)) tones.push({ label: 'Emphatic', color: '#5b21b6' });
+    if (lower.includes('please') || lower.includes('kindly')) tones.push({ label: 'Polite', color: '#4c1d95' });
+
+    let tHtml = '<div class="tag-wrap">';
+    tones.forEach(t => {
+      tHtml += `<span class="tag" style="background:${t.color}18;color:${t.color};border:1.5px solid ${t.color}55">${t.label}</span>`;
+    });
+    tHtml += '</div>';
+    document.getElementById('toneTagsWrap').innerHTML = tHtml;
+  }
+
+  function renderKeywords(words) {
+    const lower = words.map(w => w.toLowerCase().replace(/[^a-z]/g,''));
+    const freq = {};
+    lower.forEach(w => { if(w.length > 3) freq[w] = (freq[w]||0)+1; });
+    const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,12);
+    const colors = ['#7c3aed','#6d28d9','#8b5cf6','#a855f7','#5b21b6','#4c1d95'];
+    let html = '';
+    sorted.forEach(([word, count], i) => {
+      const c = colors[i % colors.length];
+      html += `<span class="tag" style="background:${c}15;color:${c};border:1.5px solid ${c}44">${word}${count>1?' ×'+count:''}</span>`;
+    });
+    document.getElementById('keywordTags').innerHTML = html || '<span style="color:#666">No significant keywords detected</span>';
+  }
+
+  function renderSuggestions(text, words, clarity, specificity, context, actionability) {
+    const suggestions = [];
+    if (words.length < 10) suggestions.push('Add more detail — prompts with 10+ words get better AI responses.');
+    if (words.length > 100) suggestions.push('Consider breaking this into smaller, focused sub-prompts.');
+    if (actionability < 50) suggestions.push('Start with a clear action verb (e.g., "Write", "Explain", "List").');
+    if (specificity < 50) suggestions.push('Be more specific — mention the subject, format, or expected output.');
+    if (context < 50) suggestions.push('Add context about the target audience or purpose (e.g., "for beginners").');
+    if (!/\d/.test(text)) suggestions.push('Consider specifying a number (e.g., "List 5 examples...").');
+    if (!/format|structure|bullet|paragraph|table/.test(text.toLowerCase())) suggestions.push('Specify output format (e.g., "in bullet points", "as a table").');
+    if (clarity >= 80 && specificity >= 70) suggestions.push('✅ Great prompt! Clear and specific — well structured.');
+    if (suggestions.length === 0) suggestions.push('Your prompt looks well-formed and comprehensive!');
+
+    let html = '';
+    suggestions.forEach(s => {
+      html += `<li><span class="bullet">›</span>${s}</li>`;
+    });
+    document.getElementById('suggestionList').innerHTML = html;
+  }
+
+  function renderHighlight(text) {
+    const tokenize = text.split(/(\s+)/);
+    let html = '';
+    tokenize.forEach(token => {
+      const clean = token.toLowerCase().replace(/[^a-z]/g,'');
+      if (ACTION_WORDS.includes(clean)) html += `<span class="kw-action">${token}</span>`;
+      else if (QUESTION_WORDS.includes(clean)) html += `<span class="kw-question">${token}</span>`;
+      else if (CONTEXT_WORDS.includes(clean)) html += `<span class="kw-context">${token}</span>`;
+      else if (SUBJECT_NOUNS.includes(clean)) html += `<span class="kw-object">${token}</span>`;
+      else html += token;
+    });
+    document.getElementById('highlightedPrompt').innerHTML = html;
+  }
+
+  function renderClassification(text, words) {
+    const lower = text.toLowerCase();
+    const types = [];
+    if (ACTION_WORDS.some(w => lower.split(/\W+/).includes(w))) types.push({ label: '⚡ Instructional', desc: 'Asks the AI to perform a task', color: '#7c3aed' });
+    if (/\?/.test(text) || QUESTION_WORDS.some(w => lower.split(/\W+/)[0] === w)) types.push({ label: '❓ Question-Based', desc: 'Seeks information or explanation', color: '#6d28d9' });
+    if (/story|poem|creative|imagine|fiction|narrative/.test(lower)) types.push({ label: '🎨 Creative', desc: 'Involves creative generation', color: '#8b5cf6' });
+    if (/code|program|function|script|debug|fix/.test(lower)) types.push({ label: '💻 Technical / Code', desc: 'Related to programming or code', color: '#a855f7' });
+    if (/analyze|compare|evaluate|review|assess/.test(lower)) types.push({ label: '🔍 Analytical', desc: 'Requires reasoning or evaluation', color: '#5b21b6' });
+    if (types.length === 0) types.push({ label: '📄 General', desc: 'General-purpose prompt', color: '#9ca3af' });
+
+    let html = '<div style="display:flex;flex-wrap:wrap;gap:12px;">';
+    types.forEach(t => {
+      html += `<div style="background:${t.color}18;border:1px solid ${t.color}44;border-radius:12px;padding:14px 20px;min-width:180px">
+        <div style="font-size:1rem;font-weight:700;color:${t.color};margin-bottom:4px">${t.label}</div>
+        <div style="font-size:0.8rem;color:#6b7280">${t.desc}</div>
+      </div>`;
+    });
+    html += '</div>';
+    document.getElementById('classificationBox').innerHTML = html;
+  }
+
+  function clearAll() {
+    document.getElementById('promptInput').value = '';
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI Role Generator</title>
+
+  
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:Segoe UI,Tahoma,sans-serif;
+  background:linear-gradient(135deg,#f3f0ff,#ede9fe,#faf5ff);
+  min-height:100vh;
+  padding:20px;
+  color:#1e1b4b;
+}
+
+.container{max-width:1100px;margin:auto;}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:30px 20px;
+}
+
+.badge{
+  display:inline-block;
+  background:linear-gradient(90deg,#7c3aed,#a855f7);
+  color:#fff;
+  padding:6px 16px;
+  border-radius:20px;
+  font-size:12px;
+  letter-spacing:2px;
+  margin-bottom:10px;
+}
+
+.header h1{
+  font-size:2.4rem;
+  font-weight:800;
+  background:linear-gradient(90deg,#5b21b6,#7c3aed,#a855f7);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.header p{color:#6b7280;margin-top:6px;}
+
+/* CARD */
+.card{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:18px;
+  padding:25px;
+  margin-bottom:18px;
+  box-shadow:0 4px 18px rgba(124,58,237,0.1);
+}
+
+label{
+  font-size:12px;
+  font-weight:700;
+  color:#7c3aed;
+  letter-spacing:1.5px;
+}
+
+textarea{
+  width:100%;
+  height:110px;
+  margin-top:10px;
+  padding:14px;
+  border-radius:12px;
+  border:1.5px solid #ddd6fe;
+  background:#faf5ff;
+  font-size:1rem;
+  outline:none;
+}
+
+textarea:focus{
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:10px;margin-top:12px;}
+
+button{
+  padding:10px 18px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.primary{
+  background:linear-gradient(135deg,#7c3aed,#5b21b6);
+  color:#fff;
+}
+.clear{
+  background:#ede9fe;
+  color:#6d28d9;
+  border:1px solid #c4b5fd;
+}
+
+/* ROLE GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+}
+
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr;}
+}
+
+/* ROLE CARD */
+.role-card{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:16px;
+  padding:18px;
+  box-shadow:0 3px 10px rgba(124,58,237,0.08);
+  position:relative;
+  overflow:hidden;
+}
+
+.role-card::before{
+  content:"";
+  position:absolute;
+  top:-50px;
+  right:-50px;
+  width:120px;
+  height:120px;
+  background:radial-gradient(circle,#c4b5fd,#7c3aed);
+  opacity:0.15;
+  border-radius:50%;
+}
+
+.role-title{
+  font-size:1.1rem;
+  font-weight:800;
+  color:#5b21b6;
+  margin-bottom:8px;
+}
+
+.role-tag{
+  display:inline-block;
+  font-size:11px;
+  padding:4px 10px;
+  border-radius:20px;
+  background:#ede9fe;
+  color:#6d28d9;
+  margin-bottom:10px;
+}
+
+.role-text{
+  font-size:0.9rem;
+  color:#374151;
+  line-height:1.5;
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:12px;
+  color:#9ca3af;
+  border-top:1px solid #ddd6fe;
+  padding-top:15px;
+}
+
+.footer span{color:#7c3aed;font-weight:700;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="badge">AI ROLE ENGINE</div>
+  <h1>AI Role Generator</h1>
+  <p>Create intelligent AI personas from your prompt idea</p>
+</div>
+
+<!-- INPUT -->
+<div class="card">
+  <label>ENTER TASK DESCRIPTION</label>
+  <textarea id="text" placeholder="e.g. A tool that helps students learn programming"></textarea>
+
+  <div class="btn-row">
+    <button class="primary" onclick="generate()">Generate Roles</button>
+    <button class="clear" onclick="clearAll()">Clear</button>
+  </div>
+</div>
+
+<!-- OUTPUT -->
+<div class="card">
+  <h3 style="color:#5b21b6;margin-bottom:12px;">🧠 Generated AI Roles</h3>
+  <div class="grid" id="roles"></div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+</div>
+
+</div>
+
+<script>
+
+function generate(){
+  let text=document.getElementById("text").value.trim();
+  if(!text){alert("Enter description");return;}
+
+  let roles=[
+    {
+      t:"AI Strategist",
+      tag:"Planning Layer",
+      d:"Designs the overall structure and intelligence flow of the system based on: " + text
+    },
+    {
+      t:"Prompt Engineer",
+      tag:"Logic Layer",
+      d:"Optimizes prompts and ensures maximum clarity, specificity, and performance."
+    },
+    {
+      t:"AI Output Designer",
+      tag:"UX Layer",
+      d:"Shapes the final AI responses into structured, user-friendly outputs."
+    },
+    {
+      t:"Context Analyzer",
+      tag:"Understanding Layer",
+      d:"Breaks down input context and extracts key intent signals."
+    },
+    {
+      t:"Quality Controller",
+      tag:"Validation Layer",
+      d:"Ensures responses meet accuracy, clarity, and completeness standards."
+    },
+    {
+      t:"AI Optimizer",
+      tag:"Performance Layer",
+      d:"Continuously improves system output based on feedback patterns."
+    }
+  ];
+
+  let html="";
+  roles.forEach(r=>{
+    html+=`
+    <div class="role-card">
+      <div class="role-title">${r.t}</div>
+      <div class="role-tag">${r.tag}</div>
+      <div class="role-text">${r.d}</div>
+    </div>`;
+  });
+
+  document.getElementById("roles").innerHTML=html;
+}
+
+function clearAll(){
+  document.getElementById("text").value="";
+  document.getElementById("roles").innerHTML="";
+}
+
+</script>
+
+</body>
+</html>

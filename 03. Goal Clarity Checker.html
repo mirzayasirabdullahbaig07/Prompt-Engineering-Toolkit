@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Goal Clarity Checker</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+  
+body{
+  font-family:Segoe UI,Tahoma,sans-serif;
+  background:linear-gradient(135deg,#f3f0ff,#ede9fe,#faf5ff);
+  min-height:100vh;
+  padding:20px;
+  color:#1e1b4b;
+}
+
+.container{max-width:1100px;margin:auto;}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:30px 20px;
+}
+.badge{
+  display:inline-block;
+  background:linear-gradient(90deg,#7c3aed,#a855f7);
+  color:#fff;
+  padding:6px 16px;
+  border-radius:20px;
+  font-size:12px;
+  letter-spacing:2px;
+  margin-bottom:10px;
+}
+.header h1{
+  font-size:2.4rem;
+  font-weight:800;
+  background:linear-gradient(90deg,#5b21b6,#7c3aed,#a855f7);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.header p{color:#6b7280;margin-top:6px;}
+
+/* INPUT */
+.card{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:18px;
+  padding:25px;
+  margin-bottom:18px;
+  box-shadow:0 4px 18px rgba(124,58,237,0.1);
+}
+
+label{
+  font-size:12px;
+  font-weight:700;
+  color:#7c3aed;
+  letter-spacing:1.5px;
+}
+
+textarea{
+  width:100%;
+  height:130px;
+  margin-top:10px;
+  padding:14px;
+  border-radius:12px;
+  border:1.5px solid #ddd6fe;
+  background:#faf5ff;
+  font-size:1rem;
+  outline:none;
+}
+
+textarea:focus{
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:10px;margin-top:12px;}
+
+button{
+  padding:10px 18px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.primary{
+  background:linear-gradient(135deg,#7c3aed,#5b21b6);
+  color:#fff;
+}
+.clear{
+  background:#ede9fe;
+  color:#6d28d9;
+  border:1px solid #c4b5fd;
+}
+
+/* SCORE STRIP (NEW STYLE - NOT GAUGE) */
+.score-strip{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.score-box{
+  flex:1;
+  min-width:160px;
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:14px;
+  padding:16px;
+  text-align:center;
+  box-shadow:0 3px 10px rgba(124,58,237,0.08);
+}
+
+.score-box h3{
+  font-size:12px;
+  color:#7c3aed;
+  margin-bottom:8px;
+  letter-spacing:1px;
+}
+
+.score-val{
+  font-size:1.8rem;
+  font-weight:800;
+  color:#5b21b6;
+}
+
+/* STATUS CHIPS */
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+
+.chip{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+  background:#f3f0ff;
+  border:1px solid #ddd6fe;
+  color:#6d28d9;
+}
+
+/* FLOW */
+.flow{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.step{
+  background:#faf5ff;
+  border-left:5px solid #7c3aed;
+  padding:12px;
+  border-radius:10px;
+  font-size:0.9rem;
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:12px;
+  color:#9ca3af;
+  border-top:1px solid #ddd6fe;
+  padding-top:15px;
+}
+.footer span{color:#7c3aed;font-weight:700;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="badge">AI TOOL</div>
+  <h1>Goal Clarity Checker</h1>
+  <p>Check how clearly your goal is defined and structured</p>
+</div>
+
+<!-- INPUT -->
+<div class="card">
+  <label>ENTER YOUR GOAL</label>
+  <textarea id="goal" placeholder="e.g. I want to become a data scientist in 6 months by learning Python and ML"></textarea>
+
+  <div class="btn-row">
+    <button class="primary" onclick="checkGoal()">Analyze Goal</button>
+    <button class="clear" onclick="clearAll()">Clear</button>
+  </div>
+</div>
+
+<!-- SCORE STRIP -->
+<div class="card">
+  <div class="score-strip">
+
+    <div class="score-box">
+      <h3>SPECIFICITY</h3>
+      <div class="score-val" id="s1">0%</div>
+    </div>
+
+    <div class="score-box">
+      <h3>TIMELINE</h3>
+      <div class="score-val" id="s2">0%</div>
+    </div>
+
+    <div class="score-box">
+      <h3>MEASURABILITY</h3>
+      <div class="score-val" id="s3">0%</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DETAILS -->
+<div class="card">
+  <h3 style="color:#5b21b6;margin-bottom:10px;">📌 Goal Structure Check</h3>
+  <div class="chips" id="chips"></div>
+</div>
+
+<!-- IMPROVEMENT FLOW -->
+<div class="card">
+  <h3 style="color:#5b21b6;margin-bottom:10px;">🚀 Improvement Flow</h3>
+  <div class="flow" id="flow"></div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+</div>
+
+</div>
+
+<script>
+
+function words(t){return t.toLowerCase().split(/\W+/).filter(w=>w);}
+
+function checkGoal(){
+  let text=document.getElementById("goal").value.trim();
+  if(!text){alert("Enter goal");return;}
+
+  let w=words(text);
+
+  // checks
+  let hasTime=/\d|month|year|week|day/.test(text.toLowerCase());
+  let hasAction=["become","learn","build","create","achieve","complete"].some(a=>w.includes(a));
+  let measurable=/\d/.test(text);
+  let specific=w.length>8;
+
+  let s1=specific?80:40;
+  let s2=hasTime?85:35;
+  let s3=measurable?80:30;
+
+  document.getElementById("s1").textContent=s1+"%";
+  document.getElementById("s2").textContent=s2+"%";
+  document.getElementById("s3").textContent=s3+"%";
+
+  // chips
+  let chips="";
+  chips+=hasAction?`<div class="chip">✔ Action Defined</div>`:`<div class="chip">✖ No Action</div>`;
+  chips+=hasTime?`<div class="chip">✔ Timeline Present</div>`:`<div class="chip">✖ No Timeline</div>`;
+  chips+=measurable?`<div class="chip">✔ Measurable</div>`:`<div class="chip">✖ Not Measurable</div>`;
+  chips+=specific?`<div class="chip">✔ Detailed</div>`:`<div class="chip">✖ Too Vague</div>`;
+  document.getElementById("chips").innerHTML=chips;
+
+  // flow
+  let flow=[];
+  if(!hasAction) flow.push("Define a clear action (e.g., become, build, learn)");
+  if(!hasTime) flow.push("Add a timeline (e.g., 3 months, 1 year)");
+  if(!measurable) flow.push("Add measurable outcome (e.g., score, project count)");
+  if(!specific) flow.push("Add more detail to the goal");
+
+  let html="";
+  if(flow.length===0){
+    html="<div class='step'>✅ Your goal is already well structured</div>";
+  }else{
+    flow.forEach(f=>{
+      html+=`<div class="step">${f}</div>`;
+    });
+  }
+
+  document.getElementById("flow").innerHTML=html;
+}
+
+function clearAll(){
+  document.getElementById("goal").value="";
+  document.getElementById("s1").textContent="0%";
+  document.getElementById("s2").textContent="0%";
+  document.getElementById("s3").textContent="0%";
+  document.getElementById("chips").innerHTML="";
+  document.getElementById("flow").innerHTML="";
+}
+
+</script>
+
+</body>
+</html>

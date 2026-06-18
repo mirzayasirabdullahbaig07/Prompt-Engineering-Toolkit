@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prompt Quality Score</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:Segoe UI,Tahoma,sans-serif;
+  background:linear-gradient(135deg,#f3f0ff,#ede9fe,#faf5ff);
+  min-height:100vh;
+  padding:20px;
+  color:#1e1b4b;
+}
+
+.container{max-width:1100px;margin:auto;}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:30px 20px;
+}
+
+.badge{
+  display:inline-block;
+  background:linear-gradient(90deg,#7c3aed,#a855f7);
+  color:#fff;
+  padding:6px 16px;
+  border-radius:20px;
+  font-size:12px;
+  letter-spacing:2px;
+  margin-bottom:10px;
+}
+
+.header h1{
+  font-size:2.4rem;
+  font-weight:800;
+  background:linear-gradient(90deg,#5b21b6,#7c3aed,#a855f7);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.header p{color:#6b7280;margin-top:6px;}
+
+/* INPUT */
+.card{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:18px;
+  padding:25px;
+  margin-bottom:18px;
+  box-shadow:0 4px 18px rgba(124,58,237,0.1);
+}
+
+label{
+  font-size:12px;
+  font-weight:700;
+  color:#7c3aed;
+  letter-spacing:1.5px;
+}
+
+textarea{
+  width:100%;
+  height:130px;
+  margin-top:10px;
+  padding:14px;
+  border-radius:12px;
+  border:1.5px solid #ddd6fe;
+  background:#faf5ff;
+  font-size:1rem;
+  outline:none;
+}
+
+textarea:focus{
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:10px;margin-top:12px;}
+
+button{
+  padding:10px 18px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.primary{
+  background:linear-gradient(135deg,#7c3aed,#5b21b6);
+  color:#fff;
+}
+.clear{
+  background:#ede9fe;
+  color:#6d28d9;
+  border:1px solid #c4b5fd;
+}
+
+/* SCORE HEADER */
+.score-head{
+  text-align:center;
+  padding:10px 0 20px;
+}
+
+.big-score{
+  font-size:3rem;
+  font-weight:900;
+  color:#5b21b6;
+}
+
+/* QUALITY CARDS */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+@media(max-width:800px){.grid{grid-template-columns:1fr;}}
+
+.qcard{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:14px;
+  padding:15px;
+  box-shadow:0 3px 10px rgba(124,58,237,0.08);
+}
+
+.qtitle{
+  font-size:12px;
+  font-weight:700;
+  color:#7c3aed;
+  letter-spacing:1px;
+  margin-bottom:8px;
+}
+
+.bar{
+  height:10px;
+  background:#ede9fe;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.fill{
+  height:100%;
+  background:linear-gradient(90deg,#7c3aed,#a855f7);
+  width:0%;
+  transition:0.6s;
+}
+
+/* VERDICT */
+.verdict{
+  text-align:center;
+  padding:15px;
+  margin-top:10px;
+  border-radius:14px;
+  font-weight:700;
+}
+
+/* INSIGHT */
+.insight{
+  background:#faf5ff;
+  border-left:5px solid #7c3aed;
+  padding:12px;
+  border-radius:10px;
+  margin-top:10px;
+  font-size:0.9rem;
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:12px;
+  color:#9ca3af;
+  border-top:1px solid #ddd6fe;
+  padding-top:15px;
+}
+
+.footer span{color:#7c3aed;font-weight:700;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="badge">AI TOOL</div>
+  <h1>Prompt Quality Score</h1>
+  <p>Evaluate overall AI prompt strength and structure</p>
+</div>
+
+<!-- INPUT -->
+<div class="card">
+  <label>ENTER PROMPT</label>
+  <textarea id="text" placeholder="Type your prompt..."></textarea>
+
+  <div class="btn-row">
+    <button class="primary" onclick="analyze()">Analyze</button>
+    <button class="clear" onclick="clearAll()">Clear</button>
+  </div>
+</div>
+
+<!-- SCORE -->
+<div class="card score-head">
+  <div class="big-score" id="score">0%</div>
+  <div id="verdict" class="verdict">No Analysis Yet</div>
+</div>
+
+<!-- QUALITY PILLARS -->
+<div class="grid">
+
+  <div class="qcard">
+    <div class="qtitle">CLARITY</div>
+    <div class="bar"><div class="fill" id="c1"></div></div>
+  </div>
+
+  <div class="qcard">
+    <div class="qtitle">STRUCTURE</div>
+    <div class="bar"><div class="fill" id="c2"></div></div>
+  </div>
+
+  <div class="qcard">
+    <div class="qtitle">SPECIFICITY</div>
+    <div class="bar"><div class="fill" id="c3"></div></div>
+  </div>
+
+  <div class="qcard">
+    <div class="qtitle">ACTIONABILITY</div>
+    <div class="bar"><div class="fill" id="c4"></div></div>
+  </div>
+
+</div>
+
+<!-- INSIGHT -->
+<div class="card">
+  <h3 style="color:#5b21b6;margin-bottom:10px;">🧠 AI Insight</h3>
+  <div id="insight" class="insight"></div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+</div>
+
+</div>
+
+<script>
+
+function words(t){return t.toLowerCase().split(/\W+/).filter(w=>w);}
+
+function analyze(){
+  let text=document.getElementById("text").value.trim();
+  if(!text){alert("Enter prompt");return;}
+
+  let w=words(text);
+
+  let clarity = w.includes("explain")||w.includes("write")?80:50;
+  let structure = text.includes(",")?75:45;
+  let specificity = /\d/.test(text)?85:40;
+  let action = ["create","build","write","generate","design"].some(a=>w.includes(a))?80:45;
+
+  let score=Math.round((clarity+structure+specificity+action)/4);
+
+  document.getElementById("score").textContent=score+"%";
+
+  // bars
+  setBar("c1",clarity);
+  setBar("c2",structure);
+  setBar("c3",specificity);
+  setBar("c4",action);
+
+  // verdict
+  let verdict="";
+  if(score>80) verdict="🔥 Excellent Prompt Quality";
+  else if(score>60) verdict="👍 Good Prompt";
+  else if(score>40) verdict="⚠ Needs Improvement";
+  else verdict="❌ Poor Prompt Quality";
+
+  document.getElementById("verdict").textContent=verdict;
+  document.getElementById("verdict").style.background=
+    score>60?"#ede9fe":"#f3f0ff";
+
+  // insight
+  let insight=[];
+  if(clarity<60) insight.push("Improve clarity by using explicit instructions.");
+  if(structure<60) insight.push("Add structured formatting (steps, bullets).");
+  if(specificity<60) insight.push("Add numbers or constraints.");
+  if(action<60) insight.push("Start with a strong action verb.");
+
+  document.getElementById("insight").innerHTML =
+    insight.length?insight.map(i=>`• ${i}`).join("<br>"):"Your prompt is well optimized.";
+
+}
+
+function setBar(id,val){
+  document.getElementById(id).style.width=val+"%";
+}
+
+function clearAll(){
+  document.getElementById("text").value="";
+  document.getElementById("score").textContent="0%";
+  document.getElementById("verdict").textContent="No Analysis Yet";
+  document.querySelectorAll(".fill").forEach(f=>f.style.width="0%");
+  document.getElementById("insight").innerHTML="";
+}
+
+</script>
+
+</body>
+</html>

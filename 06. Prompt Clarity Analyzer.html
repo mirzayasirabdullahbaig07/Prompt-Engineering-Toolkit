@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prompt Clarity Analyzer</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f3f0ff, #ede9fe, #faf5ff);
+      min-height: 100vh;
+      color: #1e1b4b;
+      padding: 20px;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f3f0ff; }
+    ::-webkit-scrollbar-thumb { background: #c4b5fd; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #7c3aed; }
+
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    /* ── HEADER ── */
+    .header { text-align: center; padding: 30px 20px 20px; margin-bottom: 30px; }
+    .badge {
+      display: inline-block;
+      background: linear-gradient(90deg, #7c3aed, #a855f7);
+      padding: 5px 18px; border-radius: 20px;
+      font-size: 12px; letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 14px; color: #fff;
+    }
+    .header h1 {
+      font-size: 2.6rem; font-weight: 800;
+      background: linear-gradient(90deg, #5b21b6, #7c3aed, #a855f7);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    .header p { color: #6b7280; font-size: 1rem; }
+
+    /* ── INPUT CARD ── */
+    .input-card {
+      background: #fff; border: 1.5px solid #c4b5fd;
+      border-radius: 20px; padding: 30px; margin-bottom: 24px;
+      box-shadow: 0 4px 24px rgba(124,58,237,0.10);
+    }
+    .input-card label {
+      display: block; font-size: 0.85rem; color: #7c3aed;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      margin-bottom: 10px; font-weight: 700;
+    }
+    textarea {
+      width: 100%; height: 150px; background: #faf5ff;
+      border: 1.5px solid #ddd6fe; border-radius: 12px;
+      padding: 16px; color: #1e1b4b; font-size: 1rem;
+      resize: vertical; outline: none; transition: border 0.3s;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    textarea:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+    textarea::placeholder { color: #a78bfa; }
+
+    .btn-row { display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+    .btn {
+      padding: 12px 28px; border: none; border-radius: 10px;
+      font-size: 0.95rem; font-weight: 600; cursor: pointer;
+      transition: all 0.25s; letter-spacing: 0.5px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #7c3aed, #5b21b6);
+      color: #fff; box-shadow: 0 4px 20px rgba(124,58,237,0.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(124,58,237,0.5); }
+    .btn-clear { background: #ede9fe; color: #6d28d9; border: 1.5px solid #c4b5fd; }
+    .btn-clear:hover { background: #ddd6fe; }
+
+    /* ── CLARITY METER ── */
+    .clarity-meter-card {
+      background: #fff; border: 1.5px solid #c4b5fd;
+      border-radius: 20px; padding: 30px; margin-bottom: 24px;
+      box-shadow: 0 4px 24px rgba(124,58,237,0.10);
+      text-align: center;
+    }
+    .meter-title {
+      font-size: 0.85rem; text-transform: uppercase;
+      letter-spacing: 1.5px; color: #5b21b6; font-weight: 700;
+      margin-bottom: 24px;
+    }
+    .gauge-wrap { position: relative; width: 200px; height: 110px; margin: 0 auto 20px; }
+    .gauge-svg { width: 200px; height: 110px; }
+    .gauge-bg { fill: none; stroke: #ede9fe; stroke-width: 18; stroke-linecap: round; }
+    .gauge-fill {
+      fill: none; stroke-width: 18; stroke-linecap: round;
+      stroke-dasharray: 283; stroke-dashoffset: 283;
+      transition: stroke-dashoffset 1s ease, stroke 0.5s;
+      transform-origin: center;
+      transform: rotate(180deg);
+    }
+    .gauge-text-val {
+      position: absolute; bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      font-size: 2.4rem; font-weight: 900; color: #5b21b6;
+    }
+    .gauge-label {
+      font-size: 1.2rem; font-weight: 700; margin-bottom: 6px;
+    }
+    .gauge-sub { font-size: 0.85rem; color: #6b7280; }
+
+    /* ── GRID ── */
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+    @media(max-width:700px){ .grid2 { grid-template-columns: 1fr; } }
+
+    .card {
+      background: #fff; border: 1.5px solid #c4b5fd;
+      border-radius: 16px; padding: 22px;
+      box-shadow: 0 2px 12px rgba(124,58,237,0.07);
+    }
+    .card h3 {
+      font-size: 0.85rem; text-transform: uppercase;
+      letter-spacing: 1.5px; color: #5b21b6; font-weight: 700;
+      margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+    }
+
+    /* ── ISSUE LIST ── */
+    .issue-item {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 10px 0; border-bottom: 1px solid #ede9fe;
+    }
+    .issue-item:last-child { border-bottom: none; }
+    .issue-icon {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; flex-shrink: 0; margin-top: 2px;
+    }
+    .issue-icon.error   { background: #fde8ff; color: #a21caf; }
+    .issue-icon.warn    { background: #ede9fe; color: #7c3aed; }
+    .issue-icon.ok      { background: #f3f0ff; color: #6d28d9; }
+    .issue-text { font-size: 0.87rem; color: #374151; line-height: 1.5; }
+    .issue-text strong  { color: #5b21b6; }
+
+    /* ── DIMENSION BARS ── */
+    .dim-row { margin-bottom: 14px; }
+    .dim-top { display: flex; justify-content: space-between; margin-bottom: 5px; }
+    .dim-label { font-size: 0.83rem; color: #4b5563; font-weight: 600; }
+    .dim-val   { font-size: 0.83rem; color: #7c3aed; font-weight: 700; }
+    .bar-track {
+      background: #ede9fe; border-radius: 8px; height: 10px; overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%; border-radius: 8px;
+      background: linear-gradient(90deg, #7c3aed, #c4b5fd);
+      transition: width 0.9s ease;
+    }
+
+    /* ── REWRITTEN PROMPT ── */
+    .rewrite-box {
+      background: #faf5ff; border: 1.5px dashed #c4b5fd;
+      border-radius: 12px; padding: 16px; font-size: 0.95rem;
+      color: #3b0764; line-height: 1.7; margin-bottom: 14px;
+      min-height: 60px;
+    }
+    .copy-btn {
+      padding: 8px 20px; background: #ede9fe; color: #6d28d9;
+      border: 1.5px solid #c4b5fd; border-radius: 8px;
+      font-size: 0.83rem; font-weight: 600; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .copy-btn:hover { background: #ddd6fe; }
+
+    /* ── CHECKLIST ── */
+    .check-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid #ede9fe;
+      font-size: 0.87rem; color: #374151;
+    }
+    .check-item:last-child { border-bottom: none; }
+    .check-dot {
+      width: 20px; height: 20px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; flex-shrink: 0;
+    }
+    .check-dot.pass { background: #ede9fe; color: #6d28d9; }
+    .check-dot.fail { background: #fde8ff; color: #a21caf; }
+
+    /* ── WORD CLOUD ── */
+    .word-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+    .wc-word {
+      padding: 5px 12px; border-radius: 20px; font-weight: 700;
+      transition: transform 0.2s; cursor: default;
+    }
+    .wc-word:hover { transform: scale(1.1); }
+
+    /* ── FULL CARD ── */
+    .full-card {
+      background: #fff; border: 1.5px solid #c4b5fd;
+      border-radius: 16px; padding: 22px; margin-bottom: 24px;
+      box-shadow: 0 2px 12px rgba(124,58,237,0.07);
+    }
+    .full-card h3 {
+      font-size: 0.85rem; text-transform: uppercase;
+      letter-spacing: 1.5px; color: #5b21b6; font-weight: 700;
+      margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+    }
+
+    /* ── HIDDEN ── */
+    #results { display: none; }
+    .empty-state { text-align: center; padding: 60px 20px; }
+    .empty-state .big-icon { font-size: 4rem; opacity: 0.4; margin-bottom: 14px; }
+    .empty-state p { color: #6b7280; font-size: 1rem; }
+    .empty-state strong { color: #7c3aed; }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center; padding: 30px 0 10px;
+      color: #9ca3af; font-size: 0.82rem;
+      border-top: 1.5px solid #ddd6fe; margin-top: 10px;
+    }
+    .footer span { color: #7c3aed; font-weight: 700; }
+
+    /* ── GRADE BADGE ── */
+    .grade-badge {
+      display: inline-block;
+      width: 56px; height: 56px; border-radius: 50%;
+      font-size: 1.6rem; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="badge">🔬 AI Tools Suite</div>
+    <h1>Prompt Clarity Analyzer</h1>
+    <p>Detect ambiguity, vagueness, and structural weaknesses in your AI prompts</p>
+  </div>
+
+  <!-- Input -->
+  <div class="input-card">
+    <label>📝 Enter Your Prompt</label>
+    <textarea id="promptInput" placeholder="e.g. 'Write a detailed blog post about machine learning in healthcare for a general audience, in 500 words, using simple language.'"></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="analyzeClarity()">🔍 Analyze Clarity</button>
+      <button class="btn btn-clear" onclick="clearAll()">✕ Clear</button>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div id="emptyState">
+    <div class="empty-state">
+      <div class="big-icon">💡</div>
+      <p>Paste your prompt above and click <strong>Analyze Clarity</strong></p>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results">
+
+    <!-- Clarity Meter -->
+    <div class="clarity-meter-card">
+      <div class="meter-title">⚡ Overall Clarity Score</div>
+      <div class="gauge-wrap">
+        <svg class="gauge-svg" viewBox="0 0 100 55">
+          <path class="gauge-bg" d="M 10 50 A 40 40 0 0 1 90 50"/>
+          <path class="gauge-fill" id="gaugeFill" d="M 10 50 A 40 40 0 0 1 90 50"/>
+        </svg>
+        <div class="gauge-text-val" id="gaugeVal">0%</div>
+      </div>
+      <div class="grade-badge" id="gradeBadge">—</div>
+      <div class="gauge-label" id="gaugeLabel">—</div>
+      <div class="gauge-sub" id="gaugeSub">Enter a prompt to see your clarity score</div>
+    </div>
+
+    <!-- Dimensions + Issues -->
+    <div class="grid2">
+
+      <!-- Clarity Dimensions -->
+      <div class="card">
+        <h3>📊 Clarity Dimensions</h3>
+        <div id="dimensionBars"></div>
+      </div>
+
+      <!-- Issues Detected -->
+      <div class="card">
+        <h3>⚠️ Issues Detected</h3>
+        <div id="issueList"></div>
+      </div>
+
+    </div>
+
+    <!-- Checklist + Word Cloud -->
+    <div class="grid2">
+
+      <!-- Clarity Checklist -->
+      <div class="card">
+        <h3>✅ Clarity Checklist</h3>
+        <div id="checklist"></div>
+      </div>
+
+      <!-- Key Words -->
+      <div class="card">
+        <h3>☁️ Key Words Found</h3>
+        <div class="word-cloud" id="wordCloud"></div>
+      </div>
+
+    </div>
+
+    <!-- Rewritten Prompt -->
+    <div class="full-card">
+      <h3>✨ Suggested Rewrite</h3>
+      <div class="rewrite-box" id="rewriteBox"></div>
+      <button class="copy-btn" onclick="copyRewrite()">📋 Copy Rewritten Prompt</button>
+    </div>
+
+    <!-- Explanation -->
+    <div class="full-card">
+      <h3>📖 Clarity Breakdown</h3>
+      <div id="breakdownBox"></div>
+    </div>
+
+  </div><!-- /results -->
+
+  <div class="footer">
+    Developed by <span>Hamna Munir</span> &nbsp;|&nbsp; <span>Mirza Yasir Abdullah Baig</span> &nbsp;|&nbsp; Prompt Clarity Analyzer v1.0
+  </div>
+
+</div>
+
+<script>
+  // ── Helpers ──────────────────────────────────────────────────────────────
+  const VAGUE_WORDS = ['something','stuff','things','etc','somehow','maybe','perhaps','kind of','sort of','a bit','a lot','various','several','many','some','certain','good','bad','nice','great','better','different','other','more','less','really','very','quite'];
+  const ACTION_WORDS = ['write','create','generate','explain','summarize','analyze','describe','list','compare','define','give','make','build','design','suggest','recommend','identify','evaluate','provide','draft','outline','classify','extract','translate','convert','calculate','find','review','assess'];
+  const FORMAT_WORDS = ['bullet','bullets','list','table','paragraph','paragraphs','numbered','steps','section','sections','json','html','markdown','outline','short','long','brief','detailed','500 words','100 words'];
+  const AUDIENCE_WORDS = ['beginner','beginners','expert','experts','student','students','professional','professionals','child','children','general','audience','non-technical','technical','developer','developers','manager','managers'];
+  const CONTEXT_WORDS = ['for','about','regarding','concerning','related','based on','according to','in the context','purpose','goal','aim','objective'];
+  const AMBIGUOUS = ['it','this','that','they','them','these','those','he','she','its','their'];
+
+  function words(text){ return text.toLowerCase().split(/\W+/).filter(w=>w.length>1); }
+  function hasAny(arr, list){ return list.some(w => arr.includes(w) || arr.some(a => a.includes(w))); }
+  function countAny(arr, list){ return list.filter(w => arr.includes(w) || arr.some(a=>a.includes(w))).length; }
+
+  // ── Scores ───────────────────────────────────────────────────────────────
+  function calcScores(text){
+    const w = words(text);
+    const wc = w.length;
+
+    // 1. Specificity: has numbers, format words, subject nouns
+    const hasNum = /\d+/.test(text);
+    const hasFmt = hasAny(w, FORMAT_WORDS);
+    const hasAud = hasAny(w, AUDIENCE_WORDS);
+    const vagueCount = countAny(w, VAGUE_WORDS);
+    let specificity = 40 + (hasNum?20:0) + (hasFmt?20:0) - vagueCount*8;
+    specificity = Math.min(100, Math.max(0, specificity));
+
+    // 2. Completeness: has action, context, length
+    const hasAction = hasAny(w, ACTION_WORDS);
+    const hasCtx = hasAny(w, CONTEXT_WORDS);
+    let completeness = 20 + (hasAction?25:0) + (hasCtx?20:0) + (wc>=10?15:0) + (wc>=20?10:0) + (hasAud?10:0);
+    completeness = Math.min(100, Math.max(0, completeness));
+
+    // 3. Conciseness: penalise redundancy and very long prompts
+    const redundant = ['please note','as mentioned','in order to','due to the fact','it is important to','it should be noted'].filter(p=>text.toLowerCase().includes(p)).length;
+    let conciseness = 100 - redundant*12 - (wc>80?20:0) - (wc>120?15:0);
+    conciseness = Math.min(100, Math.max(0, conciseness));
+
+    // 4. Unambiguity: fewer ambiguous pronouns, vague refs
+    const ambigCount = countAny(w, AMBIGUOUS);
+    let unambiguity = 100 - ambigCount*10 - vagueCount*6;
+    unambiguity = Math.min(100, Math.max(0, unambiguity));
+
+    // 5. Focus: single clear topic vs scattered
+    const sentences = text.split(/[.!?]+/).filter(s=>s.trim());
+    let focus = sentences.length <= 2 ? 90 : sentences.length <= 4 ? 70 : 50;
+    focus = hasAction ? focus : focus - 20;
+    focus = Math.min(100, Math.max(0, focus));
+
+    const overall = Math.round((specificity + completeness + conciseness + unambiguity + focus) / 5);
+    return { specificity, completeness, conciseness, unambiguity, focus, overall };
+  }
+
+  // ── Main ─────────────────────────────────────────────────────────────────
+  function analyzeClarity(){
+    const text = document.getElementById('promptInput').value.trim();
+    if(!text){ alert('Please enter a prompt first!'); return; }
+
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+
+    const scores = calcScores(text);
+    renderGauge(scores.overall);
+    renderDimensions(scores);
+    renderIssues(text, scores);
+    renderChecklist(text, scores);
+    renderWordCloud(text);
+    renderRewrite(text, scores);
+    renderBreakdown(text, scores);
+  }
+
+  // ── Gauge ─────────────────────────────────────────────────────────────────
+  function renderGauge(score){
+    const fill = document.getElementById('gaugeFill');
+    const val  = document.getElementById('gaugeVal');
+    const lbl  = document.getElementById('gaugeLabel');
+    const sub  = document.getElementById('gaugeSub');
+    const badge= document.getElementById('gradeBadge');
+
+    // arc length ≈ 157 (half circle)
+    const arc = 157;
+    const offset = arc - (arc * score / 100);
+    const color = score >= 80 ? '#6d28d9' : score >= 60 ? '#8b5cf6' : score >= 40 ? '#a855f7' : '#c084fc';
+    fill.style.strokeDasharray  = arc;
+    fill.style.strokeDashoffset = offset;
+    fill.style.stroke = color;
+
+    val.textContent = score + '%';
+    val.style.color = color;
+
+    let grade, label, gradeBg, gradeColor, gradeText;
+    if(score>=85){ grade='A'; label='Excellent Clarity'; gradeBg='#ede9fe'; gradeColor='#5b21b6'; gradeText='Your prompt is clear, specific, and well-structured. Ready to use!'; }
+    else if(score>=70){ grade='B'; label='Good Clarity'; gradeBg='#f3f0ff'; gradeColor='#6d28d9'; gradeText='Good structure. Minor improvements could make it even sharper.'; }
+    else if(score>=55){ grade='C'; label='Moderate Clarity'; gradeBg='#faf5ff'; gradeColor='#8b5cf6'; gradeText='Some ambiguity detected. Review the suggestions below.'; }
+    else if(score>=35){ grade='D'; label='Needs Improvement'; gradeBg='#fde8ff'; gradeColor='#a21caf'; gradeText='Significant vagueness found. Use the rewrite suggestion.'; }
+    else              { grade='F'; label='Very Unclear'; gradeBg='#fce7f3'; gradeColor='#be185d'; gradeText='The prompt is too vague or incomplete for reliable AI output.'; }
+
+    badge.textContent = grade;
+    badge.style.background = gradeBg;
+    badge.style.color = gradeColor;
+    lbl.textContent = label;
+    lbl.style.color = gradeColor;
+    sub.textContent = gradeText;
+  }
+
+  // ── Dimensions ────────────────────────────────────────────────────────────
+  function renderDimensions(scores){
+    const dims = [
+      { label:'Specificity',   val: scores.specificity },
+      { label:'Completeness',  val: scores.completeness },
+      { label:'Conciseness',   val: scores.conciseness },
+      { label:'Unambiguity',   val: scores.unambiguity },
+      { label:'Focus',         val: scores.focus },
+    ];
+    let html = '';
+    dims.forEach(d=>{
+      html += `<div class="dim-row">
+        <div class="dim-top">
+          <span class="dim-label">${d.label}</span>
+          <span class="dim-val">${d.val}%</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${d.val}%"></div>
+        </div>
+      </div>`;
+    });
+    document.getElementById('dimensionBars').innerHTML = html;
+  }
+
+  // ── Issues ────────────────────────────────────────────────────────────────
+  function renderIssues(text, scores){
+    const w = words(text);
+    const issues = [];
+
+    const vague = VAGUE_WORDS.filter(v => w.includes(v) || w.some(a=>a.includes(v)));
+    if(vague.length) issues.push({ type:'error', icon:'⚠', title:'Vague words found', desc:`"${vague.slice(0,4).join('", "')}" — replace with precise terms.` });
+
+    const ambig = AMBIGUOUS.filter(a => w.includes(a));
+    if(ambig.length) issues.push({ type:'warn', icon:'🔵', title:'Ambiguous pronouns', desc:`"${ambig.slice(0,3).join('", "')}" — specify what they refer to.` });
+
+    if(!hasAny(w, ACTION_WORDS)) issues.push({ type:'error', icon:'⚠', title:'No clear action verb', desc:'Add a verb like "Write", "Explain", "List", or "Summarize".' });
+    if(!hasAny(w, FORMAT_WORDS)) issues.push({ type:'warn', icon:'🔵', title:'No output format specified', desc:'Mention format: bullets, table, paragraph, etc.' });
+    if(!hasAny(w, AUDIENCE_WORDS)) issues.push({ type:'warn', icon:'🔵', title:'Audience not defined', desc:'Specify who this is for (e.g., "for beginners").' });
+    if(!/\d/.test(text)) issues.push({ type:'warn', icon:'🔵', title:'No quantity or length', desc:'Add a number — "List 5 points" or "in 300 words".' });
+    if(w.length < 8) issues.push({ type:'error', icon:'⚠', title:'Prompt too short', desc:'Very short prompts are often too vague for accurate AI output.' });
+    if(w.length > 100) issues.push({ type:'ok', icon:'ℹ', title:'Prompt is quite long', desc:'Consider splitting into focused sub-prompts for best results.' });
+
+    if(!issues.length) issues.push({ type:'ok', icon:'✔', title:'No major issues found!', desc:'Your prompt appears clear and well-structured.' });
+
+    let html = '';
+    issues.forEach(iss=>{
+      html += `<div class="issue-item">
+        <div class="issue-icon ${iss.type}">${iss.icon}</div>
+        <div class="issue-text"><strong>${iss.title}</strong><br>${iss.desc}</div>
+      </div>`;
+    });
+    document.getElementById('issueList').innerHTML = html;
+  }
+
+  // ── Checklist ─────────────────────────────────────────────────────────────
+  function renderChecklist(text, scores){
+    const w = words(text);
+    const checks = [
+      { label:'Has a clear action verb',       pass: hasAny(w, ACTION_WORDS) },
+      { label:'Specifies output format',        pass: hasAny(w, FORMAT_WORDS) },
+      { label:'Defines target audience',        pass: hasAny(w, AUDIENCE_WORDS) },
+      { label:'Includes a quantity or length',  pass: /\d/.test(text) },
+      { label:'Free from vague words',          pass: !VAGUE_WORDS.some(v=>w.includes(v)) },
+      { label:'No ambiguous pronouns',          pass: !AMBIGUOUS.some(a=>w.includes(a)) },
+      { label:'Adequate length (8+ words)',     pass: w.length >= 8 },
+      { label:'Provides context or purpose',   pass: hasAny(w, CONTEXT_WORDS) },
+    ];
+    let html = '';
+    checks.forEach(c=>{
+      html += `<div class="check-item">
+        <div class="check-dot ${c.pass?'pass':'fail'}">${c.pass?'✓':'✕'}</div>
+        <span>${c.label}</span>
+      </div>`;
+    });
+    document.getElementById('checklist').innerHTML = html;
+  }
+
+  // ── Word Cloud ────────────────────────────────────────────────────────────
+  function renderWordCloud(text){
+    const w = words(text);
+    const freq = {};
+    w.forEach(x=>{ if(x.length>3) freq[x]=(freq[x]||0)+1; });
+    const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,16);
+    const sizes = ['1.4rem','1.2rem','1.1rem','1rem','0.9rem'];
+    const purples = ['#5b21b6','#6d28d9','#7c3aed','#8b5cf6','#a855f7','#c084fc'];
+    const bgs     = ['#ede9fe','#f3f0ff','#faf5ff','#e9d5ff','#ddd6fe'];
+    let html = '';
+    sorted.forEach(([word, count], i)=>{
+      const sz = sizes[Math.min(i, sizes.length-1)];
+      const col = purples[i % purples.length];
+      const bg  = bgs[i % bgs.length];
+      html += `<span class="wc-word" style="font-size:${sz};color:${col};background:${bg}">${word}</span>`;
+    });
+    document.getElementById('wordCloud').innerHTML = html || '<span style="color:#a78bfa">No significant words found</span>';
+  }
+
+  // ── Rewrite ───────────────────────────────────────────────────────────────
+  function renderRewrite(text, scores){
+    const w = words(text);
+    let rewrite = text.trim();
+
+    // Ensure starts with action verb
+    if(!hasAny(w, ACTION_WORDS)){
+      rewrite = 'Write ' + rewrite.charAt(0).toLowerCase() + rewrite.slice(1);
+    }
+
+    // Remove vague words
+    VAGUE_WORDS.forEach(v=>{
+      const re = new RegExp('\\b'+v+'\\b', 'gi');
+      rewrite = rewrite.replace(re, '');
+    });
+
+    // Add audience if missing
+    if(!hasAny(w, AUDIENCE_WORDS) && !rewrite.toLowerCase().includes('for a')){
+      rewrite += ' for a general audience';
+    }
+
+    // Add format if missing
+    if(!hasAny(w, FORMAT_WORDS)){
+      rewrite += ', in clear bullet points';
+    }
+
+    // Add length if no number
+    if(!/\d/.test(rewrite)){
+      rewrite += ', in approximately 300 words';
+    }
+
+    // Clean double spaces
+    rewrite = rewrite.replace(/\s{2,}/g,' ').replace(/\s,/g,',').trim();
+    // Capitalise first letter
+    rewrite = rewrite.charAt(0).toUpperCase() + rewrite.slice(1);
+    if(!rewrite.endsWith('.')) rewrite += '.';
+
+    document.getElementById('rewriteBox').textContent = rewrite;
+  }
+
+  // ── Breakdown ─────────────────────────────────────────────────────────────
+  function renderBreakdown(text, scores){
+    const wc = words(text).length;
+    const rows = [
+      { label:'Word Count',    val: wc + ' words',   note: wc<8?'Too short — add more detail.':wc>100?'Consider splitting.':'Good length.' },
+      { label:'Specificity',   val: scores.specificity+'%',  note: scores.specificity<50?'Add numbers, formats, or named subjects.':'Acceptable.' },
+      { label:'Completeness',  val: scores.completeness+'%', note: scores.completeness<50?'Missing action, context, or audience.':'Good.' },
+      { label:'Conciseness',   val: scores.conciseness+'%',  note: scores.conciseness<60?'Remove filler phrases.':'Clean.' },
+      { label:'Unambiguity',   val: scores.unambiguity+'%',  note: scores.unambiguity<60?'Replace pronouns/vague refs with specifics.':'Clear.' },
+      { label:'Focus',         val: scores.focus+'%',        note: scores.focus<60?'Stick to one clear topic per prompt.':'Focused.' },
+    ];
+    let html = '<table style="width:100%;border-collapse:collapse;font-size:0.88rem;">';
+    html += '<thead><tr style="border-bottom:2px solid #ede9fe;">';
+    html += '<th style="text-align:left;padding:8px 10px;color:#5b21b6;font-weight:700">Dimension</th>';
+    html += '<th style="text-align:center;padding:8px 10px;color:#5b21b6;font-weight:700">Score</th>';
+    html += '<th style="text-align:left;padding:8px 10px;color:#5b21b6;font-weight:700">Feedback</th>';
+    html += '</tr></thead><tbody>';
+    rows.forEach((r,i)=>{
+      const bg = i%2===0?'#faf5ff':'#fff';
+      html += `<tr style="background:${bg}">
+        <td style="padding:9px 10px;color:#374151;font-weight:600">${r.label}</td>
+        <td style="padding:9px 10px;text-align:center;color:#7c3aed;font-weight:700">${r.val}</td>
+        <td style="padding:9px 10px;color:#6b7280">${r.note}</td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    document.getElementById('breakdownBox').innerHTML = html;
+  }
+
+  // ── Copy ──────────────────────────────────────────────────────────────────
+  function copyRewrite(){
+    const txt = document.getElementById('rewriteBox').textContent;
+    navigator.clipboard.writeText(txt).then(()=>{
+      const btn = document.querySelector('.copy-btn');
+      btn.textContent = '✅ Copied!';
+      setTimeout(()=>btn.textContent='📋 Copy Rewritten Prompt', 2000);
+    });
+  }
+
+  function clearAll(){
+    document.getElementById('promptInput').value = '';
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'block';
+  }
+</script>
+</body>
+</html>

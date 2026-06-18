@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prompt Ambiguity Detector</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
+  background:linear-gradient(135deg,#f3f0ff,#ede9fe,#faf5ff);
+  min-height:100vh;
+  padding:20px;
+  color:#1e1b4b;
+}
+
+.container{max-width:1100px;margin:auto;}
+
+/* HEADER */
+.header{text-align:center;padding:30px 20px;}
+.badge{
+  display:inline-block;
+  background:linear-gradient(90deg,#7c3aed,#a855f7);
+  color:#fff;
+  padding:6px 16px;
+  border-radius:20px;
+  font-size:12px;
+  letter-spacing:2px;
+  margin-bottom:12px;
+}
+.header h1{
+  font-size:2.4rem;
+  font-weight:800;
+  background:linear-gradient(90deg,#5b21b6,#7c3aed,#a855f7);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.header p{color:#6b7280;margin-top:8px;}
+
+/* CARD */
+.card{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:18px;
+  padding:25px;
+  box-shadow:0 4px 20px rgba(124,58,237,0.1);
+  margin-bottom:20px;
+}
+
+label{
+  font-size:12px;
+  font-weight:700;
+  color:#7c3aed;
+  letter-spacing:1.5px;
+  display:block;
+  margin-bottom:10px;
+}
+
+textarea{
+  width:100%;
+  height:150px;
+  padding:14px;
+  border-radius:12px;
+  border:1.5px solid #ddd6fe;
+  background:#faf5ff;
+  outline:none;
+  font-size:1rem;
+}
+textarea:focus{
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+
+button{
+  padding:10px 20px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.primary{
+  background:linear-gradient(135deg,#7c3aed,#5b21b6);
+  color:#fff;
+}
+.clear{
+  background:#ede9fe;
+  color:#6d28d9;
+  border:1px solid #c4b5fd;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+@media(max-width:800px){.grid{grid-template-columns:1fr;}}
+
+/* RESULT ITEMS */
+.item{
+  padding:10px 0;
+  border-bottom:1px solid #ede9fe;
+  font-size:0.9rem;
+}
+.item span{color:#7c3aed;font-weight:700;}
+
+/* SCORE */
+.score-box{
+  text-align:center;
+}
+.circle{
+  width:160px;
+  height:160px;
+  margin:0 auto;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:2rem;
+  font-weight:800;
+  background:conic-gradient(#7c3aed 0deg,#ede9fe 0deg);
+}
+.score-label{
+  margin-top:10px;
+  font-weight:700;
+  color:#5b21b6;
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  margin-top:25px;
+  font-size:12px;
+  color:#9ca3af;
+  border-top:1px solid #ddd6fe;
+  padding-top:15px;
+}
+.footer span{color:#7c3aed;font-weight:700;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="badge">AI TOOL</div>
+    <h1>Prompt Ambiguity Detector</h1>
+    <p>Detect unclear, vague, and ambiguous expressions in prompts</p>
+  </div>
+
+  <!-- INPUT -->
+  <div class="card">
+    <label>ENTER YOUR PROMPT</label>
+    <textarea id="text" placeholder="Type your prompt here..."></textarea>
+
+    <div class="btn-row">
+      <button class="primary" onclick="analyze()">Analyze</button>
+      <button class="clear" onclick="clearAll()">Clear</button>
+    </div>
+  </div>
+
+  <!-- SCORE -->
+  <div class="card score-box">
+    <div class="circle" id="circle">0%</div>
+    <div class="score-label" id="label">No Analysis</div>
+  </div>
+
+  <!-- DETAILS -->
+  <div class="grid">
+
+    <div class="card">
+      <h3>⚠️ Ambiguity Issues</h3>
+      <div id="issues"></div>
+    </div>
+
+    <div class="card">
+      <h3>📊 Text Stats</h3>
+      <div class="item">Words: <span id="words">0</span></div>
+      <div class="item">Sentences: <span id="sent">0</span></div>
+      <div class="item">Ambiguous Words: <span id="amb">0</span></div>
+      <div class="item">Clarity Level: <span id="level">-</span></div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+  </div>
+
+</div>
+
+<script>
+const AMBIGUOUS = [
+  "it","this","that","they","them","these","those",
+  "something","anything","everything","stuff","things",
+  "maybe","perhaps","some","many","a lot","various"
+];
+
+function analyze(){
+  let text = document.getElementById("text").value.trim();
+  if(!text){alert("Please enter prompt");return;}
+
+  let words = text.toLowerCase().split(/\s+/).filter(w=>w);
+  let sentences = text.split(/[.!?]+/).filter(s=>s.trim());
+
+  let ambWords = words.filter(w=>AMBIGUOUS.includes(w));
+  let ambCount = ambWords.length;
+
+  let score = 100 - ambCount*12;
+  score = Math.max(0, Math.min(100, score));
+
+  let level = score>80?"Clear":score>60?"Slightly Ambiguous":score>40?"Ambiguous":"Very Ambiguous";
+
+  // circle
+  let circle = document.getElementById("circle");
+  circle.textContent = score + "%";
+  circle.style.background = `conic-gradient(#7c3aed ${score*3.6}deg,#ede9fe 0deg)`;
+
+  document.getElementById("label").textContent = level;
+
+  document.getElementById("words").textContent = words.length;
+  document.getElementById("sent").textContent = sentences.length;
+  document.getElementById("amb").textContent = ambCount;
+  document.getElementById("level").textContent = level;
+
+  // issues
+  let html = "";
+  if(ambCount === 0){
+    html = "<div class='item'>✅ No major ambiguity detected</div>";
+  } else {
+    ambWords.slice(0,10).forEach(w=>{
+      html += `<div class='item'>⚠️ Ambiguous word found: <span>${w}</span></div>`;
+    });
+  }
+
+  document.getElementById("issues").innerHTML = html;
+}
+
+function clearAll(){
+  document.getElementById("text").value="";
+  document.getElementById("circle").textContent="0%";
+  document.getElementById("label").textContent="No Analysis";
+  document.getElementById("words").textContent="0";
+  document.getElementById("sent").textContent="0";
+  document.getElementById("amb").textContent="0";
+  document.getElementById("level").textContent="-";
+  document.getElementById("issues").innerHTML="";
+}
+</script>
+
+</body>
+</html>
