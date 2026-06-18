@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>YouTube Prompt Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #eeeef8;
+  --bg2:       #f5f4fc;
+  --white:     #ffffff;
+  --border:    #ddd8f5;
+  --border2:   #ebe8fb;
+  --purple:    #5b21b6;
+  --purple2:   #7c3aed;
+  --purple3:   #6d28d9;
+  --lav:       #a78bfa;
+  --lav-light: #ede9fe;
+  --lav-mid:   #c4b5fd;
+  --text:      #1e1b4b;
+  --text2:     #4b5563;
+  --muted:     #9ca3af;
+  --red:       #ef4444;
+  --green:     #059669;
+  --green-lt:  #d1fae5;
+  --yellow:    #f59e0b;
+  --yell-lt:   #fef3c7;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── CENTERED HEADER ── */
+.site-header {
+  background: var(--bg);
+  padding: 36px 28px 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.header-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--purple2);
+  color: #fff;
+  font-size: 12px; font-weight: 700; letter-spacing: .3px;
+  padding: 7px 20px; border-radius: 999px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 14px rgba(124,58,237,.3);
+}
+.header-title {
+  font-size: 36px; font-weight: 800; color: var(--purple);
+  letter-spacing: -.5px; line-height: 1.15; margin-bottom: 10px;
+}
+.header-authors {
+  font-size: 13px; color: var(--text2);
+}
+.header-authors span { color: var(--purple2); font-weight: 700; }
+
+/* ── WORKSPACE ── */
+.workspace {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  flex: 1;
+  height: calc(100vh - 148px);
+  overflow: hidden;
+}
+
+/* ── LEFT PANEL ── */
+.panel-left {
+  background: var(--white);
+  border-right: 1.5px solid var(--border);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.panel-head {
+  padding: 20px 22px 14px;
+  border-bottom: 1.5px solid var(--border2);
+  flex-shrink: 0;
+}
+.panel-head-title { font-size: 13px; font-weight: 700; color: var(--purple); }
+.panel-head-desc  { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+
+.form-scroll { overflow-y: auto; flex: 1; padding: 18px 22px; }
+.form-scroll::-webkit-scrollbar { width: 4px; }
+.form-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* FIELD */
+.field { margin-bottom: 16px; }
+.field-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase;
+  color: var(--purple2); margin-bottom: 7px; display: flex; align-items: center; gap: 5px;
+}
+.req { color: var(--red); font-size: 13px; line-height: 1; }
+
+input[type="text"], textarea, select {
+  width: 100%;
+  background: var(--bg2);
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  padding: 10px 13px;
+  transition: border-color .2s, box-shadow .2s;
+  resize: vertical;
+  appearance: none;
+}
+input::placeholder, textarea::placeholder { color: var(--muted); }
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--purple2);
+  box-shadow: 0 0 0 3px rgba(124,58,237,.1);
+  background: var(--white);
+}
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237c3aed' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 34px;
+  cursor: pointer;
+}
+
+/* PILL GROUPS */
+.pill-group { display: flex; gap: 7px; flex-wrap: wrap; }
+.pill {
+  padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  cursor: pointer; border: 1.5px solid var(--border);
+  color: var(--muted); background: transparent; transition: all .17s;
+  font-family: 'Inter', sans-serif; line-height: 1;
+}
+.pill:hover { border-color: var(--lav); color: var(--purple2); }
+.pill.active {
+  border-color: var(--purple2); background: var(--lav-light);
+  color: var(--purple);
+}
+
+/* DIVIDER */
+.divider {
+  height: 1px; background: var(--border2); margin: 6px 0 16px;
+}
+
+/* ACTIONS */
+.panel-actions {
+  padding: 14px 22px 18px;
+  border-top: 1.5px solid var(--border2);
+  flex-shrink: 0; display: flex; gap: 9px;
+}
+.btn {
+  flex: 1; padding: 11px; border-radius: 9px; border: none;
+  font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all .18s; letter-spacing: .2px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--purple) 0%, var(--purple2) 100%);
+  color: #fff; box-shadow: 0 4px 14px rgba(91,33,182,.28);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(91,33,182,.38); }
+.btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-ghost {
+  background: transparent; color: var(--muted);
+  border: 1.5px solid var(--border);
+}
+.btn-ghost:hover { border-color: var(--lav-mid); color: var(--purple2); }
+
+/* ── RIGHT PANEL ── */
+.panel-right {
+  display: flex; flex-direction: column; overflow: hidden;
+  background: var(--bg);
+}
+.preview-topbar {
+  background: var(--white);
+  border-bottom: 1.5px solid var(--border);
+  padding: 12px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.status-row { display: flex; align-items: center; gap: 8px; }
+.status-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--muted);
+  transition: background .3s, box-shadow .3s;
+}
+.status-dot.live { background: #10b981; box-shadow: 0 0 7px #10b981; animation: blink 1.8s infinite; }
+@keyframes blink { 0%,100%{ opacity:1 } 50%{ opacity:.4 } }
+.status-text { font-size: 12px; font-weight: 600; color: var(--muted); }
+.status-text.live { color: #059669; }
+
+.tab-bar { display: flex; gap: 2px; background: var(--bg2); padding: 3px; border-radius: 9px; border: 1.5px solid var(--border2); }
+.tab-btn {
+  padding: 6px 15px; border-radius: 7px; font-size: 12px; font-weight: 600;
+  cursor: pointer; color: var(--muted); transition: all .15s; border: none;
+  background: transparent; font-family: 'Inter', sans-serif;
+}
+.tab-btn.active { background: var(--white); color: var(--purple); box-shadow: 0 1px 4px rgba(91,33,182,.1); }
+
+.copy-btn {
+  padding: 8px 14px; background: var(--white); border: 1.5px solid var(--border);
+  color: var(--muted); border-radius: 8px; font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: 'Inter', sans-serif; transition: all .15s;
+}
+.copy-btn:hover { border-color: var(--purple2); color: var(--purple2); }
+
+.preview-scroll { flex: 1; overflow-y: auto; padding: 28px; }
+.preview-scroll::-webkit-scrollbar { width: 4px; }
+.preview-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 100%; text-align: center; gap: 10px; color: var(--muted);
+}
+.empty-icon { font-size: 48px; opacity: .35; }
+.empty-title { font-size: 15px; font-weight: 700; color: var(--text2); opacity: .6; }
+.empty-desc  { font-size: 13px; max-width: 260px; line-height: 1.6; }
+
+/* ── SKELETON ── */
+.sk { animation: sk-pulse 1.5s ease-in-out infinite; }
+@keyframes sk-pulse { 0%,100%{opacity:.45} 50%{opacity:.85} }
+.sk-line { height: 13px; background: var(--lav-light); border-radius: 5px; margin-bottom: 9px; }
+
+/* ── OUTPUT CARD ── */
+.output-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  max-width: 740px;
+  margin: 0 auto;
+  box-shadow: 0 4px 24px rgba(91,33,182,.07);
+}
+.output-hero {
+  background: linear-gradient(135deg, var(--purple) 0%, var(--purple2) 60%, var(--lav) 100%);
+  padding: 28px 32px 24px;
+}
+.output-hero-topic {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase;
+  color: rgba(255,255,255,.6); margin-bottom: 6px;
+}
+.output-hero-title {
+  font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -.3px; line-height: 1.3;
+}
+.output-hero-meta { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+.meta-chip {
+  font-size: 11px; font-weight: 600; padding: 4px 11px; border-radius: 999px;
+  background: rgba(255,255,255,.15); color: rgba(255,255,255,.85);
+  border: 1px solid rgba(255,255,255,.2);
+}
+.purple-strip { height: 3px; background: linear-gradient(90deg, var(--lav-mid), var(--purple2), transparent); }
+
+.output-body { padding: 24px 32px 28px; }
+.out-section { margin-bottom: 22px; }
+.out-section:last-child { margin-bottom: 0; }
+.out-label {
+  font-size: 10px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase;
+  color: var(--purple2); border-bottom: 2px solid var(--lav-light);
+  padding-bottom: 5px; margin-bottom: 12px;
+}
+
+/* TITLE IDEAS */
+.title-list { display: flex; flex-direction: column; gap: 8px; }
+.title-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: var(--lav-light); border-radius: 9px; padding: 10px 14px;
+  border: 1px solid var(--border2); transition: border-color .15s;
+}
+.title-item:hover { border-color: var(--lav-mid); }
+.title-num {
+  font-size: 10px; font-weight: 800; color: var(--purple2);
+  background: var(--lav-mid); border-radius: 50%; width: 18px; height: 18px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+}
+.title-text { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.5; }
+
+/* SCRIPT BLOCK */
+.script-block {
+  background: var(--bg2); border: 1.5px solid var(--border2); border-radius: 10px; overflow: hidden;
+}
+.script-part { padding: 12px 16px; border-bottom: 1px solid var(--border2); }
+.script-part:last-child { border-bottom: none; }
+.script-part-name {
+  font-size: 10px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--lav); margin-bottom: 5px;
+}
+.script-part-text { font-size: 13px; color: var(--text2); line-height: 1.7; }
+.script-part-text b { color: var(--purple); }
+
+/* TAGS */
+.tags-wrap { display: flex; flex-wrap: wrap; gap: 7px; }
+.tag {
+  font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 999px;
+  background: var(--bg2); border: 1.5px solid var(--border);
+  color: var(--purple2); font-family: 'JetBrains Mono', monospace;
+}
+
+/* DESC */
+.desc-box {
+  background: var(--bg2); border-radius: 9px; padding: 14px 16px;
+  font-size: 13px; color: var(--text2); line-height: 1.75;
+  border: 1.5px solid var(--border2);
+}
+
+/* HISTORY */
+.hist-list { display: flex; flex-direction: column; gap: 9px; }
+.hist-card {
+  background: var(--white); border: 1.5px solid var(--border); border-radius: 11px;
+  padding: 13px 16px; cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.hist-card:hover { border-color: var(--purple2); box-shadow: 0 2px 10px rgba(91,33,182,.08); }
+.hist-topic { font-size: 13px; font-weight: 700; color: var(--text); }
+.hist-meta  { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.hist-time  { font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
+
+/* PROMPT TAB */
+.prompt-label-row { font-size: 10px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; color: var(--purple2); margin-bottom: 10px; }
+.prompt-code {
+  background: var(--white); border: 1.5px solid var(--border); border-radius: 11px;
+  padding: 18px; font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  line-height: 1.8; color: var(--text2); white-space: pre-wrap;
+}
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--white); border: 1.5px solid var(--green);
+  color: var(--green); font-size: 13px; font-weight: 700;
+  padding: 11px 18px; border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.1);
+  transform: translateY(70px); opacity: 0; transition: all .3s; z-index: 999;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* ROW2 */
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+* { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="site-header">
+  <div class="header-badge">🎬 YouTube Builder</div>
+  <div class="header-title">YouTube Prompt Generator</div>
+  <div class="header-authors">Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span></div>
+</div>
+
+<!-- WORKSPACE -->
+<div class="workspace">
+
+  <!-- LEFT: FORM -->
+  <div class="panel-left">
+    <div class="panel-head">
+      <div class="panel-head-title">Video Details</div>
+      <div class="panel-head-desc">Describe your video — Claude writes the full content strategy</div>
+    </div>
+
+    <div class="form-scroll">
+
+      <div class="field">
+        <div class="field-label">Video Topic <span class="req">*</span></div>
+        <input type="text" id="f-topic" placeholder="e.g. How to study effectively for exams"/>
+      </div>
+
+      <div class="field">
+        <div class="field-label">Channel Niche</div>
+        <input type="text" id="f-niche" placeholder="e.g. Student productivity, Tech, Cooking…"/>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <div class="field-label">Target Audience</div>
+          <input type="text" id="f-audience" placeholder="e.g. College students"/>
+        </div>
+        <div class="field">
+          <div class="field-label">Video Length</div>
+          <select id="f-length">
+            <option value="Short (under 60s)">Short (under 60s)</option>
+            <option value="Medium (5–10 min)" selected>Medium (5–10 min)</option>
+            <option value="Long (15–30 min)">Long (15–30 min)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">Video Format</div>
+        <div class="pill-group" id="format-group">
+          <button class="pill active" data-val="Tutorial">Tutorial</button>
+          <button class="pill" data-val="Vlog">Vlog</button>
+          <button class="pill" data-val="Listicle">Listicle</button>
+          <button class="pill" data-val="Short">YouTube Short</button>
+          <button class="pill" data-val="Review">Review</button>
+          <button class="pill" data-val="Story">Story</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="field">
+        <div class="field-label">Tone &amp; Style</div>
+        <div class="pill-group" id="tone-group">
+          <button class="pill active" data-val="Educational">Educational</button>
+          <button class="pill" data-val="Motivational">Motivational</button>
+          <button class="pill" data-val="Fun &amp; Casual">Fun &amp; Casual</button>
+          <button class="pill" data-val="Viral">Viral</button>
+          <button class="pill" data-val="Professional">Professional</button>
+          <button class="pill" data-val="Cinematic">Cinematic</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">Key Points to Cover (optional)</div>
+        <textarea id="f-points" rows="3" placeholder="e.g. Pomodoro technique, sleep habits, note-taking tips…"></textarea>
+      </div>
+
+      <div class="field">
+        <div class="field-label">Call to Action</div>
+        <select id="f-cta">
+          <option>Subscribe for more</option>
+          <option>Like &amp; Share</option>
+          <option>Comment your thoughts</option>
+          <option>Follow on socials</option>
+          <option>Visit my website</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="panel-actions">
+      <button class="btn btn-primary" id="gen-btn" onclick="generate()">✦ Generate Content</button>
+      <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
+    </div>
+  </div>
+
+  <!-- RIGHT: OUTPUT -->
+  <div class="panel-right">
+    <div class="preview-topbar">
+      <div class="status-row">
+        <div class="status-dot" id="status-dot"></div>
+        <div class="status-text" id="status-text">Ready</div>
+      </div>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('output', this)">Output</button>
+        <button class="tab-btn" onclick="switchTab('prompt', this)">Prompt</button>
+        <button class="tab-btn" onclick="switchTab('history', this)">History</button>
+      </div>
+      <button class="copy-btn" onclick="copyContent()">⎘ Copy Text</button>
+    </div>
+
+    <div class="preview-scroll" id="preview-scroll">
+
+      <!-- OUTPUT TAB -->
+      <div id="tab-output">
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon">🎬</div>
+          <div class="empty-title">No Content Yet</div>
+          <div class="empty-desc">Enter your video details and click Generate Content to get titles, script, description, and tags.</div>
+        </div>
+        <div id="output-area" style="display:none;"></div>
+      </div>
+
+      <!-- PROMPT TAB -->
+      <div id="tab-prompt" style="display:none;">
+        <div class="prompt-label-row">Prompt Sent to Claude</div>
+        <div class="prompt-code" id="prompt-display">Generate content to see the prompt here.</div>
+      </div>
+
+      <!-- HISTORY TAB -->
+      <div id="tab-history" style="display:none;">
+        <div class="hist-list" id="hist-list">
+          <div class="empty-state">
+            <div class="empty-icon">🕘</div>
+            <div class="empty-title">No History</div>
+            <div class="empty-desc">Generated outputs will appear here.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast">✓ Copied to clipboard</div>
+
+<script>
+// ─── STATE ──────────────────────────────────────────────
+let activeFormat  = 'Tutorial';
+let activeTone    = 'Educational';
+let historyData   = [];
+let lastPlainText = '';
+let lastPromptTxt = '';
+
+// ─── PILL GROUPS ────────────────────────────────────────
+function initPillGroup(groupId, stateSetter) {
+  document.getElementById(groupId).querySelectorAll('.pill').forEach(p => {
+    p.addEventListener('click', () => {
+      document.getElementById(groupId).querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+      p.classList.add('active');
+      stateSetter(p.dataset.val);
+    });
+  });
+}
+initPillGroup('format-group', v => activeFormat = v);
+initPillGroup('tone-group',   v => activeTone   = v);
+
+// ─── TAB SWITCH ─────────────────────────────────────────
+function switchTab(name, btn) {
+  ['output','prompt','history'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = 'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).style.display = 'block';
+  btn.classList.add('active');
+}
+
+// ─── GENERATE ───────────────────────────────────────────
+async function generate() {
+  const topic    = document.getElementById('f-topic').value.trim();
+  const niche    = document.getElementById('f-niche').value.trim();
+  const audience = document.getElementById('f-audience').value.trim();
+  const length   = document.getElementById('f-length').value;
+  const points   = document.getElementById('f-points').value.trim();
+  const cta      = document.getElementById('f-cta').value;
+
+  if (!topic) { toast('⚠ Please enter a video topic.', '#ef4444', '#fef2f2'); return; }
+
+  setStatus('live');
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true;
+  btn.textContent = '⟳ Generating…';
+
+  // switch to output tab
+  switchTab('output', document.querySelectorAll('.tab-btn')[0]);
+  showSkeleton();
+
+  const prompt = buildPrompt(topic, niche, audience, length, points, cta);
+  lastPromptTxt = prompt;
+  document.getElementById('prompt-display').textContent = prompt;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    if (!data.content?.[0]) throw new Error('Empty response');
+    const raw = data.content.map(b => b.text || '').join('');
+    let parsed;
+    try { parsed = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
+    catch { parsed = fallback(topic, niche, audience, activeFormat, activeTone, cta); }
+    renderOutput(parsed, topic, activeFormat, activeTone, length);
+    saveHistory(topic, activeFormat, activeTone, parsed, length);
+  } catch(e) {
+    const parsed = fallback(topic, niche, audience, activeFormat, activeTone, cta);
+    renderOutput(parsed, topic, activeFormat, activeTone, length);
+    saveHistory(topic, activeFormat, activeTone, parsed, length);
+  }
+
+  setStatus('done');
+  btn.disabled = false;
+  btn.textContent = '✦ Generate Content';
+}
+
+// ─── PROMPT ─────────────────────────────────────────────
+function buildPrompt(topic, niche, audience, length, points, cta) {
+  return `You are an expert YouTube content strategist. Generate complete YouTube content for the video below. Return ONLY a valid JSON object — no markdown, no backticks, no extra text.
+
+JSON schema:
+{
+  "titles": ["title1", "title2", "title3"],
+  "hook": "Attention-grabbing opening line (1-2 sentences)",
+  "script_sections": [
+    { "name": "Hook", "content": "..." },
+    { "name": "Introduction", "content": "..." },
+    { "name": "Main Content", "content": "..." },
+    { "name": "Conclusion", "content": "..." }
+  ],
+  "description": "Full YouTube description (3-4 sentences, SEO-optimized)",
+  "tags": ["tag1", "tag2", ...12 tags total],
+  "thumbnail_idea": "One sentence describing a compelling thumbnail concept"
+}
+
+Video Details:
+- Topic: ${topic}
+- Niche: ${niche || 'General'}
+- Target Audience: ${audience || 'General viewers'}
+- Format: ${activeFormat}
+- Tone: ${activeTone}
+- Length: ${length}
+- Key Points: ${points || 'Decide based on topic'}
+- CTA: ${cta}
+
+Write compelling, specific content. Titles should be curiosity-driven and SEO-friendly. Script should match the ${activeTone.toLowerCase()} tone. Return only valid JSON.`;
+}
+
+// ─── RENDER ─────────────────────────────────────────────
+function renderOutput(d, topic, format, tone, length) {
+  document.getElementById('empty-state').style.display = 'none';
+  const area = document.getElementById('output-area');
+  area.style.display = 'block';
+
+  const titlesHtml = (d.titles || []).map((t,i) => `
+    <div class="title-item">
+      <div class="title-num">${i+1}</div>
+      <div class="title-text">${t}</div>
+    </div>`).join('');
+
+  const scriptHtml = (d.script_sections || []).map(s => `
+    <div class="script-part">
+      <div class="script-part-name">${s.name}</div>
+      <div class="script-part-text">${s.content}</div>
+    </div>`).join('');
+
+  const tagsHtml = (d.tags || []).map(t => `<div class="tag">#${t.replace(/^#/,'').replace(/\s+/g,'')}</div>`).join('');
+
+  area.innerHTML = `
+  <div class="output-card">
+    <div class="output-hero">
+      <div class="output-hero-topic">${format} · ${tone}</div>
+      <div class="output-hero-title">${topic}</div>
+      <div class="output-hero-meta">
+        <div class="meta-chip">📹 ${length}</div>
+        <div class="meta-chip">${(d.titles||[]).length} title ideas</div>
+        <div class="meta-chip">${(d.tags||[]).length} tags</div>
+      </div>
+    </div>
+    <div class="purple-strip"></div>
+    <div class="output-body">
+
+      <div class="out-section">
+        <div class="out-label">Title Ideas</div>
+        <div class="title-list">${titlesHtml}</div>
+      </div>
+
+      ${d.hook ? `<div class="out-section">
+        <div class="out-label">Hook Line</div>
+        <div class="desc-box" style="font-weight:600;color:var(--purple);">"${d.hook}"</div>
+      </div>` : ''}
+
+      ${scriptHtml ? `<div class="out-section">
+        <div class="out-label">Script Outline</div>
+        <div class="script-block">${scriptHtml}</div>
+      </div>` : ''}
+
+      ${d.description ? `<div class="out-section">
+        <div class="out-label">Video Description</div>
+        <div class="desc-box">${d.description}</div>
+      </div>` : ''}
+
+      ${d.thumbnail_idea ? `<div class="out-section">
+        <div class="out-label">Thumbnail Concept</div>
+        <div class="desc-box" style="border-color:var(--lav-mid);">🖼 ${d.thumbnail_idea}</div>
+      </div>` : ''}
+
+      ${tagsHtml ? `<div class="out-section">
+        <div class="out-label">Tags</div>
+        <div class="tags-wrap">${tagsHtml}</div>
+      </div>` : ''}
+
+    </div>
+  </div>`;
+
+  // build plain text for copy
+  lastPlainText = buildPlainText(d, topic, format, tone);
+}
+
+function buildPlainText(d, topic, format, tone) {
+  const lines = [`YOUTUBE CONTENT — ${topic}`, `Format: ${format} | Tone: ${tone}`, ''];
+  lines.push('TITLE IDEAS');
+  (d.titles||[]).forEach((t,i) => lines.push(`${i+1}. ${t}`));
+  lines.push('');
+  if(d.hook) { lines.push('HOOK'); lines.push(d.hook); lines.push(''); }
+  if((d.script_sections||[]).length) {
+    lines.push('SCRIPT OUTLINE');
+    d.script_sections.forEach(s => { lines.push(`[${s.name}]`); lines.push(s.content); lines.push(''); });
+  }
+  if(d.description) { lines.push('DESCRIPTION'); lines.push(d.description); lines.push(''); }
+  if(d.thumbnail_idea) { lines.push('THUMBNAIL CONCEPT'); lines.push(d.thumbnail_idea); lines.push(''); }
+  if((d.tags||[]).length) { lines.push('TAGS'); lines.push(d.tags.map(t=>'#'+t.replace(/^#/,'')).join(' ')); }
+  return lines.join('\n');
+}
+
+// ─── FALLBACK ───────────────────────────────────────────
+function fallback(topic, niche, audience, format, tone, cta) {
+  return {
+    titles: [
+      `How to Master ${topic} — Step by Step`,
+      `${topic}: Everything You Need to Know in ${format === 'Short (under 60s)' ? '60 Seconds' : '10 Minutes'}`,
+      `You're Doing ${topic} Wrong — Here's How to Fix It`
+    ],
+    hook: `If you've ever struggled with ${topic}, this video is going to change everything for you.`,
+    script_sections: [
+      { name: 'Hook',         content: `Open with a bold statement or question about ${topic} to grab attention immediately.` },
+      { name: 'Introduction', content: `Briefly introduce yourself and explain what viewers will learn about ${topic} by the end of the video.` },
+      { name: 'Main Content', content: `Cover the key aspects of ${topic} with clear explanations, examples, and visuals. Break it into digestible segments.` },
+      { name: 'Conclusion',   content: `Summarize the key takeaways and end with: "${cta}"` }
+    ],
+    description: `In this ${tone.toLowerCase()} video, we dive deep into ${topic}${niche ? ' for ' + niche : ''}. Whether you're a beginner or looking to refine your knowledge, this video covers everything you need. ${cta}! New videos every week.`,
+    tags: [topic, niche, audience, format, tone, 'tutorial', 'howto', 'youtube', 'learning', 'tips', 'guide', '2024']
+      .filter(Boolean).map(t => t.replace(/[^a-zA-Z0-9 ]/g,'').trim()).filter(Boolean).slice(0,12),
+    thumbnail_idea: `Bold text overlay reading "${topic}" on a vivid gradient background with your face showing a surprised or confident expression.`
+  };
+}
+
+// ─── HISTORY ────────────────────────────────────────────
+function saveHistory(topic, format, tone, parsed, length) {
+  const ts = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+  historyData.unshift({ topic, format, tone, parsed, length, ts });
+  if (historyData.length > 10) historyData.pop();
+  renderHistory();
+}
+function renderHistory() {
+  const box = document.getElementById('hist-list');
+  if (!historyData.length) {
+    box.innerHTML = '<div class="empty-state"><div class="empty-icon">🕘</div><div class="empty-title">No History</div></div>';
+    return;
+  }
+  box.innerHTML = historyData.map((h,i) => `
+    <div class="hist-card" onclick="restoreHistory(${i})">
+      <div>
+        <div class="hist-topic">${h.topic}</div>
+        <div class="hist-meta">${h.format} · ${h.tone}</div>
+      </div>
+      <div class="hist-time">${h.ts}</div>
+    </div>`).join('');
+}
+function restoreHistory(i) {
+  const h = historyData[i];
+  renderOutput(h.parsed, h.topic, h.format, h.tone, h.length);
+  switchTab('output', document.querySelectorAll('.tab-btn')[0]);
+}
+
+// ─── SKELETON ───────────────────────────────────────────
+function showSkeleton() {
+  document.getElementById('empty-state').style.display = 'none';
+  const area = document.getElementById('output-area');
+  area.style.display = 'block';
+  area.innerHTML = `
+  <div class="output-card">
+    <div class="output-hero" style="padding:28px 32px;">
+      <div class="sk sk-line" style="width:40%;height:11px;background:rgba(255,255,255,.2);margin-bottom:10px;"></div>
+      <div class="sk sk-line" style="width:70%;height:22px;background:rgba(255,255,255,.3);margin-bottom:16px;"></div>
+      <div style="display:flex;gap:8px;">
+        ${[60,80,55].map(w=>`<div class="sk sk-line" style="width:${w}px;height:22px;background:rgba(255,255,255,.15);border-radius:999px;margin:0;"></div>`).join('')}
+      </div>
+    </div>
+    <div class="output-body">
+      <div class="sk sk-line" style="width:30%;height:10px;background:var(--lav-light);margin-bottom:14px;"></div>
+      ${[95,88,92].map(w=>`<div class="sk sk-line" style="width:${w}%;background:var(--lav-light);"></div>`).join('')}
+      <br>
+      <div class="sk sk-line" style="width:25%;height:10px;background:var(--lav-light);margin-bottom:14px;"></div>
+      ${[100,95,90,85].map(w=>`<div class="sk sk-line" style="width:${w}%;background:var(--lav-light);"></div>`).join('')}
+      <br>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;">
+        ${Array(8).fill(0).map(()=>`<div class="sk sk-line" style="width:70px;height:24px;border-radius:999px;background:var(--lav-light);margin:0;"></div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ─── UTILS ──────────────────────────────────────────────
+function setStatus(s) {
+  const dot = document.getElementById('status-dot');
+  const txt = document.getElementById('status-text');
+  if (s === 'live') { dot.className = 'status-dot live'; txt.className = 'status-text live'; txt.textContent = 'Generating…'; }
+  else { dot.className = 'status-dot'; txt.className = 'status-text'; txt.textContent = 'Done'; }
+}
+function copyContent() {
+  if (!lastPlainText) { toast('Generate content first.', '#ef4444', '#fef2f2'); return; }
+  navigator.clipboard.writeText(lastPlainText).then(() => toast('✓ Copied to clipboard', '#059669', '#d1fae5'));
+}
+function toast(msg, color, bg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.borderColor = color || '#059669';
+  t.style.color = color || '#059669';
+  t.style.background = bg || '#fff';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+function clearAll() {
+  ['f-topic','f-niche','f-audience','f-points'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('f-length').selectedIndex = 1;
+  document.getElementById('f-cta').selectedIndex = 0;
+  document.getElementById('empty-state').style.display = 'flex';
+  document.getElementById('output-area').style.display = 'none';
+  document.getElementById('prompt-display').textContent = 'Generate content to see the prompt here.';
+  setStatus('done');
+  document.getElementById('status-text').textContent = 'Ready';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Resume Prompt Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #f5f3ff;
+    --surface: #ffffff;
+    --panel:   #faf5ff;
+    --panel2:  #ede9fe;
+    --border:  #ddd6fe;
+    --accent:  #7c3aed;
+    --accent2: #5b21b6;
+    --gold:    #7c3aed;
+    --gold2:   #6d28d9;
+    --lavender:#7c3aed;
+    --lav2:    #5b21b6;
+    --white:   #2d1b69;
+    --muted:   #7c3aed99;
+    --green:   #059669;
+    --red:     #dc2626;
+    --text:    #2d1b69;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: linear-gradient(135deg, #f0eeff, #ede9fe, #f5f3ff);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HERO HEADER ── */
+  .hero-header {
+    background: linear-gradient(135deg, #f0eeff 0%, #ede9fe 50%, #e9e3ff 100%);
+    text-align: center;
+    padding: 42px 32px 36px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: linear-gradient(135deg, var(--accent), #6d28d9);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .6px;
+    padding: 7px 18px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 16px rgba(124,58,237,.3);
+  }
+  .hero-title {
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--accent2);
+    letter-spacing: -1px;
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+  .hero-sub {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 400;
+  }
+  .hero-sub span {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* ── LAYOUT ── */
+  .workspace {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    flex: 1;
+    height: calc(100vh - 175px);
+    overflow: hidden;
+  }
+
+  /* ── LEFT PANEL ── */
+  .panel-left {
+    background: #ffffff;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 20px 24px 14px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--panel);
+  }
+  .panel-title { font-size: 13px; font-weight: 700; color: var(--accent2); letter-spacing: .4px; }
+  .panel-desc  { font-size: 12px; color: #a78bfa; margin-top: 3px; }
+  .form-scroll { overflow-y: auto; flex: 1; padding: 20px 24px; }
+  .form-scroll::-webkit-scrollbar { width: 5px; }
+  .form-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  /* FIELD */
+  .field { margin-bottom: 18px; }
+  .field-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.3px;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .field-label .req { color: #dc2626; font-size: 12px; }
+
+  input, textarea, select {
+    width: 100%;
+    background: #ffffff;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    color: #111111;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 11px 14px;
+    transition: border-color .2s, box-shadow .2s;
+    resize: vertical;
+  }
+  input::placeholder, textarea::placeholder { color: #c4b5fd; }
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(124,58,237,.12);
+  }
+  select option { background: #fff; color: #111; }
+
+  /* ROW */
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* TONE PILLS */
+  .tone-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tone-pill {
+    padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 600;
+    cursor: pointer; border: 1.5px solid var(--border);
+    color: #a78bfa; background: var(--panel); transition: all .18s;
+    font-family: 'Inter', sans-serif;
+  }
+  .tone-pill:hover  { border-color: var(--accent); color: var(--accent); }
+  .tone-pill.active { border-color: var(--accent); background: rgba(124,58,237,.1); color: var(--accent); }
+
+  /* ACTIONS */
+  .actions {
+    padding: 16px 24px 20px;
+    border-top: 1px solid var(--border);
+    background: var(--panel);
+    flex-shrink: 0;
+    display: flex; gap: 10px;
+  }
+  .btn {
+    flex: 1; padding: 12px; border-radius: 9px; border: none;
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all .18s; letter-spacing: .3px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent) 0%, #6d28d9 100%);
+    color: #fff; box-shadow: 0 4px 16px rgba(124,58,237,.25);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,58,237,.35); }
+  .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  .btn-secondary {
+    background: #ede9fe; color: var(--accent2);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── RIGHT PANEL ── */
+  .panel-right {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .preview-bar {
+    padding: 14px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    background: #ffffff;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(124,58,237,0.06);
+  }
+  .preview-bar-left { display: flex; align-items: center; gap: 10px; }
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #c4b5fd; transition: background .3s;
+  }
+  .status-dot.live { background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{ opacity:1 } 50%{ opacity:.5 } }
+  .status-label { font-size: 12px; font-weight: 600; color: #a78bfa; }
+  .status-label.live { color: var(--green); }
+  .tab-group { display: flex; gap: 2px; background: var(--panel2); padding: 3px; border-radius: 8px; }
+  .tab {
+    padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600;
+    cursor: pointer; color: #a78bfa; transition: all .15s; border: none;
+    background: transparent; font-family: 'Inter', sans-serif;
+  }
+  .tab.active { background: #fff; color: var(--accent2); box-shadow: 0 1px 4px rgba(124,58,237,.1); }
+  .copy-btn {
+    padding: 8px 14px; background: var(--panel); border: 1px solid var(--border);
+    color: var(--accent); border-radius: 7px; font-size: 12px; font-weight: 600;
+    cursor: pointer; font-family: 'Inter', sans-serif; transition: all .15s;
+  }
+  .copy-btn:hover { border-color: var(--accent); background: var(--panel2); }
+  .preview-content { flex: 1; overflow-y: auto; padding: 36px; }
+  .preview-content::-webkit-scrollbar { width: 5px; }
+  .preview-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  /* RESUME DOCUMENT */
+  .resume-doc {
+    max-width: 720px; margin: 0 auto;
+    background: #fff; color: #1a1a1a;
+    border-radius: 4px;
+    box-shadow: 0 8px 40px rgba(124,58,237,.15);
+    border: 1px solid var(--border);
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    min-height: 900px;
+  }
+  .resume-header-block {
+    background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 60%, #6d28d9 100%);
+    padding: 36px 40px 32px;
+    position: relative;
+  }
+  .resume-name { font-size: 30px; font-weight: 800; color: #fff; letter-spacing: -.5px; }
+  .resume-title-role {
+    font-size: 14px; color: #ddd6fe; font-weight: 600; margin-top: 4px; letter-spacing: .5px;
+  }
+  .resume-contacts {
+    display: flex; gap: 20px; margin-top: 16px; flex-wrap: wrap;
+  }
+  .contact-item { font-size: 12px; color: rgba(255,255,255,.75); display: flex; align-items: center; gap: 5px; }
+  .contact-item b { color: #c4b5fd; }
+  .gold-bar { height: 3px; background: linear-gradient(90deg, #a78bfa, #7c3aed, #ddd6fe); }
+  .resume-body { padding: 32px 40px; }
+  .r-section { margin-bottom: 28px; }
+  .r-section-title {
+    font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+    color: #7c3aed; border-bottom: 2px solid #ede9fe; padding-bottom: 6px; margin-bottom: 14px;
+  }
+  .r-section p { font-size: 13px; line-height: 1.75; color: #374151; }
+  .skill-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .skill-chip {
+    font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 999px;
+    background: #f5f3ff; color: #5b21b6; border: 1px solid #ddd6fe;
+  }
+  .exp-item, .edu-item { margin-bottom: 16px; }
+  .exp-title { font-size: 14px; font-weight: 700; color: #111827; }
+  .exp-meta  { font-size: 12px; color: #9ca3af; margin: 2px 0 8px; }
+  .exp-body  { font-size: 13px; color: #374151; line-height: 1.7; }
+  .exp-bullets { list-style: none; }
+  .exp-bullets li { font-size: 13px; color: #374151; line-height: 1.7; padding-left: 16px; position: relative; }
+  .exp-bullets li::before { content: '▸'; position: absolute; left: 0; color: #7c3aed; font-size: 10px; top: 3px; }
+  .declaration { font-size: 12px; color: #6b7280; font-style: italic; margin-top: 24px; padding-top: 16px; border-top: 1px solid #f3f4f6; }
+
+  /* EMPTY STATE */
+  .empty-state {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100%; color: #c4b5fd; text-align: center; gap: 12px;
+  }
+  .empty-icon { font-size: 48px; opacity: .5; }
+  .empty-title { font-size: 16px; font-weight: 700; color: var(--accent); opacity: .6; }
+  .empty-desc  { font-size: 13px; max-width: 280px; line-height: 1.6; color: #a78bfa; }
+
+  /* SKELETON */
+  .skeleton { animation: shimmer 1.5s infinite; }
+  @keyframes shimmer { 0%{ opacity:.4 } 50%{ opacity:.9 } 100%{ opacity:.4 } }
+  .sk-line { height: 14px; border-radius: 4px; background: #ede9fe; margin-bottom: 10px; }
+
+  /* HISTORY */
+  .history-list { display: flex; flex-direction: column; gap: 10px; }
+  .hist-item {
+    background: #fff; border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 18px; cursor: pointer; transition: all .15s;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .hist-item:hover { border-color: var(--accent); box-shadow: 0 2px 12px rgba(124,58,237,.1); }
+  .hist-name { font-size: 14px; font-weight: 700; color: var(--accent2); }
+  .hist-meta { font-size: 12px; color: #a78bfa; margin-top: 2px; }
+  .hist-time { font-size: 11px; color: #c4b5fd; font-family: 'JetBrains Mono', monospace; }
+
+  /* PROMPT TAB */
+  .prompt-box {
+    background: #fff; border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px; font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; line-height: 1.8; color: #5b21b6; white-space: pre-wrap;
+  }
+  .prompt-label { font-size: 10px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 28px; right: 28px;
+    background: #fff; border: 1px solid var(--green);
+    color: var(--green); font-size: 13px; font-weight: 600;
+    padding: 12px 20px; border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(124,58,237,.15);
+    transform: translateY(80px); opacity: 0;
+    transition: all .3s; z-index: 999;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+</style>
+</head>
+<body>
+
+<!-- ── HERO HEADER ── -->
+<div class="hero-header">
+  <div class="hero-badge">
+    📄 Resume Builder
+  </div>
+  <div class="hero-title">Resume Prompt Generator</div>
+  <div class="hero-sub">Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span></div>
+</div>
+
+<div class="workspace">
+
+  <div class="panel-left">
+    <div class="panel-header">
+      <div class="panel-title">Resume Details</div>
+      <div class="panel-desc">Fill in your info — Claude writes the professional copy</div>
+    </div>
+
+    <div class="form-scroll">
+      <div class="row2">
+        <div class="field">
+          <div class="field-label">Full Name <span class="req">*</span></div>
+          <input id="f-name" type="text" placeholder="e.g. Hamna Munir"/>
+        </div>
+        <div class="field">
+          <div class="field-label">Job Title <span class="req">*</span></div>
+          <input id="f-job" type="text" placeholder="AI/ML Engineer"/>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <div class="field-label">Email</div>
+          <input id="f-email" type="email" placeholder="hamna@email.com"/>
+        </div>
+        <div class="field">
+          <div class="field-label">Phone</div>
+          <input id="f-phone" type="text" placeholder="+92 300 0000000"/>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <div class="field-label">Location</div>
+          <input id="f-location" type="text" placeholder="Lahore, Pakistan"/>
+        </div>
+        <div class="field">
+          <div class="field-label">LinkedIn / Portfolio</div>
+          <input id="f-link" type="text" placeholder="linkedin.com/in/hamna"/>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">Education</div>
+        <textarea id="f-edu" rows="2" placeholder="BS Computer Science — University of XYZ (2021–2025)"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-label">Technical Skills</div>
+        <input id="f-skills" type="text" placeholder="Python, TensorFlow, React, SQL, Docker, …"/>
+      </div>
+      <div class="field">
+        <div class="field-label">Experience / Projects</div>
+        <textarea id="f-exp" rows="3" placeholder="Internship at XYZ — built an ML pipeline that reduced inference time by 40%&#10;Project: MoodGuard — real-time emotion detection system using CNNs"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-label">Achievements (optional)</div>
+        <textarea id="f-ach" rows="2" placeholder="Winner — FAST Hackathon 2024&#10;Published paper on edge AI at ICML workshop"></textarea>
+      </div>
+      <div class="field">
+        <div class="field-label">Resume Tone</div>
+        <div class="tone-group">
+          <button class="tone-pill active" data-tone="Professional">Professional</button>
+          <button class="tone-pill" data-tone="Confident">Confident</button>
+          <button class="tone-pill" data-tone="Creative">Creative</button>
+          <button class="tone-pill" data-tone="Academic">Academic</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="gen-btn" onclick="generateResume()">✦ Generate Resume</button>
+      <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+    </div>
+  </div>
+
+  <div class="panel-right">
+    <div class="preview-bar">
+      <div class="preview-bar-left">
+        <div class="status-dot" id="status-dot"></div>
+        <div class="status-label" id="status-label">Ready</div>
+      </div>
+      <div class="tab-group">
+        <button class="tab active" onclick="switchTab('preview', this)">Preview</button>
+        <button class="tab" onclick="switchTab('prompt', this)">Prompt</button>
+        <button class="tab" onclick="switchTab('history', this)">History</button>
+      </div>
+      <button class="copy-btn" onclick="copyResume()">⎘ Copy Text</button>
+    </div>
+
+    <div class="preview-content" id="preview-content">
+      <div id="tab-preview">
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon">📋</div>
+          <div class="empty-title">No Resume Yet</div>
+          <div class="empty-desc">Fill in your details on the left and click Generate Resume to create your professional document.</div>
+        </div>
+        <div id="resume-output" style="display:none;"></div>
+      </div>
+      <div id="tab-prompt" style="display:none;">
+        <div class="prompt-label">System Prompt Sent to Claude</div>
+        <div class="prompt-box" id="prompt-display">Generate a resume to see the prompt used.</div>
+      </div>
+      <div id="tab-history" style="display:none;">
+        <div class="history-list" id="history-list">
+          <div class="empty-state">
+            <div class="empty-icon">🕘</div>
+            <div class="empty-title">No History</div>
+            <div class="empty-desc">Generated resumes will appear here.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast">✓ Copied to clipboard</div>
+
+<script>
+let activeTone = 'Professional';
+let activeTab  = 'preview';
+let history    = [];
+let lastRawText = '';
+let lastPrompt  = '';
+
+document.querySelectorAll('.tone-pill').forEach(p => {
+  p.addEventListener('click', () => {
+    document.querySelectorAll('.tone-pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    activeTone = p.dataset.tone;
+  });
+});
+
+function switchTab(tab, btn) {
+  ['preview','prompt','history'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = 'none';
+  });
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).style.display = 'block';
+  btn.classList.add('active');
+  activeTab = tab;
+}
+
+async function generateResume() {
+  const name     = document.getElementById('f-name').value.trim();
+  const job      = document.getElementById('f-job').value.trim();
+  const email    = document.getElementById('f-email').value.trim();
+  const phone    = document.getElementById('f-phone').value.trim();
+  const location = document.getElementById('f-location').value.trim();
+  const link     = document.getElementById('f-link').value.trim();
+  const edu      = document.getElementById('f-edu').value.trim();
+  const skills   = document.getElementById('f-skills').value.trim();
+  const exp      = document.getElementById('f-exp').value.trim();
+  const ach      = document.getElementById('f-ach').value.trim();
+
+  if (!name || !job) { showToast('⚠ Please enter Name and Job Title.', '#dc2626'); return; }
+
+  setStatus('generating');
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true;
+  btn.textContent = '⟳ Generating…';
+
+  document.querySelectorAll('.tab').forEach((b,i) => b.classList.toggle('active', i===0));
+  ['preview','prompt','history'].forEach((t,i) => {
+    document.getElementById('tab-' + t).style.display = i===0 ? 'block' : 'none';
+  });
+
+  showSkeleton();
+
+  const prompt = buildPrompt(name, job, email, phone, location, link, edu, skills, exp, ach);
+  lastPrompt = prompt;
+  document.getElementById('prompt-display').textContent = prompt;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    if (!data.content || !data.content[0]) throw new Error('Empty response');
+
+    const text = data.content.map(b => b.text || '').join('');
+    let parsed;
+    try {
+      parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+    } catch(e) {
+      parsed = parseRawFallback(text, name, job);
+    }
+
+    lastRawText = renderResumeText(parsed, name, job, email, phone, location, link);
+    renderResumeDoc(parsed, name, job, email, phone, location, link);
+    saveHistory(name, job, parsed, email, phone, location, link);
+    setStatus('done');
+
+  } catch(err) {
+    console.error(err);
+    const parsed = offlineFallback(name, job, edu, skills, exp, ach);
+    lastRawText = renderResumeText(parsed, name, job, email, phone, location, link);
+    renderResumeDoc(parsed, name, job, email, phone, location, link);
+    saveHistory(name, job, parsed, email, phone, location, link);
+    setStatus('done');
+  }
+
+  btn.disabled = false;
+  btn.textContent = '✦ Generate Resume';
+}
+
+function buildPrompt(name, job, email, phone, location, link, edu, skills, exp, ach) {
+  return `You are a professional resume writer. Create a polished ${activeTone.toLowerCase()} resume for the following person. Return ONLY a JSON object with no markdown, no extra text.
+
+JSON schema:
+{
+  "objective": "2-3 sentence professional summary",
+  "education": [{ "degree": "", "institution": "", "year": "", "details": "" }],
+  "skills": ["skill1", "skill2", ...],
+  "experience": [{ "title": "", "company": "", "duration": "", "bullets": ["...", "..."] }],
+  "achievements": ["achievement1", ...],
+  "declaration": "short declaration sentence"
+}
+
+Candidate Info:
+- Name: ${name}
+- Target Role: ${job}
+- Education: ${edu || 'Not provided'}
+- Skills: ${skills || 'Not provided'}
+- Experience/Projects: ${exp || 'Not provided'}
+- Achievements: ${ach || 'Not provided'}
+- Tone: ${activeTone}
+
+Write compelling, quantified bullet points where possible. Return only valid JSON.`;
+}
+
+function renderResumeDoc(data, name, job, email, phone, location, link) {
+  const contacts = [
+    email    ? `<div class="contact-item"><b>✉</b> ${email}</div>` : '',
+    phone    ? `<div class="contact-item"><b>☎</b> ${phone}</div>` : '',
+    location ? `<div class="contact-item"><b>⌖</b> ${location}</div>` : '',
+    link     ? `<div class="contact-item"><b>⬡</b> ${link}</div>` : '',
+  ].filter(Boolean).join('');
+
+  const skillChips = (data.skills || []).map(s => `<div class="skill-chip">${s}</div>`).join('');
+
+  const expBlocks = (data.experience || []).map(e => `
+    <div class="exp-item">
+      <div class="exp-title">${e.title || ''}</div>
+      <div class="exp-meta">${e.company || ''}${e.duration ? ' · ' + e.duration : ''}</div>
+      <ul class="exp-bullets">${(e.bullets || []).map(b => `<li>${b}</li>`).join('')}</ul>
+    </div>`).join('');
+
+  const eduBlocks = (data.education || []).map(e => `
+    <div class="edu-item">
+      <div class="exp-title">${e.degree || ''}</div>
+      <div class="exp-meta">${e.institution || ''}${e.year ? ' · ' + e.year : ''}</div>
+      ${e.details ? `<div class="exp-body">${e.details}</div>` : ''}
+    </div>`).join('');
+
+  const achItems = (data.achievements || []).length > 0
+    ? `<ul class="exp-bullets">${data.achievements.map(a => `<li>${a}</li>`).join('')}</ul>` : '';
+
+  document.getElementById('empty-state').style.display   = 'none';
+  document.getElementById('resume-output').style.display = 'block';
+  document.getElementById('resume-output').innerHTML = `
+  <div class="resume-doc">
+    <div class="resume-header-block">
+      <div class="resume-name">${name}</div>
+      <div class="resume-title-role">${job}</div>
+      <div class="resume-contacts">${contacts}</div>
+    </div>
+    <div class="gold-bar"></div>
+    <div class="resume-body">
+      ${data.objective ? `<div class="r-section"><div class="r-section-title">Professional Summary</div><p>${data.objective}</p></div>` : ''}
+      ${(data.skills||[]).length ? `<div class="r-section"><div class="r-section-title">Skills</div><div class="skill-grid">${skillChips}</div></div>` : ''}
+      ${(data.experience||[]).length ? `<div class="r-section"><div class="r-section-title">Experience & Projects</div>${expBlocks}</div>` : ''}
+      ${(data.education||[]).length ? `<div class="r-section"><div class="r-section-title">Education</div>${eduBlocks}</div>` : ''}
+      ${achItems ? `<div class="r-section"><div class="r-section-title">Achievements</div>${achItems}</div>` : ''}
+      <div class="declaration">${data.declaration || `I hereby declare that all the information provided above is true and accurate to the best of my knowledge. — ${name}`}</div>
+    </div>
+  </div>`;
+}
+
+function saveHistory(name, job, parsed, email, phone, location, link) {
+  const ts = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  history.unshift({ name, job, parsed, email, phone, location, link, ts });
+  if (history.length > 10) history.pop();
+  renderHistory();
+}
+
+function renderHistory() {
+  const box = document.getElementById('history-list');
+  if (!history.length) { box.innerHTML = '<div class="empty-state"><div class="empty-icon">🕘</div><div class="empty-title">No History</div></div>'; return; }
+  box.innerHTML = history.map((h,i) => `
+    <div class="hist-item" onclick="restoreHistory(${i})">
+      <div><div class="hist-name">${h.name}</div><div class="hist-meta">${h.job}</div></div>
+      <div class="hist-time">${h.ts}</div>
+    </div>`).join('');
+}
+
+function restoreHistory(i) {
+  const h = history[i];
+  renderResumeDoc(h.parsed, h.name, h.job, h.email, h.phone, h.location, h.link);
+  document.querySelectorAll('.tab').forEach((b,j) => b.classList.toggle('active', j===0));
+  ['preview','prompt','history'].forEach((t,j) => {
+    document.getElementById('tab-' + t).style.display = j===0 ? 'block' : 'none';
+  });
+}
+
+function setStatus(s) {
+  const dot = document.getElementById('status-dot');
+  const lbl = document.getElementById('status-label');
+  if (s === 'generating') { dot.className = 'status-dot live'; lbl.className = 'status-label live'; lbl.textContent = 'Generating…'; }
+  else { dot.className = 'status-dot'; lbl.className = 'status-label'; lbl.textContent = 'Done'; }
+}
+
+function showSkeleton() {
+  document.getElementById('empty-state').style.display   = 'none';
+  document.getElementById('resume-output').style.display = 'block';
+  document.getElementById('resume-output').innerHTML = `
+  <div class="resume-doc" style="padding:36px 40px;">
+    <div class="sk-line skeleton" style="width:45%;height:28px;margin-bottom:8px;"></div>
+    <div class="sk-line skeleton" style="width:28%;height:16px;margin-bottom:20px;"></div>
+    <div class="sk-line skeleton" style="width:90%;"></div>
+    <div class="sk-line skeleton" style="width:85%;"></div>
+    <div class="sk-line skeleton" style="width:78%;margin-bottom:24px;"></div>
+    <div class="sk-line skeleton" style="width:20%;height:12px;margin-bottom:12px;background:#ddd6fe;"></div>
+    <div class="sk-line skeleton" style="width:95%;"></div>
+    <div class="sk-line skeleton" style="width:90%;"></div>
+    <div class="sk-line skeleton" style="width:88%;margin-bottom:24px;"></div>
+    <div class="sk-line skeleton" style="width:20%;height:12px;margin-bottom:12px;background:#ddd6fe;"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;">
+      ${Array(6).fill(0).map(()=>`<div class="sk-line skeleton" style="width:80px;height:26px;border-radius:999px;margin:0;"></div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderResumeText(data, name, job, email, phone, location, link) {
+  const lines = [];
+  lines.push(name.toUpperCase());
+  lines.push(job);
+  if (email || phone || location) lines.push([email,phone,location].filter(Boolean).join(' | '));
+  lines.push('');
+  if (data.objective) { lines.push('PROFESSIONAL SUMMARY'); lines.push(data.objective); lines.push(''); }
+  if ((data.skills||[]).length) { lines.push('SKILLS'); lines.push(data.skills.join(', ')); lines.push(''); }
+  if ((data.experience||[]).length) {
+    lines.push('EXPERIENCE & PROJECTS');
+    data.experience.forEach(e => {
+      lines.push(`${e.title} — ${e.company} (${e.duration})`);
+      (e.bullets||[]).forEach(b => lines.push('  • ' + b));
+    });
+    lines.push('');
+  }
+  if ((data.education||[]).length) {
+    lines.push('EDUCATION');
+    data.education.forEach(e => { lines.push(`${e.degree} — ${e.institution} (${e.year})`); });
+    lines.push('');
+  }
+  if ((data.achievements||[]).length) { lines.push('ACHIEVEMENTS'); data.achievements.forEach(a => lines.push('  • ' + a)); lines.push(''); }
+  lines.push(data.declaration || `I declare that all information is true. — ${name}`);
+  return lines.join('\n');
+}
+
+function parseRawFallback(text, name, job) {
+  return {
+    objective: `A motivated ${job} with a passion for delivering impactful solutions.`,
+    education: [], skills: [], experience: [], achievements: [],
+    declaration: `I hereby declare that all information is true and correct. — ${name}`
+  };
+}
+
+function offlineFallback(name, job, edu, skills, exp, ach) {
+  const skillList = skills ? skills.split(',').map(s => s.trim()).filter(Boolean) : ['Communication','Problem Solving','Teamwork'];
+  const expItems = exp ? [{ title: job, company: 'Self / Project', duration: '2024–Present', bullets: exp.split('\n').map(l => l.trim()).filter(Boolean) }] : [];
+  const achList = ach ? ach.split('\n').map(l => l.trim()).filter(Boolean) : [];
+  const eduList = edu ? [{ degree: edu, institution: '', year: '', details: '' }] : [];
+  return {
+    objective: `A driven ${job} committed to delivering high-quality results and continuously expanding expertise in the field.`,
+    education: eduList, skills: skillList, experience: expItems, achievements: achList,
+    declaration: `I hereby declare that all the information provided above is true and accurate to the best of my knowledge. — ${name}`
+  };
+}
+
+function copyResume() {
+  if (!lastRawText) { showToast('Generate a resume first.', '#dc2626'); return; }
+  navigator.clipboard.writeText(lastRawText).then(() => showToast('✓ Copied to clipboard'));
+}
+
+function showToast(msg, color) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.borderColor = color || '#059669';
+  t.style.color = color || '#059669';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function clearAll() {
+  ['f-name','f-job','f-email','f-phone','f-location','f-link','f-edu','f-skills','f-exp','f-ach']
+    .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  document.getElementById('empty-state').style.display   = 'flex';
+  document.getElementById('resume-output').style.display = 'none';
+  document.getElementById('prompt-display').textContent  = 'Generate a resume to see the prompt used.';
+  setStatus('ready');
+  document.getElementById('status-label').textContent = 'Ready';
+}
+</script>
+</body>
+</html>
