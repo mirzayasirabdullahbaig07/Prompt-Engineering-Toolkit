@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Expert Persona Builder</title>
+
+  
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:Segoe UI,Tahoma,sans-serif;
+  background:linear-gradient(135deg,#f3f0ff,#ede9fe,#faf5ff);
+  min-height:100vh;
+  padding:20px;
+  color:#1e1b4b;
+}
+
+.container{max-width:1100px;margin:auto;}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:30px 20px;
+}
+
+.badge{
+  display:inline-block;
+  background:linear-gradient(90deg,#7c3aed,#a855f7);
+  color:#fff;
+  padding:6px 16px;
+  border-radius:20px;
+  font-size:12px;
+  letter-spacing:2px;
+  margin-bottom:10px;
+}
+
+.header h1{
+  font-size:2.4rem;
+  font-weight:800;
+  background:linear-gradient(90deg,#5b21b6,#7c3aed,#a855f7);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.header p{color:#6b7280;margin-top:6px;}
+
+/* CARD */
+.card{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:18px;
+  padding:25px;
+  margin-bottom:18px;
+  box-shadow:0 4px 18px rgba(124,58,237,0.1);
+}
+
+label{
+  font-size:12px;
+  font-weight:700;
+  color:#7c3aed;
+  letter-spacing:1.5px;
+}
+
+textarea{
+  width:100%;
+  height:110px;
+  margin-top:10px;
+  padding:14px;
+  border-radius:12px;
+  border:1.5px solid #ddd6fe;
+  background:#faf5ff;
+  font-size:1rem;
+  outline:none;
+}
+
+textarea:focus{
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:10px;margin-top:12px;}
+
+button{
+  padding:10px 18px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.primary{
+  background:linear-gradient(135deg,#7c3aed,#5b21b6);
+  color:#fff;
+}
+.clear{
+  background:#ede9fe;
+  color:#6d28d9;
+  border:1px solid #c4b5fd;
+}
+
+/* PROFILE CARD */
+.profile{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:20px;
+  padding:20px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 4px 14px rgba(124,58,237,0.1);
+}
+
+.profile::before{
+  content:"";
+  position:absolute;
+  top:-60px;
+  right:-60px;
+  width:160px;
+  height:160px;
+  background:radial-gradient(circle,#a855f7,#7c3aed);
+  opacity:0.12;
+  border-radius:50%;
+}
+
+.name{
+  font-size:1.4rem;
+  font-weight:900;
+  color:#5b21b6;
+}
+
+.role{
+  font-size:0.9rem;
+  color:#6d28d9;
+  margin-top:4px;
+}
+
+/* DNA CHIPS */
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+
+.chip{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+  background:#ede9fe;
+  color:#5b21b6;
+  border:1px solid #c4b5fd;
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+@media(max-width:800px){
+  .grid{grid-template-columns:1fr;}
+}
+
+/* INFO BOX */
+.box{
+  background:#faf5ff;
+  border-left:5px solid #7c3aed;
+  padding:12px;
+  border-radius:10px;
+  font-size:0.9rem;
+  color:#374151;
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:12px;
+  color:#9ca3af;
+  border-top:1px solid #ddd6fe;
+  padding-top:15px;
+}
+
+.footer span{color:#7c3aed;font-weight:700;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="badge">PERSONA ENGINE</div>
+  <h1>Expert Persona Builder</h1>
+  <p>Generate advanced AI expert identity profiles</p>
+</div>
+
+<!-- INPUT -->
+<div class="card">
+  <label>ENTER DOMAIN / IDEA</label>
+  <textarea id="text" placeholder="e.g. AI teacher for programming students"></textarea>
+
+  <div class="btn-row">
+    <button class="primary" onclick="build()">Build Persona</button>
+    <button class="clear" onclick="clearAll()">Clear</button>
+  </div>
+</div>
+
+<!-- OUTPUT -->
+<div class="profile" id="profile" style="display:none;">
+
+  <div class="name" id="name">AI Expert</div>
+  <div class="role" id="role">Generated Persona</div>
+
+  <div class="chips" id="chips"></div>
+
+</div>
+
+<!-- DETAILS -->
+<div class="grid" style="margin-top:15px;">
+
+  <div class="card">
+    <h3 style="color:#5b21b6;margin-bottom:10px;">🧠 Expertise Summary</h3>
+    <div class="box" id="summary"></div>
+  </div>
+
+  <div class="card">
+    <h3 style="color:#5b21b6;margin-bottom:10px;">🎯 Capabilities</h3>
+    <div class="box" id="cap"></div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+</div>
+
+</div>
+
+<script>
+
+function build(){
+  let text=document.getElementById("text").value.trim();
+  if(!text){alert("Enter idea");return;}
+
+  document.getElementById("profile").style.display="block";
+
+  let name="Dr. "+text.split(" ")[0]+" AI Specialist";
+  let role="Expert System for "+text;
+
+  let skills=[
+    "Deep Reasoning",
+    "Context Understanding",
+    "Pattern Analysis",
+    "Domain Expertise",
+    "AI Decision Making",
+    "Adaptive Learning"
+  ];
+
+  let chips="";
+  skills.forEach(s=>{
+    chips+=`<div class="chip">${s}</div>`;
+  });
+
+  document.getElementById("name").textContent=name;
+  document.getElementById("role").textContent=role;
+  document.getElementById("chips").innerHTML=chips;
+
+  document.getElementById("summary").innerHTML=
+    "This persona is designed to act as a high-level expert in <b>"+text+"</b> with advanced reasoning and contextual intelligence.";
+
+  document.getElementById("cap").innerHTML=
+    "Can analyze, generate, explain, and optimize solutions in the domain of <b>"+text+"</b> with adaptive intelligence.";
+}
+
+function clearAll(){
+  document.getElementById("text").value="";
+  document.getElementById("profile").style.display="none";
+  document.getElementById("chips").innerHTML="";
+}
+
+</script>
+
+</body>
+</html>

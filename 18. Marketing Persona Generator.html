@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Marketing Persona Generator</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:Segoe UI,Tahoma,sans-serif;
+  background:linear-gradient(135deg,#f3f0ff,#ede9fe,#faf5ff);
+  min-height:100vh;
+  padding:20px;
+  color:#1e1b4b;
+}
+
+.container{max-width:1100px;margin:auto;}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:30px 20px;
+}
+
+.badge{
+  display:inline-block;
+  background:linear-gradient(90deg,#7c3aed,#a855f7);
+  color:#fff;
+  padding:6px 16px;
+  border-radius:20px;
+  font-size:12px;
+  letter-spacing:2px;
+  margin-bottom:10px;
+}
+
+.header h1{
+  font-size:2.4rem;
+  font-weight:800;
+  background:linear-gradient(90deg,#5b21b6,#7c3aed,#a855f7);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.header p{color:#6b7280;margin-top:6px;}
+
+/* CARD */
+.card{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:18px;
+  padding:25px;
+  margin-bottom:18px;
+  box-shadow:0 4px 18px rgba(124,58,237,0.1);
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+@media(max-width:800px){
+  .grid{grid-template-columns:1fr;}
+}
+
+label{
+  font-size:12px;
+  font-weight:700;
+  color:#7c3aed;
+  letter-spacing:1.5px;
+}
+
+input,select{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border-radius:10px;
+  border:1.5px solid #ddd6fe;
+  background:#faf5ff;
+  outline:none;
+}
+
+input:focus,select:focus{
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+}
+
+/* BUTTON */
+button{
+  margin-top:15px;
+  padding:12px 18px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  background:linear-gradient(135deg,#7c3aed,#5b21b6);
+  color:#fff;
+}
+
+/* OUTPUT LANE SYSTEM */
+.lanes{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+}
+
+@media(max-width:900px){
+  .lanes{grid-template-columns:1fr;}
+}
+
+.lane{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:16px;
+  padding:15px;
+  position:relative;
+  overflow:hidden;
+}
+
+.lane::before{
+  content:"📣";
+  position:absolute;
+  font-size:80px;
+  opacity:0.05;
+  right:10px;
+  top:10px;
+}
+
+.title{
+  font-weight:900;
+  color:#5b21b6;
+  margin-bottom:8px;
+}
+
+/* TAGS */
+.tag{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:20px;
+  font-size:12px;
+  margin:4px 4px 0 0;
+  background:#ede9fe;
+  color:#5b21b6;
+  border:1px solid #c4b5fd;
+}
+
+/* STORY BOX */
+.story{
+  background:#faf5ff;
+  border-left:5px solid #7c3aed;
+  padding:12px;
+  border-radius:10px;
+  margin-top:12px;
+  font-size:0.9rem;
+  color:#374151;
+  line-height:1.6;
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:12px;
+  color:#9ca3af;
+  border-top:1px solid #ddd6fe;
+  padding-top:15px;
+}
+
+.footer span{color:#7c3aed;font-weight:700;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="badge">MARKETING INTELLIGENCE ENGINE</div>
+  <h1>Marketing Persona Generator</h1>
+  <p>Create high-conversion customer marketing personas</p>
+</div>
+
+<!-- INPUT -->
+<div class="card">
+
+<div class="grid">
+
+<div>
+<label>PRODUCT</label>
+<input id="product" placeholder="e.g. Fitness App">
+</div>
+
+<div>
+<label>AGE RANGE</label>
+<input id="age" placeholder="e.g. 20-35">
+</div>
+
+<div>
+<label>MARKETING GOAL</label>
+<input id="goal" placeholder="e.g. Increase app downloads">
+</div>
+
+<div>
+<label>CHANNEL</label>
+<select id="channel">
+<option>Social Media</option>
+<option>Email Marketing</option>
+<option>SEO</option>
+<option>Paid Ads</option>
+</select>
+</div>
+
+</div>
+
+<button onclick="build()">Generate Marketing Persona</button>
+
+</div>
+
+<!-- OUTPUT LANES -->
+<div class="lanes" id="lanes" style="display:none;">
+
+<!-- Lane 1 -->
+<div class="lane">
+<div class="title">🎯 Audience Profile</div>
+<div id="audience"></div>
+</div>
+
+<!-- Lane 2 -->
+<div class="lane">
+<div class="title">🧠 Behavior Traits</div>
+<div id="behavior"></div>
+</div>
+
+<!-- Lane 3 -->
+<div class="lane">
+<div class="title">📣 Campaign Insight</div>
+<div id="insight"></div>
+</div>
+
+</div>
+
+<!-- STORY -->
+<div class="card">
+<h3 style="color:#5b21b6;margin-bottom:10px;">🪄 Persona Narrative</h3>
+<div class="story" id="story"></div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Developed by <span>Hamna Munir</span> |  <span>Mirza Yasir Abdullah Baig</span>
+</div>
+
+</div>
+
+<script>
+
+function build(){
+
+let product=document.getElementById("product").value;
+let age=document.getElementById("age").value;
+let goal=document.getElementById("goal").value;
+let channel=document.getElementById("channel").value;
+
+if(!product||!age||!goal){alert("Fill all fields");return;}
+
+document.getElementById("lanes").style.display="grid";
+
+/* Audience */
+document.getElementById("audience").innerHTML=`
+<div class="tag">${product}</div>
+<div class="tag">${age}</div>
+<div class="tag">Digital User</div>
+<div class="tag">Mobile First</div>
+`;
+
+/* Behavior */
+document.getElementById("behavior").innerHTML=`
+<div class="tag">Scroll Driven</div>
+<div class="tag">Trend Aware</div>
+<div class="tag">Impulse Buyer</div>
+<div class="tag">Engagement Focused</div>
+`;
+
+/* Insight */
+document.getElementById("insight").innerHTML=`
+<div class="tag">${channel} Strategy</div>
+<div class="tag">Conversion Focus</div>
+<div class="tag">Emotion Trigger</div>
+<div class="tag">Retention Model</div>
+`;
+
+document.getElementById("story").innerHTML=
+`This persona represents a <b>${age}</b> segment of users interested in <b>${product}</b>. 
+They are highly active on <b>${channel}</b> and respond best to emotional, value-driven messaging.
+The main goal is to achieve <b>${goal}</b> through targeted marketing psychology, personalized content, and optimized conversion funnels.`;
+
+}
+
+</script>
+
+</body>
+</html>

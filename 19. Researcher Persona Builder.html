@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Researcher Persona Builder</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:Segoe UI,Tahoma,sans-serif;
+  background:linear-gradient(135deg,#f3f0ff,#ede9fe,#faf5ff);
+  min-height:100vh;
+  padding:20px;
+  color:#1e1b4b;
+}
+
+.container{max-width:1100px;margin:auto;}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:30px 20px;
+}
+
+.badge{
+  display:inline-block;
+  background:linear-gradient(90deg,#7c3aed,#a855f7);
+  color:#fff;
+  padding:6px 16px;
+  border-radius:20px;
+  font-size:12px;
+  letter-spacing:2px;
+  margin-bottom:10px;
+}
+
+.header h1{
+  font-size:2.4rem;
+  font-weight:800;
+  background:linear-gradient(90deg,#5b21b6,#7c3aed,#a855f7);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.header p{color:#6b7280;margin-top:6px;}
+
+/* INPUT CARD */
+.card{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:18px;
+  padding:25px;
+  margin-bottom:18px;
+  box-shadow:0 4px 18px rgba(124,58,237,0.1);
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+@media(max-width:800px){
+  .grid{grid-template-columns:1fr;}
+}
+
+label{
+  font-size:12px;
+  font-weight:700;
+  color:#7c3aed;
+  letter-spacing:1.5px;
+}
+
+input,select{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border-radius:10px;
+  border:1.5px solid #ddd6fe;
+  background:#faf5ff;
+  outline:none;
+}
+
+input:focus,select:focus{
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+}
+
+/* BUTTON */
+button{
+  margin-top:15px;
+  padding:12px 18px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  background:linear-gradient(135deg,#7c3aed,#5b21b6);
+  color:#fff;
+}
+
+/* LAB PANEL */
+.lab{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:20px;
+  padding:20px;
+  position:relative;
+  overflow:hidden;
+}
+
+.lab::before{
+  content:"🔬";
+  position:absolute;
+  font-size:120px;
+  opacity:0.05;
+  right:10px;
+  top:10px;
+}
+
+/* TITLE */
+.title{
+  font-size:1.4rem;
+  font-weight:900;
+  color:#5b21b6;
+}
+
+.sub{
+  color:#6d28d9;
+  margin-top:4px;
+}
+
+/* TAGS */
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+
+.tag{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+  background:#ede9fe;
+  color:#5b21b6;
+  border:1px solid #c4b5fd;
+}
+
+/* BOXES */
+.box{
+  background:#faf5ff;
+  border-left:5px solid #7c3aed;
+  padding:12px;
+  border-radius:10px;
+  margin-top:10px;
+  font-size:0.9rem;
+  color:#374151;
+  line-height:1.6;
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:12px;
+  color:#9ca3af;
+  border-top:1px solid #ddd6fe;
+  padding-top:15px;
+}
+
+.footer span{color:#7c3aed;font-weight:700;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="badge">RESEARCH AI LAB</div>
+  <h1>Researcher Persona Builder</h1>
+  <p>Create academic-level AI research personas</p>
+</div>
+
+<!-- INPUT -->
+<div class="card">
+
+<div class="grid">
+
+<div>
+<label>RESEARCH DOMAIN</label>
+<input id="domain" placeholder="e.g. Artificial Intelligence">
+</div>
+
+<div>
+<label>RESEARCH LEVEL</label>
+<select id="level">
+<option>Undergraduate</option>
+<option>Graduate</option>
+<option>PhD</option>
+<option>Industry Researcher</option>
+</select>
+</div>
+
+<div>
+<label>METHODOLOGY STYLE</label>
+<input id="method" placeholder="e.g. Quantitative / Qualitative / Mixed">
+</div>
+
+<div>
+<label>RESEARCH GOAL</label>
+<input id="goal" placeholder="e.g. Develop new ML model">
+</div>
+
+</div>
+
+<button onclick="build()">Generate Research Persona</button>
+
+</div>
+
+<!-- OUTPUT -->
+<div class="lab" id="lab" style="display:none;">
+
+<div class="title" id="name">Research Persona</div>
+<div class="sub" id="sub">AI Research Identity</div>
+
+<div class="tags" id="tags"></div>
+
+<div class="box" id="focus"></div>
+<div class="box" id="approach"></div>
+<div class="box" id="output"></div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+</div>
+
+</div>
+
+<script>
+
+function build(){
+
+let domain=document.getElementById("domain").value;
+let level=document.getElementById("level").value;
+let method=document.getElementById("method").value;
+let goal=document.getElementById("goal").value;
+
+if(!domain||!method||!goal){alert("Fill all fields");return;}
+
+document.getElementById("lab").style.display="block";
+
+document.getElementById("name").textContent="Dr. "+domain+" Research AI";
+document.getElementById("sub").textContent=level+" Level Research Specialist";
+
+let tags=[
+"Data Analysis",
+"Hypothesis Testing",
+"Model Design",
+"Literature Review",
+"Experimentation",
+"Insight Generation"
+];
+
+let html="";
+tags.forEach(t=>{
+html+=`<div class="tag">${t}</div>`;
+});
+
+document.getElementById("tags").innerHTML=html;
+
+document.getElementById("focus").innerHTML=
+"Research focus: Investigating advanced concepts in <b>"+domain+"</b> at "+level+" level with a strong emphasis on innovation and validation.";
+
+document.getElementById("approach").innerHTML=
+"Methodology: Uses <b>"+method+"</b> approach to ensure structured, evidence-based research outcomes.";
+
+document.getElementById("output").innerHTML=
+"Goal: <b>"+goal+"</b>. Expected output includes research papers, models, frameworks, or experimental findings suitable for academic or industrial application.";
+
+}
+
+</script>
+
+</body>
+</html>

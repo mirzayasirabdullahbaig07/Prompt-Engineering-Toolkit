@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Teacher Persona Generator</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:Segoe UI,Tahoma,sans-serif;
+  background:linear-gradient(135deg,#f3f0ff,#ede9fe,#faf5ff);
+  min-height:100vh;
+  padding:20px;
+  color:#1e1b4b;
+}
+
+.container{max-width:1100px;margin:auto;}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:30px 20px;
+}
+
+.badge{
+  display:inline-block;
+  background:linear-gradient(90deg,#7c3aed,#a855f7);
+  color:#fff;
+  padding:6px 16px;
+  border-radius:20px;
+  font-size:12px;
+  letter-spacing:2px;
+  margin-bottom:10px;
+}
+
+.header h1{
+  font-size:2.4rem;
+  font-weight:800;
+  background:linear-gradient(90deg,#5b21b6,#7c3aed,#a855f7);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.header p{color:#6b7280;margin-top:6px;}
+
+/* CARD */
+.card{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:18px;
+  padding:25px;
+  margin-bottom:18px;
+  box-shadow:0 4px 18px rgba(124,58,237,0.1);
+}
+
+/* INPUT GRID */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+@media(max-width:800px){
+  .grid{grid-template-columns:1fr;}
+}
+
+label{
+  font-size:12px;
+  font-weight:700;
+  color:#7c3aed;
+  letter-spacing:1.5px;
+}
+
+input,select{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border-radius:10px;
+  border:1.5px solid #ddd6fe;
+  background:#faf5ff;
+  outline:none;
+}
+
+input:focus,select:focus{
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+}
+
+/* BUTTON */
+button{
+  margin-top:15px;
+  padding:12px 18px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  background:linear-gradient(135deg,#7c3aed,#5b21b6);
+  color:#fff;
+}
+
+/* CLASSROOM CARD */
+.classroom{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:20px;
+  padding:20px;
+  position:relative;
+  overflow:hidden;
+}
+
+.classroom::before{
+  content:"🏫";
+  position:absolute;
+  font-size:120px;
+  opacity:0.05;
+  right:10px;
+  top:10px;
+}
+
+.name{
+  font-size:1.4rem;
+  font-weight:900;
+  color:#5b21b6;
+}
+
+.role{
+  color:#6d28d9;
+  margin-top:5px;
+}
+
+/* TAGS */
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+
+.tag{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+  background:#ede9fe;
+  color:#5b21b6;
+  border:1px solid #c4b5fd;
+}
+
+/* INSIGHT BOX */
+.box{
+  background:#faf5ff;
+  border-left:5px solid #7c3aed;
+  padding:12px;
+  border-radius:10px;
+  font-size:0.9rem;
+  margin-top:10px;
+  color:#374151;
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:12px;
+  color:#9ca3af;
+  border-top:1px solid #ddd6fe;
+  padding-top:15px;
+}
+
+.footer span{color:#7c3aed;font-weight:700;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="badge">EDUCATION AI ENGINE</div>
+  <h1>Teacher Persona Generator</h1>
+  <p>Create intelligent teaching personas for educational AI systems</p>
+</div>
+
+<!-- INPUT -->
+<div class="card">
+
+<div class="grid">
+
+<div>
+<label>SUBJECT</label>
+<input id="subject" placeholder="e.g. Mathematics">
+</div>
+
+<div>
+<label>LEVEL</label>
+<select id="level">
+<option>Primary</option>
+<option>Secondary</option>
+<option>College</option>
+<option>University</option>
+</select>
+</div>
+
+<div>
+<label>TEACHING STYLE</label>
+<input id="style" placeholder="e.g. Interactive / Strict / Friendly">
+</div>
+
+<div>
+<label>GOAL</label>
+<input id="goal" placeholder="e.g. Improve student understanding">
+</div>
+
+</div>
+
+<button onclick="generate()">Generate Teacher Persona</button>
+
+</div>
+
+<!-- OUTPUT -->
+<div class="classroom" id="out" style="display:none;">
+
+<div class="name" id="name">Teacher Persona</div>
+<div class="role" id="role">AI Teaching Profile</div>
+
+<div class="tags" id="tags"></div>
+
+<div class="box" id="desc"></div>
+
+<div class="box" id="method"></div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+</div>
+
+</div>
+
+<script>
+
+function generate(){
+
+let subject=document.getElementById("subject").value;
+let level=document.getElementById("level").value;
+let style=document.getElementById("style").value;
+let goal=document.getElementById("goal").value;
+
+if(!subject||!style||!goal){alert("Fill all fields");return;}
+
+document.getElementById("out").style.display="block";
+
+document.getElementById("name").textContent="Dr. "+subject+" Educator AI";
+document.getElementById("role").textContent=level+" Level Teaching Specialist";
+
+let tags=[
+"Lesson Planning",
+"Student Engagement",
+"Concept Simplification",
+"Interactive Teaching",
+"Assessment Design",
+"Knowledge Delivery"
+];
+
+let html="";
+tags.forEach(t=>{
+html+=`<div class="tag">${t}</div>`;
+});
+
+document.getElementById("tags").innerHTML=html;
+
+document.getElementById("desc").innerHTML=
+"This AI teacher persona specializes in <b>"+subject+"</b> for <b>"+level+"</b> students using a <b>"+style+"</b> teaching approach.";
+
+document.getElementById("method").innerHTML=
+"Primary goal: <b>"+goal+"</b>. Uses adaptive teaching strategies, real-world examples, and simplified explanations to improve learning outcomes.";
+
+}
+
+</script>
+
+</body>
+</html>

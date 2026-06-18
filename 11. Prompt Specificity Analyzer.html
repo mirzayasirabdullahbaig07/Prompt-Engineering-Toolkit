@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prompt Specificity Analyzer</title>
+  
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:Segoe UI,Tahoma,sans-serif;
+  background:linear-gradient(135deg,#f3f0ff,#ede9fe,#faf5ff);
+  min-height:100vh;
+  padding:20px;
+  color:#1e1b4b;
+}
+
+.container{max-width:1100px;margin:auto;}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:30px 20px;
+}
+
+.badge{
+  display:inline-block;
+  background:linear-gradient(90deg,#7c3aed,#a855f7);
+  color:#fff;
+  padding:6px 16px;
+  border-radius:20px;
+  font-size:12px;
+  letter-spacing:2px;
+  margin-bottom:10px;
+}
+
+.header h1{
+  font-size:2.4rem;
+  font-weight:800;
+  background:linear-gradient(90deg,#5b21b6,#7c3aed,#a855f7);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.header p{color:#6b7280;margin-top:6px;}
+
+/* CARD */
+.card{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:18px;
+  padding:25px;
+  margin-bottom:18px;
+  box-shadow:0 4px 18px rgba(124,58,237,0.1);
+}
+
+label{
+  font-size:12px;
+  font-weight:700;
+  color:#7c3aed;
+  letter-spacing:1.5px;
+}
+
+textarea{
+  width:100%;
+  height:130px;
+  margin-top:10px;
+  padding:14px;
+  border-radius:12px;
+  border:1.5px solid #ddd6fe;
+  background:#faf5ff;
+  font-size:1rem;
+  outline:none;
+}
+
+textarea:focus{
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:10px;margin-top:12px;}
+
+button{
+  padding:10px 18px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.primary{
+  background:linear-gradient(135deg,#7c3aed,#5b21b6);
+  color:#fff;
+}
+.clear{
+  background:#ede9fe;
+  color:#6d28d9;
+  border:1px solid #c4b5fd;
+}
+
+/* SCORE GRID (NEW STYLE) */
+.score-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+@media(max-width:900px){
+  .score-grid{grid-template-columns:repeat(2,1fr);}
+}
+
+.sbox{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:14px;
+  padding:15px;
+  text-align:center;
+  box-shadow:0 3px 10px rgba(124,58,237,0.08);
+}
+
+.sbox h4{
+  font-size:11px;
+  color:#7c3aed;
+  letter-spacing:1px;
+}
+
+.sval{
+  font-size:1.6rem;
+  font-weight:800;
+  color:#5b21b6;
+}
+
+/* TOKENS */
+.tokens{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+
+.token{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.good{
+  background:#ede9fe;
+  color:#5b21b6;
+  border:1px solid #c4b5fd;
+}
+
+.bad{
+  background:#f3f0ff;
+  color:#a21caf;
+  border:1px solid #e9d5ff;
+}
+
+/* METER */
+.meter{
+  margin-top:10px;
+  height:12px;
+  background:#ede9fe;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#7c3aed,#a855f7);
+  transition:0.6s;
+}
+
+/* INSIGHT */
+.insight{
+  background:#faf5ff;
+  border-left:5px solid #7c3aed;
+  padding:12px;
+  border-radius:10px;
+  font-size:0.9rem;
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:12px;
+  color:#9ca3af;
+  border-top:1px solid #ddd6fe;
+  padding-top:15px;
+}
+
+.footer span{color:#7c3aed;font-weight:700;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="badge">AI TOOL</div>
+  <h1>Prompt Specificity Analyzer</h1>
+  <p>Measure how precise and detailed your prompt is</p>
+</div>
+
+<!-- INPUT -->
+<div class="card">
+  <label>ENTER PROMPT</label>
+  <textarea id="text" placeholder="Type your prompt..."></textarea>
+
+  <div class="btn-row">
+    <button class="primary" onclick="analyze()">Analyze</button>
+    <button class="clear" onclick="clearAll()">Clear</button>
+  </div>
+</div>
+
+<!-- SCORE GRID -->
+<div class="card">
+  <div class="score-grid">
+
+    <div class="sbox">
+      <h4>DETAIL LEVEL</h4>
+      <div class="sval" id="d1">0%</div>
+      <div class="meter"><div class="fill" id="f1"></div></div>
+    </div>
+
+    <div class="sbox">
+      <h4>PRECISION</h4>
+      <div class="sval" id="d2">0%</div>
+      <div class="meter"><div class="fill" id="f2"></div></div>
+    </div>
+
+    <div class="sbox">
+      <h4>NUMERIC DEPTH</h4>
+      <div class="sval" id="d3">0%</div>
+      <div class="meter"><div class="fill" id="f3"></div></div>
+    </div>
+
+    <div class="sbox">
+      <h4>SPECIFICITY SCORE</h4>
+      <div class="sval" id="total">0%</div>
+      <div class="meter"><div class="fill" id="ft"></div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOKENS -->
+<div class="card">
+  <h3 style="color:#5b21b6;margin-bottom:10px;">🔍 Prompt Tokens Analysis</h3>
+  <div class="tokens" id="tokens"></div>
+</div>
+
+<!-- INSIGHT -->
+<div class="card">
+  <h3 style="color:#5b21b6;margin-bottom:10px;">🧠 AI Insight</h3>
+  <div id="insight" class="insight"></div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+</div>
+
+</div>
+
+<script>
+
+function words(t){return t.toLowerCase().split(/\W+/).filter(w=>w);}
+
+function analyze(){
+  let text=document.getElementById("text").value.trim();
+  if(!text){alert("Enter prompt");return;}
+
+  let w=words(text);
+
+  let vague=["something","stuff","things","good","bad","nice","some","many"];
+  let numbers=/\d/.test(text);
+
+  let vagueCount=w.filter(x=>vague.includes(x)).length;
+
+  let detail=Math.min(100,w.length*5);
+  let precision=100 - vagueCount*15;
+  let numeric=numbers?85:30;
+
+  let total=Math.round((detail+precision+numeric)/3);
+
+  set("d1","f1",detail);
+  set("d2","f2",precision);
+  set("d3","f3",numeric);
+  set("total","ft",total);
+
+  // tokens
+  let html="";
+  w.forEach(word=>{
+    if(vague.includes(word)){
+      html+=`<div class="token bad">${word}</div>`;
+    }else{
+      html+=`<div class="token good">${word}</div>`;
+    }
+  });
+
+  document.getElementById("tokens").innerHTML=html;
+
+  // insight
+  let msg=[];
+  if(vagueCount>0) msg.push("Replace vague words with precise terms.");
+  if(!numbers) msg.push("Add numeric constraints for higher specificity.");
+  if(w.length<10) msg.push("Add more descriptive detail.");
+
+  document.getElementById("insight").innerHTML=
+    msg.length?msg.join("<br>"):"Your prompt is highly specific and well structured.";
+}
+
+function set(id,fill,val){
+  document.getElementById(id).textContent=val+"%";
+  document.getElementById(fill).style.width=val+"%";
+}
+
+function clearAll(){
+  document.getElementById("text").value="";
+  ["d1","d2","d3","total"].forEach(i=>document.getElementById(i).textContent="0%");
+  ["f1","f2","f3","ft"].forEach(i=>document.getElementById(i).style.width="0%");
+  document.getElementById("tokens").innerHTML="";
+  document.getElementById("insight").innerHTML="";
+}
+
+</script>
+
+</body>
+</html>
