@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Recruiter Persona Generator</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:Segoe UI,Tahoma,sans-serif;
+  background:linear-gradient(135deg,#f3f0ff,#ede9fe,#faf5ff);
+  min-height:100vh;
+  padding:20px;
+  color:#1e1b4b;
+}
+
+.container{max-width:1100px;margin:auto;}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:30px 20px;
+}
+
+.badge{
+  display:inline-block;
+  background:linear-gradient(90deg,#7c3aed,#a855f7);
+  color:#fff;
+  padding:6px 16px;
+  border-radius:20px;
+  font-size:12px;
+  letter-spacing:2px;
+  margin-bottom:10px;
+}
+
+.header h1{
+  font-size:2.4rem;
+  font-weight:800;
+  background:linear-gradient(90deg,#5b21b6,#7c3aed,#a855f7);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.header p{color:#6b7280;margin-top:6px;}
+
+/* INPUT */
+.card{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:18px;
+  padding:25px;
+  margin-bottom:18px;
+  box-shadow:0 4px 18px rgba(124,58,237,0.1);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+@media(max-width:800px){
+  .grid{grid-template-columns:1fr;}
+}
+
+label{
+  font-size:12px;
+  font-weight:700;
+  color:#7c3aed;
+  letter-spacing:1.5px;
+}
+
+input,select{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border-radius:10px;
+  border:1.5px solid #ddd6fe;
+  background:#faf5ff;
+  outline:none;
+}
+
+input:focus,select:focus{
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+}
+
+button{
+  margin-top:15px;
+  padding:12px 18px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  background:linear-gradient(135deg,#7c3aed,#5b21b6);
+  color:#fff;
+}
+
+/* DASHBOARD */
+.board{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+}
+
+@media(max-width:900px){
+  .board{grid-template-columns:1fr;}
+}
+
+.panel{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:18px;
+  padding:16px;
+  position:relative;
+  overflow:hidden;
+}
+
+.panel::before{
+  content:"🏢";
+  position:absolute;
+  font-size:90px;
+  opacity:0.05;
+  right:10px;
+  top:10px;
+}
+
+.title{
+  font-weight:900;
+  color:#5b21b6;
+  margin-bottom:10px;
+}
+
+/* TAGS */
+.tag{
+  display:inline-block;
+  padding:6px 10px;
+  margin:4px 4px 0 0;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+  background:#ede9fe;
+  color:#5b21b6;
+  border:1px solid #c4b5fd;
+}
+
+/* PIPELINE */
+.pipeline{
+  margin-top:10px;
+  font-size:0.9rem;
+  line-height:1.6;
+  color:#374151;
+  background:#faf5ff;
+  padding:10px;
+  border-left:5px solid #7c3aed;
+  border-radius:10px;
+}
+
+/* SCORE BAR */
+.score{
+  margin-top:10px;
+}
+
+.bar{
+  background:#ede9fe;
+  height:10px;
+  border-radius:8px;
+  overflow:hidden;
+}
+
+.fill{
+  height:100%;
+  background:linear-gradient(90deg,#7c3aed,#a855f7);
+  width:0%;
+  transition:0.8s;
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:12px;
+  color:#9ca3af;
+  border-top:1px solid #ddd6fe;
+  padding-top:15px;
+}
+
+.footer span{color:#7c3aed;font-weight:700;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="badge">RECRUITMENT AI ENGINE</div>
+  <h1>Recruiter Persona Generator</h1>
+  <p>Create intelligent hiring decision-maker personas</p>
+</div>
+
+<!-- INPUT -->
+<div class="card">
+
+<div class="grid">
+
+<div>
+<label>INDUSTRY</label>
+<input id="industry" placeholder="e.g. Software / Healthcare">
+</div>
+
+<div>
+<label>HIRE ROLE</label>
+<input id="role" placeholder="e.g. Frontend Developer">
+</div>
+
+<div>
+<label>COMPANY TYPE</label>
+<select id="type">
+<option>Startup</option>
+<option>Enterprise</option>
+<option>Agency</option>
+<option>Freelance Team</option>
+</select>
+</div>
+
+<div>
+<label>HIRING GOAL</label>
+<input id="goal" placeholder="e.g. Hire 5 developers in 1 month">
+</div>
+
+</div>
+
+<button onclick="build()">Generate Recruiter Persona</button>
+
+</div>
+
+<!-- DASHBOARD -->
+<div class="board" id="board" style="display:none;">
+
+<!-- PANEL 1 -->
+<div class="panel">
+<div class="title">🎯 Recruiter Profile</div>
+<div id="profile"></div>
+</div>
+
+<!-- PANEL 2 -->
+<div class="panel">
+<div class="title">📊 Hiring Strategy</div>
+<div id="strategy"></div>
+</div>
+
+<!-- PANEL 3 -->
+<div class="panel">
+<div class="title">📁 Candidate Focus</div>
+<div id="candidate"></div>
+
+<div class="score">
+<div class="bar"><div class="fill" id="fill"></div></div>
+</div>
+
+</div>
+
+</div>
+
+<!-- PIPELINE -->
+<div class="card">
+<div class="title">🧠 Decision Pipeline</div>
+<div class="pipeline" id="pipeline"></div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+</div>
+
+</div>
+
+<script>
+
+function build(){
+
+let industry=document.getElementById("industry").value;
+let role=document.getElementById("role").value;
+let type=document.getElementById("type").value;
+let goal=document.getElementById("goal").value;
+
+if(!industry||!role||!goal){alert("Fill all fields");return;}
+
+document.getElementById("board").style.display="grid";
+
+/* Profile */
+document.getElementById("profile").innerHTML=`
+<div class="tag">${industry}</div>
+<div class="tag">${type}</div>
+<div class="tag">Talent Acquisition Expert</div>
+<div class="tag">Data Driven Hiring</div>
+`;
+
+/* Strategy */
+document.getElementById("strategy").innerHTML=`
+<div class="tag">LinkedIn Sourcing</div>
+<div class="tag">Interview Funnel</div>
+<div class="tag">Skill Matching</div>
+<div class="tag">Cultural Fit Analysis</div>
+`;
+
+/* Candidate */
+document.getElementById("candidate").innerHTML=`
+<div class="tag">${role}</div>
+<div class="tag">Skilled Talent Pool</div>
+<div class="tag">Pre-Screened Candidates</div>
+<div class="tag">Remote + Onsite</div>
+`;
+
+document.getElementById("fill").style.width="85%";
+
+/* Pipeline */
+document.getElementById("pipeline").innerHTML=
+`1. Define hiring requirements for <b>${role}</b><br>
+2. Source candidates from global talent platforms<br>
+3. Shortlist based on skill + experience<br>
+4. Conduct structured interviews<br>
+5. Final selection aligned with goal: <b>${goal}</b><br>
+6. Onboard and evaluate performance`;
+
+}
+
+</script>
+
+</body>
+</html>

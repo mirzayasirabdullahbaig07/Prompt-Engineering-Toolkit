@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prompt Refiner</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:Segoe UI,Tahoma,sans-serif;
+  background:linear-gradient(135deg,#f3f0ff,#ede9fe,#faf5ff);
+  min-height:100vh;
+  padding:20px;
+  color:#1e1b4b;
+}
+
+.container{max-width:1100px;margin:auto;}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:30px 20px;
+}
+
+.badge{
+  display:inline-block;
+  background:linear-gradient(90deg,#7c3aed,#a855f7);
+  color:#fff;
+  padding:6px 16px;
+  border-radius:20px;
+  font-size:12px;
+  letter-spacing:2px;
+  margin-bottom:10px;
+}
+
+.header h1{
+  font-size:2.4rem;
+  font-weight:800;
+  background:linear-gradient(90deg,#5b21b6,#7c3aed,#a855f7);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.header p{color:#6b7280;margin-top:6px;}
+
+/* INPUT */
+.card{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:18px;
+  padding:25px;
+  box-shadow:0 4px 18px rgba(124,58,237,0.1);
+  margin-bottom:18px;
+}
+
+textarea{
+  width:100%;
+  height:130px;
+  padding:12px;
+  border-radius:12px;
+  border:1.5px solid #ddd6fe;
+  background:#faf5ff;
+  outline:none;
+  resize:none;
+}
+
+textarea:focus{
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+}
+
+button{
+  margin-top:15px;
+  padding:12px 18px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  background:linear-gradient(135deg,#7c3aed,#5b21b6);
+  color:#fff;
+}
+
+/* WORKSPACE */
+.workspace{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+}
+
+@media(max-width:900px){
+  .workspace{grid-template-columns:1fr;}
+}
+
+.panel{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:18px;
+  padding:15px;
+  position:relative;
+  overflow:hidden;
+}
+
+.panel::before{
+  content:"🪄";
+  position:absolute;
+  font-size:90px;
+  opacity:0.05;
+  right:10px;
+  top:10px;
+}
+
+.title{
+  font-weight:900;
+  color:#5b21b6;
+  margin-bottom:10px;
+}
+
+/* BOX */
+.box{
+  background:#faf5ff;
+  border-left:5px solid #7c3aed;
+  padding:10px;
+  border-radius:10px;
+  margin-top:8px;
+  font-size:0.9rem;
+  color:#374151;
+  line-height:1.6;
+}
+
+/* TAGS */
+.tag{
+  display:inline-block;
+  padding:6px 10px;
+  margin:4px 4px 0 0;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+  background:#ede9fe;
+  color:#5b21b6;
+  border:1px solid #c4b5fd;
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:12px;
+  color:#9ca3af;
+  border-top:1px solid #ddd6fe;
+  padding-top:15px;
+}
+
+.footer span{color:#7c3aed;font-weight:700;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="badge">PROMPT REFINEMENT STUDIO</div>
+  <h1>Prompt Refiner</h1>
+  <p>Enhance prompts for maximum AI output quality</p>
+</div>
+
+<!-- INPUT -->
+<div class="card">
+
+<textarea id="input" placeholder="Enter prompt to refine..."></textarea>
+<button onclick="refine()">Refine Prompt</button>
+
+</div>
+
+<!-- WORKSPACE -->
+<div class="workspace" id="workspace" style="display:none;">
+
+<!-- ORIGINAL -->
+<div class="panel">
+<div class="title">📌 Original Prompt</div>
+<div class="box" id="original"></div>
+</div>
+
+<!-- REFINED -->
+<div class="panel">
+<div class="title">✨ Refined Prompt</div>
+<div class="box" id="refined"></div>
+</div>
+
+<!-- IMPROVEMENTS -->
+<div class="panel">
+<div class="title">📊 Enhancements Applied</div>
+<div id="improvements"></div>
+</div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Developed by <span>Hamna Munir</span> |  <span>Mirza Yasir Abdullah Baig</span>
+</div>
+
+</div>
+
+<script>
+
+function refine(){
+
+let text=document.getElementById("input").value.trim();
+if(!text){alert("Enter prompt");return;}
+
+document.getElementById("workspace").style.display="grid";
+
+/* Original */
+document.getElementById("original").innerText=text;
+
+/* Refined */
+let refined=text
+.replace(/make/gi,"create")
+.replace(/good/gi,"high-quality")
+.replace(/tell/gi,"explain in detail")
+.replace(/show/gi,"demonstrate clearly");
+
+document.getElementById("refined").innerHTML=
+`<div class="box">${refined}</div>`;
+
+/* Improvements */
+let improvements=[
+"Improved clarity and structure",
+"Enhanced vocabulary precision",
+"Replaced vague terms with strong verbs",
+"Optimized for AI comprehension",
+"Added professional tone alignment"
+];
+
+let html="";
+improvements.forEach(i=>{
+html+=`<div class="tag">${i}</div>`;
+});
+
+document.getElementById("improvements").innerHTML=html;
+
+}
+
+</script>
+
+</body>
+</html>

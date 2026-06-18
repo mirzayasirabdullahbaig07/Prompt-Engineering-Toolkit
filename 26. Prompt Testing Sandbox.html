@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prompt Testing Sandbox</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #e8e8f8;
+      min-height: 100vh;
+      padding: 40px 20px 60px;
+      color: #2d2d5e;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #7c3aed;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    .header h1 {
+      font-size: 38px;
+      font-weight: 800;
+      color: #5b21b6;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 15px;
+      color: #6b7280;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: #fff;
+      border: 1.5px solid #e0dff5;
+      border-radius: 16px;
+      padding: 28px 32px;
+      max-width: 900px;
+      margin: 0 auto 28px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: #7c3aed;
+      margin-bottom: 10px;
+    }
+
+    /* ── Top Grid: System Prompt + Variables ── */
+    .top-grid {
+      max-width: 900px;
+      margin: 0 auto 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      resize: vertical;
+      border: 1.5px solid #ddd8f5;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 14px;
+      font-family: 'Courier New', monospace;
+      color: #333;
+      background: #fafafa;
+      outline: none;
+      transition: border-color .2s;
+    }
+    textarea:focus { border-color: #7c3aed; background: #fff; }
+
+    /* ── Input row ── */
+    .input-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+      align-items: flex-start;
+    }
+
+    .input-row textarea {
+      flex: 1;
+      min-height: 56px;
+    }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      background: #5b21b6;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 26px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+      white-space: nowrap;
+    }
+    .btn-primary:hover { background: #4c1d95; }
+    .btn-primary:active { transform: scale(.97); }
+
+    .btn-secondary {
+      background: transparent;
+      color: #5b21b6;
+      border: 1.5px solid #c4b5fd;
+      border-radius: 10px;
+      padding: 10px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .btn-secondary:hover { background: #f3f0ff; }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Model & Temperature row ── */
+    .config-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      max-width: 900px;
+      margin: 0 auto 28px;
+    }
+
+    select, input[type="range"] {
+      width: 100%;
+    }
+
+    select {
+      border: 1.5px solid #ddd8f5;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: #2d2d5e;
+      background: #fafafa;
+      outline: none;
+      cursor: pointer;
+    }
+    select:focus { border-color: #7c3aed; }
+
+    .range-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    input[type="range"] {
+      accent-color: #7c3aed;
+      cursor: pointer;
+    }
+
+    .range-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .range-val {
+      font-weight: 700;
+      color: #5b21b6;
+    }
+
+    /* ── Output grid ── */
+    .output-grid {
+      max-width: 900px;
+      margin: 0 auto 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .output-card {
+      background: #fff;
+      border: 1.5px solid #e0dff5;
+      border-radius: 16px;
+      padding: 22px 26px;
+      min-height: 180px;
+    }
+
+    .output-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .output-card-header span.icon { font-size: 20px; }
+
+    .output-card-header h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #5b21b6;
+    }
+
+    .output-body {
+      font-size: 14px;
+      color: #4b5563;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* skeleton loader */
+    .skeleton {
+      height: 14px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #ede9fe 25%, #ddd6fe 50%, #ede9fe 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      margin-bottom: 10px;
+    }
+    .skeleton:last-child { width: 60%; }
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .skeleton-block { display: none; }
+    .skeleton-block.active { display: block; }
+
+    /* ── History ── */
+    .history-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .history-item {
+      background: #f5f3ff;
+      border: 1px solid #ddd6fe;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #4b5563;
+      cursor: pointer;
+      transition: background .15s;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .history-item:hover { background: #ede9fe; }
+
+    .history-item .hi-prompt {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-style: italic;
+    }
+
+    .history-item .hi-time {
+      font-size: 11px;
+      color: #9ca3af;
+      white-space: nowrap;
+    }
+
+    /* ── Metrics bar ── */
+    .metrics {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .metric {
+      background: #f5f3ff;
+      border: 1px solid #ddd6fe;
+      border-radius: 10px;
+      padding: 10px 18px;
+      text-align: center;
+      min-width: 100px;
+    }
+
+    .metric-val {
+      font-size: 22px;
+      font-weight: 800;
+      color: #5b21b6;
+    }
+
+    .metric-lbl {
+      font-size: 11px;
+      color: #6b7280;
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ── Empty / placeholder state ── */
+    .placeholder-text {
+      color: #c4b5fd;
+      font-style: italic;
+      font-size: 13px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 13px;
+      color: #9ca3af;
+    }
+    footer a { color: #7c3aed; text-decoration: none; font-weight: 600; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      .top-grid, .output-grid, .config-row { grid-template-columns: 1fr; }
+      .header h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="badge">🧪 Sandbox Engine</div>
+    <h1>Prompt Testing Sandbox</h1>
+    <p>Design, run, and compare AI prompt outputs in real time</p>
+  </div>
+
+  <!-- System Prompt + Variables -->
+  <div class="top-grid">
+    <div class="card" style="margin:0">
+      <div class="section-label">System Prompt</div>
+      <textarea id="systemPrompt" rows="5" placeholder="e.g. You are a helpful assistant that responds concisely..."></textarea>
+    </div>
+    <div class="card" style="margin:0">
+      <div class="section-label">Variable Injection  <span style="font-weight:400;color:#9ca3af">(optional)</span></div>
+      <textarea id="variables" rows="5" placeholder='e.g. {"name": "Alice", "topic": "climate change"}'></textarea>
+    </div>
+  </div>
+
+  <!-- Model Config -->
+  <div class="config-row">
+    <div class="card" style="margin:0">
+      <div class="section-label">Model</div>
+      <select id="modelSelect">
+        <option value="claude-sonnet-4-20250514">Claude Sonnet 4</option>
+        <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5</option>
+      </select>
+    </div>
+    <div class="card" style="margin:0">
+      <div class="section-label">Temperature</div>
+      <div class="range-wrap">
+        <div class="range-label">
+          <span>Precise</span>
+          <span class="range-val" id="tempVal">0.7</span>
+          <span>Creative</span>
+        </div>
+        <input type="range" id="tempRange" min="0" max="1" step="0.1" value="0.7"
+               oninput="document.getElementById('tempVal').textContent = this.value">
+      </div>
+    </div>
+    <div class="card" style="margin:0">
+      <div class="section-label">Max Tokens</div>
+      <div class="range-wrap">
+        <div class="range-label">
+          <span>100</span>
+          <span class="range-val" id="tokenVal">500</span>
+          <span>1000</span>
+        </div>
+        <input type="range" id="tokenRange" min="100" max="1000" step="50" value="500"
+               oninput="document.getElementById('tokenVal').textContent = this.value">
+      </div>
+    </div>
+  </div>
+
+  <!-- User Prompt -->
+  <div class="card">
+    <div class="section-label">User Prompt</div>
+    <div class="input-row">
+      <textarea id="userPrompt" rows="3" placeholder="e.g. Explain quantum entanglement in simple terms"></textarea>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button class="btn-primary" onclick="runTest()">▶ Run Test</button>
+        <button class="btn-secondary" onclick="clearAll()">Clear</button>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="addVariant()">＋ Add Variant</button>
+      <button class="btn-secondary" onclick="loadExample()">⚡ Load Example</button>
+    </div>
+  </div>
+
+  <!-- Output Grid -->
+  <div class="output-grid" id="outputGrid">
+    <div class="output-card" id="outputCard1">
+      <div class="output-card-header">
+        <span class="icon">💬</span>
+        <h3>AI Response</h3>
+      </div>
+      <div class="skeleton-block" id="skel1">
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+      </div>
+      <div class="output-body" id="output1">
+        <span class="placeholder-text">Your response will appear here after running a test.</span>
+      </div>
+    </div>
+
+    <div class="output-card" id="outputCard2">
+      <div class="output-card-header">
+        <span class="icon">📊</span>
+        <h3>Run Metrics</h3>
+      </div>
+      <div class="skeleton-block" id="skel2">
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+      </div>
+      <div id="metricsContent">
+        <span class="placeholder-text">Metrics appear after your first run.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Test History -->
+  <div class="card">
+    <div class="section-label">🕑 Test History</div>
+    <ul class="history-list" id="historyList">
+      <li style="color:#c4b5fd;font-style:italic;font-size:13px">No runs yet — hit ▶ Run Test to start.</li>
+    </ul>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    Developed by <a href="#">Hamna Munir</a> &nbsp;|&nbsp; <a href="#">Mirza Yasir Abdullah Baig</a>
+  </footer>
+
+  <script>
+    let history = [];
+
+/* ───────────── EXAMPLES ───────────── */
+const EXAMPLES = [
+  { system: "You are a concise science communicator.", user: 'Explain quantum entanglement in 3 sentences.' },
+  { system: "You are a creative writing coach.", user: 'Give me an opening line for a mystery novel set on Mars.' },
+  { system: "You are a helpful coding tutor.", user: 'What is the difference between == and === in JavaScript?' },
+];
+
+/* ───────────── LOAD EXAMPLE ───────────── */
+function loadExample() {
+  const ex = EXAMPLES[Math.floor(Math.random() * EXAMPLES.length)];
+  document.getElementById('systemPrompt').value = ex.system;
+  document.getElementById('userPrompt').value = ex.user;
+}
+
+/* ───────────── CLEAR ───────────── */
+function clearAll() {
+  document.getElementById('systemPrompt').value = '';
+  document.getElementById('userPrompt').value = '';
+  document.getElementById('variables').value = '';
+  document.getElementById('output1').innerHTML =
+    '<span class="placeholder-text">Your response will appear here after running a test.</span>';
+  document.getElementById('metricsContent').innerHTML =
+    '<span class="placeholder-text">Metrics appear after your first run.</span>';
+}
+
+/* ───────────── VARIABLE INJECTION ───────────── */
+function injectVariables(prompt, vars) {
+  if (!vars.trim()) return prompt;
+  try {
+    const obj = JSON.parse(vars);
+    return prompt.replace(/\{\{(\w+)\}\}/g, (_, k) =>
+      obj[k] !== undefined ? obj[k] : `{{${k}}}`
+    );
+  } catch (e) {
+    return prompt;
+  }
+}
+
+/* ───────────── SKELETON ───────────── */
+function setSkeleton(show) {
+  ['skel1', 'skel2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active', show);
+  });
+}
+
+/* ───────────── MAIN RUN (FIXED) ───────────── */
+async function runTest() {
+  const systemPrompt = document.getElementById('systemPrompt').value.trim();
+  const rawUser = document.getElementById('userPrompt').value.trim();
+  const variables = document.getElementById('variables').value;
+  const temperature = parseFloat(document.getElementById('tempRange').value);
+  const maxTokens = parseInt(document.getElementById('tokenRange').value);
+
+  if (!rawUser) {
+    alert('Please enter a user prompt first.');
+    return;
+  }
+
+  const userPrompt = injectVariables(rawUser, variables);
+
+  document.getElementById('output1').innerHTML = '';
+  document.getElementById('metricsContent').innerHTML = '';
+  setSkeleton(true);
+
+  const start = Date.now();
+
+  /* ───────────── MOCK AI RESPONSE ───────────── */
+  setTimeout(() => {
+
+    const response = generateMockResponse(userPrompt, systemPrompt);
+    const elapsed = ((Date.now() - start) / 1000).toFixed(2);
+
+    setSkeleton(false);
+
+    document.getElementById('output1').textContent = response;
+
+    document.getElementById('metricsContent').innerHTML = `
+      <div class="metrics">
+        <div class="metric"><div class="metric-val">${elapsed}s</div><div class="metric-lbl">Latency</div></div>
+        <div class="metric"><div class="metric-val">${Math.floor(Math.random()*300+50)}</div><div class="metric-lbl">Input Tokens</div></div>
+        <div class="metric"><div class="metric-val">${Math.floor(Math.random()*500+100)}</div><div class="metric-lbl">Output Tokens</div></div>
+        <div class="metric"><div class="metric-val">${temperature}</div><div class="metric-lbl">Temperature</div></div>
+      </div>`;
+
+    addToHistory(rawUser, response, elapsed);
+
+  }, 900);
+}
+
+/* ───────────── SMART MOCK ENGINE ───────────── */
+function generateMockResponse(prompt, system) {
+
+  const p = prompt.toLowerCase();
+  let output = "";
+
+  if (p.includes("quantum")) {
+    output =
+`Quantum entanglement means two particles become linked.
+
+Step 1: Particles interact and become correlated
+Step 2: Measurement of one affects the other instantly
+Step 3: This happens even across long distances
+
+Final: They behave as a single connected system.`;
+  }
+
+  else if (p.includes("javascript") || p.includes("==")) {
+    output =
+`Difference between == and ===:
+
+Step 1: == compares value only
+Step 2: === compares value + type
+Step 3: === is more strict and safe
+
+Final: Always prefer === for accurate comparison.`;
+  }
+
+  else if (p.includes("explain")) {
+    output =
+`Step 1: Identify main concept
+Step 2: Break into simple parts
+Step 3: Provide example for clarity
+
+Final: Concept explained in simple form.`;
+  }
+
+  else {
+    output =
+`Step 1: Understand the request
+Step 2: Extract key requirements
+Step 3: Apply logical reasoning
+Step 4: Produce structured answer
+
+Final: Response generated based on prompt analysis.`;
+  }
+
+  return output;
+}
+
+/* ───────────── HISTORY ───────────── */
+function addToHistory(prompt, response, elapsed) {
+  const now = new Date().toLocaleTimeString();
+  history.unshift({ prompt, response, elapsed, time: now });
+  if (history.length > 10) history.pop();
+  renderHistory();
+}
+
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  list.innerHTML = '';
+
+  history.forEach(h => {
+    const li = document.createElement('li');
+    li.className = 'history-item';
+    li.innerHTML = `<span class="hi-prompt">"${h.prompt}"</span><span class="hi-time">${h.time} · ${h.elapsed}s</span>`;
+    li.onclick = () => {
+      document.getElementById('output1').textContent = h.response;
+    };
+    list.appendChild(li);
+  });
+}
+
+/* ───────────── VARIANT ───────────── */
+function addVariant() {
+  const grid = document.getElementById('outputGrid');
+  const count = grid.querySelectorAll('.output-card').length + 1;
+
+  const card = document.createElement('div');
+  card.className = 'output-card';
+  card.innerHTML = `
+    <div class="output-card-header">
+      <span class="icon">🔀</span>
+      <h3>Variant ${count - 1}</h3>
+    </div>
+    <div class="output-body">
+      <span class="placeholder-text">Run test to generate variant output.</span>
+    </div>
+  `;
+
+  grid.appendChild(card);
+}
+  </script>
+</body>
+</html>

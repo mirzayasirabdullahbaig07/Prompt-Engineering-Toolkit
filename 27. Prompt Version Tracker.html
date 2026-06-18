@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Version Tracker</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#f2effd;
+    min-height:100vh;
+    padding:40px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.badge{
+    display:inline-block;
+    background:#7c3aed;
+    color:white;
+    padding:8px 18px;
+    border-radius:25px;
+    font-size:12px;
+    letter-spacing:2px;
+    margin-bottom:20px;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.header h1{
+    color:#6d28d9;
+    font-size:48px;
+    margin-bottom:10px;
+}
+
+.header p{
+    color:#666;
+    font-size:18px;
+}
+
+.main-card{
+    background:white;
+    border:1px solid #d8b4fe;
+    border-radius:25px;
+    padding:25px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.05);
+}
+
+label{
+    display:block;
+    margin-bottom:12px;
+    color:#6d28d9;
+    font-weight:700;
+    letter-spacing:1px;
+    font-size:13px;
+}
+
+textarea{
+    width:100%;
+    height:180px;
+    border:1px solid #d8b4fe;
+    border-radius:15px;
+    padding:15px;
+    resize:none;
+    font-size:15px;
+    outline:none;
+    background:#faf8ff;
+}
+
+.btn-group{
+    margin-top:20px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:none;
+    cursor:pointer;
+    padding:12px 24px;
+    border-radius:12px;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.primary{
+    background:#7c3aed;
+    color:white;
+}
+
+.primary:hover{
+    background:#6d28d9;
+}
+
+.secondary{
+    background:#ede9fe;
+    color:#6d28d9;
+}
+
+.secondary:hover{
+    background:#ddd6fe;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    margin-top:25px;
+}
+
+.card{
+    background:white;
+    border:1px solid #d8b4fe;
+    border-radius:20px;
+    padding:20px;
+}
+
+.card h2{
+    color:#5b21b6;
+    margin-bottom:15px;
+}
+
+.version-list{
+    max-height:300px;
+    overflow:auto;
+}
+
+.version-item{
+    padding:12px;
+    background:#f8f6ff;
+    border-radius:10px;
+    margin-bottom:10px;
+    cursor:pointer;
+    border-left:5px solid #7c3aed;
+}
+
+.version-item:hover{
+    background:#ede9fe;
+}
+
+.version-item small{
+    display:block;
+    color:#666;
+    margin-top:5px;
+}
+
+.details{
+    background:#faf8ff;
+    padding:15px;
+    border-radius:12px;
+    min-height:250px;
+    white-space:pre-wrap;
+}
+
+.compare-box{
+    margin-top:15px;
+}
+
+select{
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+    border-radius:10px;
+    border:1px solid #d8b4fe;
+}
+
+.compare-result{
+    margin-top:10px;
+    background:#faf8ff;
+    padding:15px;
+    border-radius:10px;
+    min-height:100px;
+    white-space:pre-wrap;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-top:20px;
+}
+
+.stat{
+    background:white;
+    border:1px solid #d8b4fe;
+    padding:20px;
+    border-radius:15px;
+    text-align:center;
+}
+
+.stat h3{
+    color:#6d28d9;
+    font-size:28px;
+}
+
+.stat p{
+    color:#666;
+}
+
+.footer{
+    text-align:center;
+    margin-top:30px;
+    color:#777;
+}
+
+@media(max-width:900px){
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .header h1{
+        font-size:34px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div class="badge">PROMPT MANAGEMENT</div>
+        <h1>Prompt Version Tracker</h1>
+        <p>Track, Compare & Manage AI Prompt Versions</p>
+    </div>
+
+    <div class="main-card">
+
+        <label>ENTER PROMPT</label>
+
+        <textarea
+            id="promptInput"
+            placeholder="e.g. Create a professional cover letter for a software engineer position..."
+        ></textarea>
+
+        <div class="btn-group">
+            <button class="primary" onclick="saveVersion()">
+                Save Version
+            </button>
+
+            <button class="secondary" onclick="clearInput()">
+                Clear
+            </button>
+
+            <button class="secondary" onclick="exportVersions()">
+                Export JSON
+            </button>
+        </div>
+
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <h3 id="totalVersions">0</h3>
+            <p>Total Versions</p>
+        </div>
+
+        <div class="stat">
+            <h3 id="latestVersion">0</h3>
+            <p>Latest Version</p>
+        </div>
+
+        <div class="stat">
+            <h3 id="totalWords">0</h3>
+            <p>Total Words</p>
+        </div>
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <h2>📜 Version History</h2>
+
+            <div id="versionList" class="version-list"></div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>📌 Version Details</h2>
+
+            <div id="details" class="details">
+Select a version to view details.
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+
+        <h2>🔍 Compare Versions</h2>
+
+        <div class="compare-box">
+
+            <select id="versionA"></select>
+
+            <select id="versionB"></select>
+
+            <button class="primary" onclick="compareVersions()">
+                Compare
+            </button>
+
+            <div id="compareResult" class="compare-result">
+Select two versions to compare.
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+        Prompt Version Tracker Project
+    </div>
+
+</div>
+
+<script>
+
+let versions =
+JSON.parse(localStorage.getItem("promptVersions")) || [];
+
+function saveToStorage(){
+    localStorage.setItem(
+        "promptVersions",
+        JSON.stringify(versions)
+    );
+}
+
+function saveVersion(){
+
+    const prompt =
+    document.getElementById("promptInput").value.trim();
+
+    if(prompt === ""){
+        alert("Please enter a prompt.");
+        return;
+    }
+
+    const version = {
+        id: versions.length + 1,
+        text: prompt,
+        date: new Date().toLocaleString()
+    };
+
+    versions.push(version);
+
+    saveToStorage();
+
+    renderVersions();
+
+    clearInput();
+
+    alert("Version Saved Successfully!");
+}
+
+function clearInput(){
+    document.getElementById("promptInput").value="";
+}
+
+function renderVersions(){
+
+    const list =
+    document.getElementById("versionList");
+
+    list.innerHTML="";
+
+    versions.forEach((v,index)=>{
+
+        const div =
+        document.createElement("div");
+
+        div.className="version-item";
+
+        div.innerHTML=
+        `
+        <strong>Version ${index+1}</strong>
+        <small>${v.date}</small>
+        `;
+
+        div.onclick=()=>showVersion(index);
+
+        list.appendChild(div);
+
+    });
+
+    populateCompareDropdowns();
+    updateStats();
+}
+
+function showVersion(index){
+
+    const v = versions[index];
+
+    document.getElementById("details").innerHTML=
+    `
+    <strong>Version ${index+1}</strong><br><br>
+    <strong>Date:</strong> ${v.date}
+    <hr style="margin:10px 0;">
+    ${v.text}
+    <br><br>
+
+    <button class="secondary"
+    onclick="deleteVersion(${index})">
+    Delete Version
+    </button>
+    `;
+}
+
+function deleteVersion(index){
+
+    if(confirm("Delete this version?")){
+
+        versions.splice(index,1);
+
+        saveToStorage();
+
+        renderVersions();
+
+        document.getElementById("details").innerHTML=
+        "Version deleted.";
+
+    }
+}
+
+function populateCompareDropdowns(){
+
+    const a =
+    document.getElementById("versionA");
+
+    const b =
+    document.getElementById("versionB");
+
+    a.innerHTML="";
+    b.innerHTML="";
+
+    versions.forEach((v,index)=>{
+
+        const option1 =
+        document.createElement("option");
+
+        option1.value=index;
+        option1.textContent=
+        `Version ${index+1}`;
+
+        a.appendChild(option1);
+
+        const option2 =
+        document.createElement("option");
+
+        option2.value=index;
+        option2.textContent=
+        `Version ${index+1}`;
+
+        b.appendChild(option2);
+
+    });
+}
+
+function compareVersions(){
+
+    if(versions.length < 2){
+        alert("Need at least 2 versions.");
+        return;
+    }
+
+    const a =
+    versions[
+        document.getElementById("versionA").value
+    ];
+
+    const b =
+    versions[
+        document.getElementById("versionB").value
+    ];
+
+    const wordsA =
+    a.text.split(/\s+/).length;
+
+    const wordsB =
+    b.text.split(/\s+/).length;
+
+    document.getElementById(
+        "compareResult"
+    ).innerHTML=
+    `
+    Version A Words: ${wordsA}<br>
+    Version B Words: ${wordsB}<br><br>
+
+    Difference:
+    ${Math.abs(wordsA-wordsB)} words
+    <hr style="margin:10px 0;">
+    <strong>Version A:</strong><br>
+    ${a.text.substring(0,200)}...
+    <br><br>
+
+    <strong>Version B:</strong><br>
+    ${b.text.substring(0,200)}...
+    `;
+}
+
+function updateStats(){
+
+    document.getElementById(
+        "totalVersions"
+    ).textContent =
+    versions.length;
+
+    document.getElementById(
+        "latestVersion"
+    ).textContent =
+    versions.length;
+
+    let words = 0;
+
+    versions.forEach(v=>{
+        words +=
+        v.text.split(/\s+/).length;
+    });
+
+    document.getElementById(
+        "totalWords"
+    ).textContent = words;
+}
+
+function exportVersions(){
+
+    const data =
+    JSON.stringify(versions,null,2);
+
+    const blob =
+    new Blob([data],
+    {type:"application/json"});
+
+    const url =
+    URL.createObjectURL(blob);
+
+    const a =
+    document.createElement("a");
+
+    a.href=url;
+    a.download="prompt_versions.json";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+renderVersions();
+
+</script>
+
+</body>
+</html>

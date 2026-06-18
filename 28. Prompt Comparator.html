@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Comparator</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#f2effd;
+    min-height:100vh;
+    padding:40px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.badge{
+    display:inline-block;
+    background:#7c3aed;
+    color:white;
+    padding:8px 18px;
+    border-radius:20px;
+    font-size:12px;
+    letter-spacing:2px;
+    margin-bottom:15px;
+}
+
+.header h1{
+    color:#6d28d9;
+    font-size:48px;
+    margin-bottom:10px;
+}
+
+.header p{
+    color:#666;
+}
+
+.main-card{
+    background:white;
+    border:1px solid #d8b4fe;
+    border-radius:25px;
+    padding:25px;
+}
+
+.prompt-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+label{
+    display:block;
+    margin-bottom:10px;
+    color:#6d28d9;
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:1px;
+}
+
+textarea{
+    width:100%;
+    height:220px;
+    border:1px solid #d8b4fe;
+    border-radius:15px;
+    padding:15px;
+    resize:none;
+    outline:none;
+    font-size:15px;
+    background:#faf8ff;
+}
+
+.buttons{
+    margin-top:20px;
+    display:flex;
+    gap:12px;
+}
+
+button{
+    border:none;
+    padding:12px 24px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.primary{
+    background:#7c3aed;
+    color:white;
+}
+
+.primary:hover{
+    background:#6d28d9;
+}
+
+.secondary{
+    background:#ede9fe;
+    color:#6d28d9;
+}
+
+.secondary:hover{
+    background:#ddd6fe;
+}
+
+.results{
+    margin-top:25px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.card{
+    background:white;
+    border:1px solid #d8b4fe;
+    border-radius:20px;
+    padding:20px;
+}
+
+.card h3{
+    color:#6d28d9;
+    margin-bottom:15px;
+}
+
+.stat{
+    margin-bottom:10px;
+    color:#555;
+}
+
+.progress-container{
+    width:100%;
+    height:25px;
+    background:#ede9fe;
+    border-radius:20px;
+    overflow:hidden;
+    margin:15px 0;
+}
+
+.progress-bar{
+    height:100%;
+    width:0%;
+    background:#7c3aed;
+    transition:0.5s;
+}
+
+.big-score{
+    font-size:40px;
+    font-weight:bold;
+    color:#6d28d9;
+    text-align:center;
+}
+
+.word-box{
+    background:#faf8ff;
+    border-radius:12px;
+    padding:12px;
+    min-height:120px;
+    margin-top:10px;
+    white-space:pre-wrap;
+}
+
+.footer{
+    text-align:center;
+    margin-top:30px;
+    color:#777;
+}
+
+@media(max-width:900px){
+
+    .prompt-grid{
+        grid-template-columns:1fr;
+    }
+
+    .results{
+        grid-template-columns:1fr;
+    }
+
+    .header h1{
+        font-size:34px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div class="badge">PROMPT ANALYSIS</div>
+        <h1>Prompt Comparator</h1>
+        <p>Compare and analyze AI prompts instantly</p>
+    </div>
+
+    <div class="main-card">
+
+        <div class="prompt-grid">
+
+            <div>
+                <label>PROMPT A</label>
+                <textarea id="promptA"
+                placeholder="Enter first prompt..."></textarea>
+            </div>
+
+            <div>
+                <label>PROMPT B</label>
+                <textarea id="promptB"
+                placeholder="Enter second prompt..."></textarea>
+            </div>
+
+        </div>
+
+        <div class="buttons">
+            <button class="primary" onclick="comparePrompts()">
+                Compare Prompts
+            </button>
+
+            <button class="secondary" onclick="clearAll()">
+                Clear
+            </button>
+        </div>
+
+    </div>
+
+    <div class="results">
+
+        <div class="card">
+            <h3>📄 Prompt A Stats</h3>
+
+            <div class="stat">
+                Words: <span id="aWords">0</span>
+            </div>
+
+            <div class="stat">
+                Characters: <span id="aChars">0</span>
+            </div>
+
+            <div class="stat">
+                Sentences: <span id="aSentences">0</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>📄 Prompt B Stats</h3>
+
+            <div class="stat">
+                Words: <span id="bWords">0</span>
+            </div>
+
+            <div class="stat">
+                Characters: <span id="bChars">0</span>
+            </div>
+
+            <div class="stat">
+                Sentences: <span id="bSentences">0</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🎯 Similarity Score</h3>
+
+            <div class="big-score" id="similarity">
+                0%
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar"
+                id="progressBar"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="results">
+
+        <div class="card">
+            <h3>🟣 Unique Words in Prompt A</h3>
+            <div class="word-box" id="uniqueA">
+                -
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🟣 Unique Words in Prompt B</h3>
+            <div class="word-box" id="uniqueB">
+                -
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🔍 Common Words</h3>
+            <div class="word-box" id="commonWords">
+                -
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        Prompt Comparator Project
+    </div>
+
+</div>
+
+<script>
+
+function getWords(text){
+    return text
+        .toLowerCase()
+        .replace(/[^\w\s]/g,'')
+        .split(/\s+/)
+        .filter(word => word.length > 0);
+}
+
+function comparePrompts(){
+
+    const promptA =
+    document.getElementById("promptA").value.trim();
+
+    const promptB =
+    document.getElementById("promptB").value.trim();
+
+    if(!promptA || !promptB){
+        alert("Please enter both prompts.");
+        return;
+    }
+
+    const wordsA = getWords(promptA);
+    const wordsB = getWords(promptB);
+
+    document.getElementById("aWords").textContent =
+    wordsA.length;
+
+    document.getElementById("bWords").textContent =
+    wordsB.length;
+
+    document.getElementById("aChars").textContent =
+    promptA.length;
+
+    document.getElementById("bChars").textContent =
+    promptB.length;
+
+    document.getElementById("aSentences").textContent =
+    promptA.split(/[.!?]+/).filter(Boolean).length;
+
+    document.getElementById("bSentences").textContent =
+    promptB.split(/[.!?]+/).filter(Boolean).length;
+
+    const setA = new Set(wordsA);
+    const setB = new Set(wordsB);
+
+    const common =
+    [...setA].filter(word => setB.has(word));
+
+    const uniqueA =
+    [...setA].filter(word => !setB.has(word));
+
+    const uniqueB =
+    [...setB].filter(word => !setA.has(word));
+
+    const union =
+    new Set([...setA,...setB]);
+
+    const similarity =
+    Math.round(
+        (common.length / union.size) * 100
+    );
+
+    document.getElementById("similarity")
+        .textContent = similarity + "%";
+
+    document.getElementById("progressBar")
+        .style.width = similarity + "%";
+
+    document.getElementById("uniqueA")
+        .textContent =
+        uniqueA.length
+        ? uniqueA.join(", ")
+        : "No unique words";
+
+    document.getElementById("uniqueB")
+        .textContent =
+        uniqueB.length
+        ? uniqueB.join(", ")
+        : "No unique words";
+
+    document.getElementById("commonWords")
+        .textContent =
+        common.length
+        ? common.join(", ")
+        : "No common words";
+}
+
+function clearAll(){
+
+    document.getElementById("promptA").value="";
+    document.getElementById("promptB").value="";
+
+    document.getElementById("aWords").textContent="0";
+    document.getElementById("bWords").textContent="0";
+
+    document.getElementById("aChars").textContent="0";
+    document.getElementById("bChars").textContent="0";
+
+    document.getElementById("aSentences").textContent="0";
+    document.getElementById("bSentences").textContent="0";
+
+    document.getElementById("similarity").textContent="0%";
+
+    document.getElementById("progressBar")
+        .style.width="0%";
+
+    document.getElementById("uniqueA").textContent="-";
+    document.getElementById("uniqueB").textContent="-";
+    document.getElementById("commonWords").textContent="-";
+}
+
+</script>
+
+</body>
+</html>

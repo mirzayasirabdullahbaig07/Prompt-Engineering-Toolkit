@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluation Criteria Builder</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#f2effd;
+    min-height:100vh;
+    padding:40px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.badge{
+    display:inline-block;
+    background:#7c3aed;
+    color:white;
+    padding:8px 18px;
+    border-radius:25px;
+    font-size:12px;
+    letter-spacing:2px;
+    margin-bottom:15px;
+}
+
+.header h1{
+    color:#6d28d9;
+    font-size:48px;
+    margin-bottom:10px;
+}
+
+.header p{
+    color:#666;
+}
+
+.main-card{
+    background:white;
+    border:1px solid #d8b4fe;
+    border-radius:25px;
+    padding:25px;
+}
+
+label{
+    display:block;
+    color:#6d28d9;
+    font-weight:700;
+    margin-bottom:10px;
+    font-size:13px;
+    letter-spacing:1px;
+}
+
+textarea{
+    width:100%;
+    height:140px;
+    border:1px solid #d8b4fe;
+    border-radius:15px;
+    padding:15px;
+    resize:none;
+    outline:none;
+    background:#faf8ff;
+}
+
+.buttons{
+    margin-top:20px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:none;
+    padding:12px 24px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.primary{
+    background:#7c3aed;
+    color:white;
+}
+
+.primary:hover{
+    background:#6d28d9;
+}
+
+.secondary{
+    background:#ede9fe;
+    color:#6d28d9;
+}
+
+.secondary:hover{
+    background:#ddd6fe;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    margin-top:25px;
+}
+
+.card{
+    background:white;
+    border:1px solid #d8b4fe;
+    border-radius:20px;
+    padding:20px;
+}
+
+.card h2{
+    color:#6d28d9;
+    margin-bottom:15px;
+}
+
+.criteria-item{
+    background:#faf8ff;
+    border-left:5px solid #7c3aed;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:10px;
+}
+
+.criteria-item strong{
+    display:block;
+    color:#5b21b6;
+}
+
+.input-row{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+.input-row input{
+    flex:1;
+    padding:10px;
+    border:1px solid #d8b4fe;
+    border-radius:10px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-top:20px;
+}
+
+.stat{
+    background:white;
+    border:1px solid #d8b4fe;
+    border-radius:15px;
+    padding:20px;
+    text-align:center;
+}
+
+.stat h3{
+    color:#6d28d9;
+    font-size:30px;
+}
+
+.stat p{
+    color:#666;
+}
+
+.footer{
+    text-align:center;
+    margin-top:40px;
+    color:#666;
+    border-top:1px solid #d8b4fe;
+    padding-top:20px;
+}
+
+@media(max-width:900px){
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .header h1{
+        font-size:34px;
+    }
+
+    .input-row{
+        flex-direction:column;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div class="badge">ASSESSMENT DESIGN</div>
+        <h1>Evaluation Criteria Builder</h1>
+        <p>Create grading rubrics and evaluation criteria automatically</p>
+    </div>
+
+    <div class="main-card">
+
+        <label>ENTER PROJECT / ASSIGNMENT</label>
+
+        <textarea id="projectInput"
+        placeholder="Example: Prompt Comparator Web Application using HTML, CSS and JavaScript"></textarea>
+
+        <div class="buttons">
+            <button class="primary" onclick="generateCriteria()">
+                Generate Criteria
+            </button>
+
+            <button class="secondary" onclick="clearAll()">
+                Clear
+            </button>
+        </div>
+
+    </div>
+
+    <div class="stats">
+
+        <div class="stat">
+            <h3 id="criteriaCount">0</h3>
+            <p>Total Criteria</p>
+        </div>
+
+        <div class="stat">
+            <h3 id="totalWeight">0%</h3>
+            <p>Total Weight</p>
+        </div>
+
+        <div class="stat">
+            <h3>100</h3>
+            <p>Total Marks</p>
+        </div>
+
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <h2>📋 Evaluation Criteria</h2>
+
+            <div id="criteriaList"></div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>🏆 Scoring Rubric</h2>
+
+            <div id="rubric">
+
+                <div class="criteria-item">
+                    <strong>Excellent (90-100)</strong>
+                    Outstanding implementation and quality.
+                </div>
+
+                <div class="criteria-item">
+                    <strong>Good (75-89)</strong>
+                    Meets requirements with minor issues.
+                </div>
+
+                <div class="criteria-item">
+                    <strong>Average (60-74)</strong>
+                    Acceptable but needs improvements.
+                </div>
+
+                <div class="criteria-item">
+                    <strong>Below Average (&lt;60)</strong>
+                    Significant improvements required.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+
+        <h2>➕ Add Custom Criterion</h2>
+
+        <div class="input-row">
+
+            <input
+                type="text"
+                id="customCriterion"
+                placeholder="Criterion Name">
+
+            <input
+                type="number"
+                id="customWeight"
+                placeholder="Weight %">
+
+            <button class="primary"
+                onclick="addCustomCriterion()">
+                Add
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+    Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+     
+    </div>
+
+</div>
+
+<script>
+
+let criteria = [];
+
+function generateCriteria(){
+
+    criteria = [
+        {name:"Functionality", weight:25},
+        {name:"User Interface Design", weight:20},
+        {name:"Code Quality", weight:20},
+        {name:"Responsiveness", weight:15},
+        {name:"Creativity & Innovation", weight:10},
+        {name:"Documentation", weight:10}
+    ];
+
+    renderCriteria();
+}
+
+function renderCriteria(){
+
+    const container =
+    document.getElementById("criteriaList");
+
+    container.innerHTML = "";
+
+    let totalWeight = 0;
+
+    criteria.forEach((item,index)=>{
+
+        totalWeight += item.weight;
+
+        container.innerHTML += `
+            <div class="criteria-item">
+                <strong>${item.name}</strong>
+                Weight: ${item.weight}%
+                <br><br>
+                <button
+                    class="secondary"
+                    onclick="removeCriterion(${index})">
+                    Remove
+                </button>
+            </div>
+        `;
+    });
+
+    document.getElementById("criteriaCount")
+        .textContent = criteria.length;
+
+    document.getElementById("totalWeight")
+        .textContent = totalWeight + "%";
+}
+
+function addCustomCriterion(){
+
+    const name =
+    document.getElementById("customCriterion").value;
+
+    const weight =
+    parseInt(
+        document.getElementById("customWeight").value
+    );
+
+    if(name === "" || isNaN(weight)){
+        alert("Enter criterion and weight.");
+        return;
+    }
+
+    criteria.push({
+        name:name,
+        weight:weight
+    });
+
+    renderCriteria();
+
+    document.getElementById("customCriterion").value="";
+    document.getElementById("customWeight").value="";
+}
+
+function removeCriterion(index){
+
+    criteria.splice(index,1);
+
+    renderCriteria();
+}
+
+function clearAll(){
+
+    document.getElementById("projectInput").value="";
+
+    criteria = [];
+
+    renderCriteria();
+}
+
+</script>
+
+</body>
+</html>

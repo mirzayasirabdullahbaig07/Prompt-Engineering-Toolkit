@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Output Format Generator</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#f2effd;
+    padding:40px;
+    min-height:100vh;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.badge{
+    display:inline-block;
+    background:#7c3aed;
+    color:white;
+    padding:8px 18px;
+    border-radius:25px;
+    font-size:12px;
+    letter-spacing:2px;
+    margin-bottom:15px;
+}
+
+.header h1{
+    color:#6d28d9;
+    font-size:48px;
+    margin-bottom:10px;
+}
+
+.header p{
+    color:#666;
+}
+
+.card{
+    background:white;
+    border:1px solid #d8b4fe;
+    border-radius:25px;
+    padding:25px;
+    margin-bottom:20px;
+}
+
+label{
+    display:block;
+    margin-bottom:10px;
+    color:#6d28d9;
+    font-weight:700;
+    letter-spacing:1px;
+    font-size:13px;
+}
+
+textarea{
+    width:100%;
+    height:150px;
+    border:1px solid #d8b4fe;
+    border-radius:15px;
+    padding:15px;
+    resize:none;
+    background:#faf8ff;
+    outline:none;
+}
+
+select{
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    border:1px solid #d8b4fe;
+    margin-top:10px;
+}
+
+.buttons{
+    margin-top:20px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:none;
+    padding:12px 24px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.primary{
+    background:#7c3aed;
+    color:white;
+}
+
+.primary:hover{
+    background:#6d28d9;
+}
+
+.secondary{
+    background:#ede9fe;
+    color:#6d28d9;
+}
+
+.secondary:hover{
+    background:#ddd6fe;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.stat{
+    background:white;
+    border:1px solid #d8b4fe;
+    border-radius:15px;
+    text-align:center;
+    padding:20px;
+}
+
+.stat h3{
+    color:#6d28d9;
+    font-size:28px;
+}
+
+.output-box{
+    background:#faf8ff;
+    border:1px solid #d8b4fe;
+    border-radius:15px;
+    padding:20px;
+    white-space:pre-wrap;
+    min-height:300px;
+    overflow:auto;
+}
+
+.footer{
+    margin-top:40px;
+    text-align:center;
+    color:#666;
+    border-top:1px solid #d8b4fe;
+    padding-top:20px;
+}
+
+@media(max-width:900px){
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .header h1{
+        font-size:34px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div class="badge">PROMPT UTILITIES</div>
+        <h1>Output Format Generator</h1>
+        <p>Create structured output templates for AI prompts</p>
+    </div>
+
+    <div class="card">
+
+        <label>TASK DESCRIPTION</label>
+
+        <textarea
+        id="taskInput"
+        placeholder="Example: Write a blog about Artificial Intelligence">
+        </textarea>
+
+        <label style="margin-top:20px;">
+            OUTPUT FORMAT
+        </label>
+
+        <select id="formatType">
+            <option>Blog Post</option>
+            <option>Email</option>
+            <option>JSON</option>
+            <option>Report</option>
+            <option>Table</option>
+            <option>FAQ</option>
+            <option>Resume</option>
+        </select>
+
+        <div class="buttons">
+
+            <button class="primary"
+            onclick="generateFormat()">
+                Generate Format
+            </button>
+
+            <button class="secondary"
+            onclick="copyOutput()">
+                Copy
+            </button>
+
+            <button class="secondary"
+            onclick="downloadOutput()">
+                Download
+            </button>
+
+            <button class="secondary"
+            onclick="clearAll()">
+                Clear
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="stats">
+
+        <div class="stat">
+            <h3 id="formatCount">0</h3>
+            <p>Generated Formats</p>
+        </div>
+
+        <div class="stat">
+            <h3 id="lineCount">0</h3>
+            <p>Total Lines</p>
+        </div>
+
+        <div class="stat">
+            <h3 id="charCount">0</h3>
+            <p>Characters</p>
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h2 style="color:#6d28d9;margin-bottom:15px;">
+            Generated Output Structure
+        </h2>
+
+        <div class="output-box" id="outputBox">
+Generated template will appear here...
+        </div>
+
+    </div>
+
+    <div class="footer">
+    Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+   </div>
+
+</div>
+
+<script>
+
+let generatedCount = 0;
+
+function generateFormat(){
+
+    const format =
+    document.getElementById("formatType").value;
+
+    let output = "";
+
+    switch(format){
+
+        case "Blog Post":
+        output =
+`TITLE
+
+INTRODUCTION
+
+MAIN CONTENT
+- Section 1
+- Section 2
+- Section 3
+
+CONCLUSION
+
+CALL TO ACTION`;
+        break;
+
+        case "Email":
+        output =
+`Subject:
+
+Greeting:
+
+Purpose:
+
+Main Message:
+
+Closing:
+
+Signature:`;
+        break;
+
+        case "JSON":
+        output =
+`{
+  "title":"",
+  "description":"",
+  "category":"",
+  "data":[]
+}`;
+        break;
+
+        case "Report":
+        output =
+`REPORT TITLE
+
+EXECUTIVE SUMMARY
+
+OBJECTIVES
+
+FINDINGS
+
+ANALYSIS
+
+RECOMMENDATIONS
+
+CONCLUSION`;
+        break;
+
+        case "Table":
+        output =
+`| Name | Description | Value |
+|------|-------------|-------|
+|      |             |       |`;
+        break;
+
+        case "FAQ":
+        output =
+`Q1:
+
+A1:
+
+Q2:
+
+A2:
+
+Q3:
+
+A3:`;
+        break;
+
+        case "Resume":
+        output =
+`FULL NAME
+
+CONTACT INFORMATION
+
+PROFESSIONAL SUMMARY
+
+EDUCATION
+
+SKILLS
+
+EXPERIENCE
+
+PROJECTS
+
+REFERENCES`;
+        break;
+    }
+
+    document.getElementById("outputBox").textContent =
+    output;
+
+    generatedCount++;
+
+    updateStats(output);
+}
+
+function updateStats(text){
+
+    document.getElementById("formatCount")
+        .textContent = generatedCount;
+
+    document.getElementById("lineCount")
+        .textContent =
+        text.split('\n').length;
+
+    document.getElementById("charCount")
+        .textContent =
+        text.length;
+}
+
+function copyOutput(){
+
+    const text =
+    document.getElementById("outputBox").textContent;
+
+    navigator.clipboard.writeText(text);
+
+    alert("Copied Successfully");
+}
+
+function downloadOutput(){
+
+    const text =
+    document.getElementById("outputBox").textContent;
+
+    const blob =
+    new Blob([text], {type:"text/plain"});
+
+    const link =
+    document.createElement("a");
+
+    link.href =
+    URL.createObjectURL(blob);
+
+    link.download =
+    "output-format.txt";
+
+    link.click();
+}
+
+function clearAll(){
+
+    document.getElementById("taskInput").value="";
+
+    document.getElementById("outputBox").textContent =
+    "Generated template will appear here...";
+
+    document.getElementById("lineCount").textContent = "0";
+    document.getElementById("charCount").textContent = "0";
+}
+
+</script>
+
+</body>
+</html>

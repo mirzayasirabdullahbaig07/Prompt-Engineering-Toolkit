@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prompt Expander</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:Segoe UI,Tahoma,sans-serif;
+  background:linear-gradient(135deg,#f3f0ff,#ede9fe,#faf5ff);
+  min-height:100vh;
+  padding:20px;
+  color:#1e1b4b;
+}
+
+.container{max-width:1100px;margin:auto;}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:30px 20px;
+}
+
+.badge{
+  display:inline-block;
+  background:linear-gradient(90deg,#7c3aed,#a855f7);
+  color:#fff;
+  padding:6px 16px;
+  border-radius:20px;
+  font-size:12px;
+  letter-spacing:2px;
+  margin-bottom:10px;
+}
+
+.header h1{
+  font-size:2.4rem;
+  font-weight:800;
+  background:linear-gradient(90deg,#5b21b6,#7c3aed,#a855f7);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.header p{color:#6b7280;margin-top:6px;}
+
+/* INPUT LAB */
+.lab{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:18px;
+  padding:25px;
+  box-shadow:0 4px 18px rgba(124,58,237,0.1);
+  margin-bottom:18px;
+}
+
+label{
+  font-size:12px;
+  font-weight:700;
+  color:#7c3aed;
+  letter-spacing:1.5px;
+}
+
+textarea{
+  width:100%;
+  height:120px;
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  border:1.5px solid #ddd6fe;
+  background:#faf5ff;
+  outline:none;
+  resize:none;
+}
+
+textarea:focus{
+  border-color:#7c3aed;
+  box-shadow:0 0 0 3px rgba(124,58,237,0.15);
+}
+
+button{
+  margin-top:15px;
+  padding:12px 18px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  background:linear-gradient(135deg,#7c3aed,#5b21b6);
+  color:#fff;
+}
+
+/* FLOW */
+.flow{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
+}
+
+@media(max-width:900px){
+  .flow{grid-template-columns:1fr;}
+}
+
+.stage{
+  background:#fff;
+  border:1.5px solid #c4b5fd;
+  border-radius:18px;
+  padding:15px;
+  position:relative;
+  overflow:hidden;
+}
+
+.stage::before{
+  content:"⚗️";
+  position:absolute;
+  font-size:90px;
+  opacity:0.05;
+  right:10px;
+  top:10px;
+}
+
+.title{
+  font-weight:900;
+  color:#5b21b6;
+  margin-bottom:10px;
+}
+
+/* BLOCKS */
+.block{
+  background:#faf5ff;
+  border-left:5px solid #7c3aed;
+  padding:10px;
+  border-radius:10px;
+  margin-top:8px;
+  font-size:0.9rem;
+  color:#374151;
+  line-height:1.6;
+}
+
+/* TAGS */
+.tag{
+  display:inline-block;
+  padding:6px 10px;
+  margin:4px 4px 0 0;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+  background:#ede9fe;
+  color:#5b21b6;
+  border:1px solid #c4b5fd;
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:12px;
+  color:#9ca3af;
+  border-top:1px solid #ddd6fe;
+  padding-top:15px;
+}
+
+.footer span{color:#7c3aed;font-weight:700;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="badge">PROMPT ENGINEERING LAB</div>
+  <h1>Prompt Expander</h1>
+  <p>Transform short prompts into powerful AI instructions</p>
+</div>
+
+<!-- INPUT -->
+<div class="lab">
+
+<label>ENTER BASIC PROMPT</label>
+<textarea id="input" placeholder="e.g. Write about AI in education"></textarea>
+
+<button onclick="expand()">Expand Prompt</button>
+
+</div>
+
+<!-- FLOW -->
+<div class="flow" id="flow" style="display:none;">
+
+<!-- STAGE 1 -->
+<div class="stage">
+<div class="title">🧠 Understanding</div>
+<div id="understanding"></div>
+</div>
+
+<!-- STAGE 2 -->
+<div class="stage">
+<div class="title">⚙️ Expansion Layers</div>
+<div id="layers"></div>
+</div>
+
+<!-- STAGE 3 -->
+<div class="stage">
+<div class="title">🚀 Final Prompt</div>
+<div id="final"></div>
+</div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Developed by <span>Hamna Munir</span> |  <span>Mirza Yasir Abdullah Baig</span>
+</div>
+
+</div>
+
+<script>
+
+function expand(){
+
+let text=document.getElementById("input").value.trim();
+if(!text){alert("Enter prompt");return;}
+
+document.getElementById("flow").style.display="grid";
+
+/* Understanding */
+document.getElementById("understanding").innerHTML=`
+<div class="block">Original Intent: ${text}</div>
+<div class="block">Detected Task: Content Generation</div>
+<div class="block">Complexity: Medium Expansion Required</div>
+`;
+
+/* Layers */
+document.getElementById("layers").innerHTML=`
+<div class="tag">Context Added</div>
+<div class="tag">Audience Defined</div>
+<div class="tag">Format Structured</div>
+<div class="tag">Depth Increased</div>
+<div class="tag">Clarity Improved</div>
+`;
+
+/* Final Prompt */
+document.getElementById("final").innerHTML=`
+<div class="block">
+${text}, written in a clear structured format with introduction, detailed explanation, real-world examples, and conclusion. 
+Make it suitable for a general audience, ensure clarity, and provide practical insights with modern context.
+</div>
+<div class="block">
+Expanded into a professional AI-ready prompt optimized for high-quality output generation.
+</div>
+`;
+
+}
+
+</script>
+
+</body>
+</html>
