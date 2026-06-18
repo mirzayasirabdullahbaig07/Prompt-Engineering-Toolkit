@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prompt Detail Booster</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #eeeef8;
+  --bg2:       #f5f4fc;
+  --white:     #ffffff;
+  --border:    #ddd8f5;
+  --border2:   #ebe8fb;
+  --purple:    #5b21b6;
+  --purple2:   #7c3aed;
+  --lav:       #a78bfa;
+  --lav-light: #ede9fe;
+  --lav-mid:   #c4b5fd;
+  --text:      #1e1b4b;
+  --text2:     #4b5563;
+  --muted:     #9ca3af;
+  --red:       #ef4444;
+  --green:     #059669;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HEADER ── */
+.site-header {
+  background: var(--bg);
+  padding: 36px 28px 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.header-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--purple2); color: #fff;
+  font-size: 12px; font-weight: 700; letter-spacing: .3px;
+  padding: 7px 20px; border-radius: 999px; margin-bottom: 14px;
+  box-shadow: 0 4px 14px rgba(124,58,237,.3);
+}
+.header-title {
+  font-size: 36px; font-weight: 800; color: var(--purple);
+  letter-spacing: -.5px; line-height: 1.15; margin-bottom: 10px;
+}
+.header-authors { font-size: 13px; color: var(--text2); }
+.header-authors span { color: var(--purple2); font-weight: 700; }
+
+/* ── WORKSPACE ── */
+.workspace {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  flex: 1;
+  height: calc(100vh - 148px);
+  overflow: hidden;
+}
+
+/* ── LEFT PANEL ── */
+.panel-left {
+  background: var(--white);
+  border-right: 1.5px solid var(--border);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.panel-head {
+  padding: 20px 22px 14px;
+  border-bottom: 1.5px solid var(--border2); flex-shrink: 0;
+}
+.panel-head-title { font-size: 13px; font-weight: 700; color: var(--purple); }
+.panel-head-desc  { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+
+.form-scroll { overflow-y: auto; flex: 1; padding: 18px 22px; }
+.form-scroll::-webkit-scrollbar { width: 4px; }
+.form-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.field { margin-bottom: 16px; }
+.field-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase;
+  color: var(--purple2); margin-bottom: 7px; display: flex; align-items: center; gap: 5px;
+}
+.req { color: var(--red); font-size: 13px; line-height: 1; }
+
+textarea, select, input[type="password"] {
+  width: 100%;
+  background: var(--bg2);
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  padding: 10px 13px;
+  transition: border-color .2s, box-shadow .2s;
+  resize: vertical;
+  appearance: none;
+}
+textarea::placeholder { color: var(--muted); }
+textarea:focus, select:focus, input:focus {
+  outline: none;
+  border-color: var(--purple2);
+  box-shadow: 0 0 0 3px rgba(124,58,237,.1);
+  background: var(--white);
+}
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237c3aed' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+  padding-right: 34px; cursor: pointer; resize: none;
+}
+
+/* PILLS */
+.pill-group { display: flex; gap: 7px; flex-wrap: wrap; }
+.pill {
+  padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  cursor: pointer; border: 1.5px solid var(--border);
+  color: var(--muted); background: transparent; transition: all .17s;
+  font-family: 'Inter', sans-serif; line-height: 1;
+}
+.pill:hover { border-color: var(--lav); color: var(--purple2); }
+.pill.active { border-color: var(--purple2); background: var(--lav-light); color: var(--purple); }
+
+/* LEVEL CARDS */
+.level-cards { display: flex; flex-direction: column; gap: 8px; }
+.level-card {
+  border: 1.5px solid var(--border); border-radius: 10px; padding: 11px 14px;
+  cursor: pointer; transition: all .17s; display: flex; align-items: center; gap: 12px;
+}
+.level-card:hover { border-color: var(--lav); background: var(--bg2); }
+.level-card.active { border-color: var(--purple2); background: var(--lav-light); }
+.level-icon { font-size: 20px; flex-shrink: 0; }
+.level-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.level-desc  { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+.level-card.active .level-title { color: var(--purple); }
+
+.divider { height: 1px; background: var(--border2); margin: 6px 0 16px; }
+
+/* CHAR COUNTER */
+.char-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+.char-count { font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+.panel-actions {
+  padding: 14px 22px 18px;
+  border-top: 1.5px solid var(--border2);
+  flex-shrink: 0; display: flex; gap: 9px;
+}
+.btn {
+  flex: 1; padding: 11px; border-radius: 9px; border: none;
+  font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all .18s; letter-spacing: .2px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--purple) 0%, var(--purple2) 100%);
+  color: #fff; box-shadow: 0 4px 14px rgba(91,33,182,.28);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(91,33,182,.38); }
+.btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-ghost {
+  background: transparent; color: var(--muted); border: 1.5px solid var(--border);
+}
+.btn-ghost:hover { border-color: var(--lav-mid); color: var(--purple2); }
+
+/* ── RIGHT PANEL ── */
+.panel-right {
+  display: flex; flex-direction: column; overflow: hidden; background: var(--bg);
+}
+.preview-topbar {
+  background: var(--white); border-bottom: 1.5px solid var(--border);
+  padding: 12px 24px;
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+}
+.status-row { display: flex; align-items: center; gap: 8px; }
+.status-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--muted);
+  transition: background .3s, box-shadow .3s;
+}
+.status-dot.live { background: #10b981; box-shadow: 0 0 7px #10b981; animation: blink 1.8s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+.status-text { font-size: 12px; font-weight: 600; color: var(--muted); }
+.status-text.live { color: #059669; }
+
+.tab-bar {
+  display: flex; gap: 2px; background: var(--bg2); padding: 3px;
+  border-radius: 9px; border: 1.5px solid var(--border2);
+}
+.tab-btn {
+  padding: 6px 15px; border-radius: 7px; font-size: 12px; font-weight: 600;
+  cursor: pointer; color: var(--muted); transition: all .15s; border: none;
+  background: transparent; font-family: 'Inter', sans-serif;
+}
+.tab-btn.active { background: var(--white); color: var(--purple); box-shadow: 0 1px 4px rgba(91,33,182,.1); }
+
+.copy-btn {
+  padding: 8px 14px; background: var(--white); border: 1.5px solid var(--border);
+  color: var(--muted); border-radius: 8px; font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: 'Inter', sans-serif; transition: all .15s;
+}
+.copy-btn:hover { border-color: var(--purple2); color: var(--purple2); }
+
+.preview-scroll { flex: 1; overflow-y: auto; padding: 28px; }
+.preview-scroll::-webkit-scrollbar { width: 4px; }
+.preview-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* EMPTY STATE */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 100%; text-align: center; gap: 10px; color: var(--muted);
+}
+.empty-icon  { font-size: 48px; opacity: .35; }
+.empty-title { font-size: 15px; font-weight: 700; color: var(--text2); opacity: .6; }
+.empty-desc  { font-size: 13px; max-width: 260px; line-height: 1.6; }
+
+/* SKELETON */
+.sk { animation: sk-pulse 1.5s ease-in-out infinite; }
+@keyframes sk-pulse { 0%,100%{opacity:.45} 50%{opacity:.85} }
+.sk-line { height: 13px; background: var(--lav-light); border-radius: 5px; margin-bottom: 9px; }
+
+/* OUTPUT LAYOUT */
+.output-wrap { display: flex; flex-direction: column; gap: 18px; max-width: 860px; margin: 0 auto; }
+
+/* SCORE CARD */
+.score-card {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 4px 24px rgba(91,33,182,.06);
+}
+.score-hero {
+  background: linear-gradient(135deg, var(--purple) 0%, var(--purple2) 60%, var(--lav) 100%);
+  padding: 20px 28px; display: flex; align-items: center; justify-content: space-between;
+}
+.score-left .score-label { font-size: 11px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; color: rgba(255,255,255,.7); }
+.score-left .score-value { font-size: 42px; font-weight: 800; color: #fff; line-height: 1.1; }
+.score-left .score-sub   { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 4px; }
+.score-ring  { position: relative; width: 80px; height: 80px; flex-shrink: 0; }
+.score-ring svg { transform: rotate(-90deg); }
+.score-ring-text {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 800; color: #fff;
+}
+.score-bars { padding: 16px 28px 18px; display: flex; flex-direction: column; gap: 10px; }
+.bar-row { display: flex; flex-direction: column; gap: 4px; }
+.bar-meta { display: flex; justify-content: space-between; font-size: 11px; }
+.bar-name  { font-weight: 600; color: var(--text2); }
+.bar-val   { font-weight: 700; color: var(--purple2); font-family: 'JetBrains Mono', monospace; }
+.bar-track { height: 6px; background: var(--border2); border-radius: 999px; overflow: hidden; }
+.bar-fill  { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--purple), var(--lav)); transition: width .7s ease; }
+
+/* COMPARE GRID */
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.compare-card {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 2px 12px rgba(91,33,182,.05);
+}
+.compare-header {
+  padding: 12px 18px; display: flex; align-items: center; gap: 8px;
+  border-bottom: 1.5px solid var(--border2);
+}
+.compare-header.before { background: #fff5f5; border-bottom-color: #fecaca; }
+.compare-header.after  { background: var(--lav-light); border-bottom-color: var(--lav-mid); }
+.compare-dot { width: 8px; height: 8px; border-radius: 50%; }
+.compare-dot.before { background: #f87171; }
+.compare-dot.after  { background: var(--purple2); }
+.compare-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.compare-label.before { color: #dc2626; }
+.compare-label.after  { color: var(--purple); }
+.compare-body {
+  padding: 16px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; line-height: 1.85; color: var(--text2);
+  white-space: pre-wrap; min-height: 160px;
+}
+.compare-body.before { background: #fffbfb; color: #6b7280; }
+
+/* ADDITIONS CARD */
+.additions-card {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 2px 12px rgba(91,33,182,.05);
+}
+.additions-head {
+  padding: 14px 20px; border-bottom: 1.5px solid var(--border2);
+  font-size: 10px; font-weight: 800; letter-spacing: 1.8px; text-transform: uppercase; color: var(--purple2);
+}
+.additions-list { padding: 12px 20px 16px; display: flex; flex-direction: column; gap: 10px; }
+.addition-item {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 10px 14px; border-radius: 9px; border: 1.5px solid var(--border2); background: var(--bg2);
+}
+.add-icon  { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.add-title { font-size: 12px; font-weight: 700; color: var(--purple); margin-bottom: 2px; }
+.add-desc  { font-size: 12px; color: var(--text2); line-height: 1.55; }
+
+/* USAGE TIPS */
+.tips-card {
+  background: var(--lav-light); border: 1.5px solid var(--lav-mid);
+  border-radius: 12px; padding: 14px 18px;
+  font-size: 12px; color: var(--purple); line-height: 1.7;
+}
+.tips-card b { font-size: 10px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; display: block; margin-bottom: 7px; }
+
+/* HISTORY TAB */
+.hist-list { display: flex; flex-direction: column; gap: 9px; }
+.hist-card {
+  background: var(--white); border: 1.5px solid var(--border); border-radius: 11px;
+  padding: 13px 16px; cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.hist-card:hover { border-color: var(--purple2); box-shadow: 0 2px 10px rgba(91,33,182,.08); }
+.hist-topic { font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+.hist-meta  { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.hist-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.hist-score { font-size: 12px; font-weight: 700; color: var(--purple2); font-family: 'JetBrains Mono', monospace; }
+.hist-time  { font-size: 11px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+/* META PROMPT TAB */
+.prompt-label-row { font-size: 10px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; color: var(--purple2); margin-bottom: 10px; }
+.prompt-code {
+  background: var(--white); border: 1.5px solid var(--border); border-radius: 11px;
+  padding: 18px; font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  line-height: 1.8; color: var(--text2); white-space: pre-wrap;
+}
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--white); border: 1.5px solid var(--green);
+  color: var(--green); font-size: 13px; font-weight: 700;
+  padding: 11px 18px; border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.1);
+  transform: translateY(70px); opacity: 0; transition: all .3s; z-index: 999;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+* { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="site-header">
+  <div class="header-badge">🚀 Detail Booster</div>
+  <div class="header-title">Prompt Detail Booster</div>
+  <div class="header-authors">Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span></div>
+</div>
+
+<!-- WORKSPACE -->
+<div class="workspace">
+
+  <!-- LEFT: FORM -->
+  <div class="panel-left">
+    <div class="panel-head">
+      <div class="panel-head-title">Prompt Input</div>
+      <div class="panel-head-desc">Enter a short prompt — Claude expands it with rich detail and context</div>
+    </div>
+
+    <div class="form-scroll">
+
+      <div class="field">
+        <div class="char-row">
+          <div class="field-label" style="margin-bottom:0;">Short Prompt <span class="req">*</span></div>
+          <div class="char-count" id="char-count">0 chars</div>
+        </div>
+        <textarea id="f-prompt" rows="5"
+          placeholder="e.g. write about AI&#10;explain neural networks&#10;create a marketing email"
+          oninput="updateChar()"></textarea>
+      </div>
+
+      <div class="field">
+        <div class="field-label">Domain / Topic Area (optional)</div>
+        <div class="pill-group" id="domain-group">
+          <button class="pill active" data-val="General">General</button>
+          <button class="pill" data-val="Technology">Tech</button>
+          <button class="pill" data-val="Business">Business</button>
+          <button class="pill" data-val="Creative">Creative</button>
+          <button class="pill" data-val="Education">Education</button>
+          <button class="pill" data-val="Science">Science</button>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="field">
+        <div class="field-label">Detail Level</div>
+        <div class="level-cards" id="level-group">
+          <div class="level-card" data-val="Medium" onclick="selectLevel(this)">
+            <div class="level-icon">⚡</div>
+            <div>
+              <div class="level-title">Medium</div>
+              <div class="level-desc">Adds role, clear task, and output format</div>
+            </div>
+          </div>
+          <div class="level-card active" data-val="High" onclick="selectLevel(this)">
+            <div class="level-icon">🔥</div>
+            <div>
+              <div class="level-title">High</div>
+              <div class="level-desc">Adds context, examples, step-by-step breakdown</div>
+            </div>
+          </div>
+          <div class="level-card" data-val="Ultra" onclick="selectLevel(this)">
+            <div class="level-icon">🚀</div>
+            <div>
+              <div class="level-title">Ultra</div>
+              <div class="level-desc">Full expert prompt with edge cases, constraints, chain-of-thought</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="field">
+        <div class="field-label">Anthropic API Key</div>
+        <div style="position:relative;">
+          <input type="password" id="f-apikey" placeholder="sk-ant-api03-…" autocomplete="off"
+            style="padding-right:58px;font-family:'JetBrains Mono',monospace;font-size:12px;"/>
+          <button onclick="toggleKey()" id="key-toggle"
+            style="position:absolute;right:8px;top:50%;transform:translateY(-50%);
+                   background:var(--lav-light);border:1.5px solid var(--lav-mid);
+                   color:var(--purple2);font-size:11px;font-weight:700;padding:4px 9px;
+                   border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif;line-height:1;">Show</button>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.55;">
+          Required for downloaded files. Get yours at
+          <a href="https://console.anthropic.com" target="_blank"
+            style="color:var(--purple2);font-weight:600;">console.anthropic.com</a>.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="panel-actions">
+      <button class="btn btn-primary" id="gen-btn" onclick="boost()">🚀 Boost Prompt</button>
+      <button class="btn btn-ghost" onclick="clearAll()">Clear</button>
+    </div>
+  </div>
+
+  <!-- RIGHT: OUTPUT -->
+  <div class="panel-right">
+    <div class="preview-topbar">
+      <div class="status-row">
+        <div class="status-dot" id="status-dot"></div>
+        <div class="status-text" id="status-text">Ready</div>
+      </div>
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('output', this)">Output</button>
+        <button class="tab-btn" onclick="switchTab('metaprompt', this)">Meta Prompt</button>
+        <button class="tab-btn" onclick="switchTab('history', this)">History</button>
+      </div>
+      <button class="copy-btn" onclick="copyContent()">⎘ Copy Boosted</button>
+    </div>
+
+    <div class="preview-scroll">
+
+      <!-- OUTPUT TAB -->
+      <div id="tab-output">
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon">🚀</div>
+          <div class="empty-title">No Boost Yet</div>
+          <div class="empty-desc">Enter a short, vague prompt on the left and click Boost Prompt to expand it with rich detail.</div>
+        </div>
+        <div id="output-area" style="display:none;"></div>
+      </div>
+
+      <!-- META PROMPT TAB -->
+      <div id="tab-metaprompt" style="display:none;">
+        <div class="prompt-label-row">Meta-Prompt Sent to Claude</div>
+        <div class="prompt-code" id="prompt-display">Boost a prompt to see the meta-prompt here.</div>
+      </div>
+
+      <!-- HISTORY TAB -->
+      <div id="tab-history" style="display:none;">
+        <div class="hist-list" id="hist-list">
+          <div class="empty-state">
+            <div class="empty-icon">🕘</div>
+            <div class="empty-title">No History</div>
+            <div class="empty-desc">Boosted prompts will appear here.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── STATE ──────────────────────────────────────────────
+let activeLevel  = 'High';
+let activeDomain = 'General';
+let historyData  = [];
+let lastBoosted  = '';
+
+// ─── LEVEL CARDS ────────────────────────────────────────
+function selectLevel(card) {
+  document.querySelectorAll('.level-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+  activeLevel = card.dataset.val;
+}
+
+// ─── DOMAIN PILLS ───────────────────────────────────────
+document.getElementById('domain-group').querySelectorAll('.pill').forEach(p => {
+  p.addEventListener('click', () => {
+    document.getElementById('domain-group').querySelectorAll('.pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    activeDomain = p.dataset.val;
+  });
+});
+
+// ─── CHAR COUNT ─────────────────────────────────────────
+function updateChar() {
+  const len = document.getElementById('f-prompt').value.length;
+  document.getElementById('char-count').textContent = len + ' chars';
+}
+
+// ─── TAB SWITCH ─────────────────────────────────────────
+function switchTab(name, btn) {
+  ['output','metaprompt','history'].forEach(t => document.getElementById('tab-' + t).style.display = 'none');
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).style.display = 'block';
+  btn.classList.add('active');
+}
+
+// ─── BOOST ──────────────────────────────────────────────
+async function boost() {
+  const prompt = document.getElementById('f-prompt').value.trim();
+  if (!prompt) { showToast('⚠ Please enter a prompt to boost.', '#ef4444'); return; }
+
+  setStatus('live');
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true; btn.textContent = '⟳ Boosting…';
+
+  switchTab('output', document.querySelectorAll('.tab-btn')[0]);
+  showSkeleton();
+
+  const metaPrompt = buildMetaPrompt(prompt);
+  document.getElementById('prompt-display').textContent = metaPrompt;
+
+  const apiKey = document.getElementById('f-apikey').value.trim();
+  const headers = { 'Content-Type': 'application/json' };
+  if (apiKey) {
+    headers['x-api-key'] = apiKey;
+    headers['anthropic-version'] = '2023-06-01';
+    headers['anthropic-dangerous-direct-browser-access'] = 'true';
+  }
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: metaPrompt }]
+      })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.error?.message || 'API error ' + res.status);
+    }
+    const data = await res.json();
+    if (!data.content?.[0]) throw new Error('Empty response');
+    const raw = data.content.map(b => b.text || '').join('');
+    let parsed;
+    try { parsed = JSON.parse(raw.replace(/```json|```/g, '').trim()); }
+    catch { parsed = fallback(prompt); }
+    renderOutput(parsed, prompt);
+    saveHistory(prompt, activeLevel, activeDomain, parsed);
+  } catch(e) {
+    showToast('⚠ ' + (e.message || 'API call failed. Add your API key.'), '#ef4444');
+    const parsed = fallback(prompt);
+    renderOutput(parsed, prompt);
+    saveHistory(prompt, activeLevel, activeDomain, parsed);
+  }
+
+  setStatus('done');
+  btn.disabled = false; btn.textContent = '🚀 Boost Prompt';
+}
+
+// ─── META-PROMPT ────────────────────────────────────────
+function buildMetaPrompt(prompt) {
+  return `You are a world-class prompt engineer specializing in expanding and enriching short, vague prompts into detailed, high-quality prompts. Your job is to take a short prompt and add SIGNIFICANT detail, context, structure, and precision without changing the core intent.
+
+Return ONLY a valid JSON object — no markdown, no backticks, no extra text.
+
+JSON schema:
+{
+  "boosted_prompt": "The fully expanded, richly detailed version of the prompt",
+  "scores": {
+    "detail": 0-100,
+    "clarity": 0-100,
+    "context": 0-100,
+    "actionability": 0-100
+  },
+  "overall_score": 0-100,
+  "additions": [
+    { "icon": "emoji", "title": "What was added", "description": "Why this addition makes the prompt more effective" }
+  ],
+  "usage_tip": "One specific tip on when and how to use this boosted prompt most effectively"
+}
+
+Short prompt to boost:
+"${prompt}"
+
+Domain: ${activeDomain}
+Detail Level: ${activeLevel}
+
+Detail level instructions:
+- Medium: Add ROLE + clear TASK + basic OUTPUT FORMAT (2-3x longer than original)
+- High: Add ROLE + detailed TASK + rich CONTEXT with examples + step-by-step OUTPUT FORMAT + audience spec (4-5x longer)
+- Ultra: Add everything in High PLUS constraints, edge cases, chain-of-thought instruction, quality criteria, tone spec, length guidance (6-8x longer)
+
+Score the BOOSTED prompt (should be high: 80-95+). List 3-5 specific things added. Return only valid JSON.`;
+}
+
+// ─── RENDER ─────────────────────────────────────────────
+function renderOutput(d, originalPrompt) {
+  document.getElementById('empty-state').style.display = 'none';
+  const area = document.getElementById('output-area');
+  area.style.display = 'block';
+  lastBoosted = d.boosted_prompt || '';
+
+  const scores  = d.scores || { detail: 85, clarity: 82, context: 88, actionability: 80 };
+  const overall = d.overall_score || 84;
+  const r = 32, circ = 2 * Math.PI * r;
+  const dash  = (overall / 100) * circ;
+  const color = overall >= 80 ? '#10b981' : overall >= 60 ? '#a78bfa' : '#f59e0b';
+
+  const levelIcon = { Medium: '⚡', High: '🔥', Ultra: '🚀' }[activeLevel] || '🔥';
+
+  const barsHtml = Object.entries(scores).map(([k, v]) => `
+    <div class="bar-row">
+      <div class="bar-meta">
+        <span class="bar-name">${k.charAt(0).toUpperCase() + k.slice(1)}</span>
+        <span class="bar-val">${v}%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${v}%;"></div></div>
+    </div>`).join('');
+
+  const additionsHtml = (d.additions || []).map(a => `
+    <div class="addition-item">
+      <div class="add-icon">${a.icon || '✅'}</div>
+      <div>
+        <div class="add-title">${a.title}</div>
+        <div class="add-desc">${a.description}</div>
+      </div>
+    </div>`).join('');
+
+  area.innerHTML = `
+  <div class="output-wrap">
+
+    <!-- SCORE -->
+    <div class="score-card">
+      <div class="score-hero">
+        <div class="score-left">
+          <div class="score-label">Detail Enhancement Score</div>
+          <div class="score-value">${overall}<span style="font-size:20px;font-weight:600;opacity:.7">%</span></div>
+          <div class="score-sub">${levelIcon} ${activeLevel} level · ${activeDomain}</div>
+        </div>
+        <div class="score-ring">
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="${r}" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="8"/>
+            <circle cx="40" cy="40" r="${r}" fill="none" stroke="${color}" stroke-width="8"
+              stroke-dasharray="${dash.toFixed(1)} ${circ.toFixed(1)}" stroke-linecap="round"/>
+          </svg>
+          <div class="score-ring-text">${overall}</div>
+        </div>
+      </div>
+      <div class="score-bars">${barsHtml}</div>
+    </div>
+
+    <!-- BEFORE / AFTER -->
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-header before">
+          <div class="compare-dot before"></div>
+          <div class="compare-label before">Original (Short)</div>
+        </div>
+        <div class="compare-body before">${escHtml(originalPrompt)}</div>
+      </div>
+      <div class="compare-card">
+        <div class="compare-header after">
+          <div class="compare-dot after"></div>
+          <div class="compare-label after">Boosted 🚀</div>
+        </div>
+        <div class="compare-body">${escHtml(d.boosted_prompt || '')}</div>
+      </div>
+    </div>
+
+    <!-- WHAT WAS ADDED -->
+    ${additionsHtml ? `
+    <div class="additions-card">
+      <div class="additions-head">What Was Added</div>
+      <div class="additions-list">${additionsHtml}</div>
+    </div>` : ''}
+
+    <!-- USAGE TIP -->
+    ${d.usage_tip ? `
+    <div class="tips-card">
+      <b>💡 Usage Tip</b>
+      ${d.usage_tip}
+    </div>` : ''}
+
+  </div>`;
+}
+
+// ─── FALLBACK ───────────────────────────────────────────
+function fallback(prompt) {
+  const levelMap = {
+    Medium: `ROLE: Helpful AI Assistant\n\nTASK: ${prompt}\n\nCONTEXT: Provide a clear, well-organized response suitable for a general audience.\n\nOUTPUT FORMAT: Structured response with a brief introduction, main content, and a concise conclusion.`,
+    High:   `ROLE: Expert AI Assistant specializing in ${activeDomain}\n\nTASK: ${prompt}\n\nCONTEXT:\n- Target audience: intermediate learners and professionals\n- Include real-world examples to illustrate key concepts\n- Break down complex ideas into digestible steps\n- Highlight practical applications\n\nOUTPUT FORMAT:\n1. Introduction (what & why)\n2. Core Concepts (step-by-step)\n3. Practical Examples (2-3 real cases)\n4. Key Takeaways\n5. Next Steps / Resources\n\nTONE: Clear, engaging, and authoritative`,
+    Ultra:  `ROLE: Senior ${activeDomain} Domain Expert with 15+ years of experience\n\nTASK: ${prompt}\n\nCONTEXT:\n- Audience: professionals and advanced learners seeking deep understanding\n- Cover both theoretical foundations and practical applications\n- Address common misconceptions and edge cases\n- Include industry best practices and current standards\n- Acknowledge areas of uncertainty or ongoing debate\n\nCHAIN OF THOUGHT: Reason step-by-step before presenting conclusions. Consider multiple perspectives.\n\nOUTPUT FORMAT:\n1. Executive Summary (2-3 sentences)\n2. Background & Foundations\n3. Deep Dive Explanation (with subsections)\n4. Real-World Applications & Case Studies\n5. Common Mistakes & How to Avoid Them\n6. Edge Cases & Limitations\n7. Expert Recommendations\n8. Summary & Action Items\n\nCONSTRAINTS:\n- Be precise and cite your reasoning\n- Use concrete examples over abstractions\n- Flag any assumptions you make\n- Length: comprehensive but not padded\n\nQUALITY CRITERIA: Response should be actionable, accurate, and leave no major questions unanswered.`
+  };
+  return {
+    boosted_prompt: levelMap[activeLevel] || levelMap['High'],
+    scores: { detail: 85, clarity: 82, context: 87, actionability: 81 },
+    overall_score: 84,
+    additions: [
+      { icon: '🎭', title: 'Role Definition', description: 'Added a specific expert role so the AI responds with appropriate authority.' },
+      { icon: '📋', title: 'Structured Output Format', description: 'Defined a clear output structure so the response is organized and scannable.' },
+      { icon: '🌍', title: 'Context & Audience', description: 'Specified who the response is for, guiding tone and depth appropriately.' },
+      { icon: '💡', title: 'Examples Requested', description: 'Explicitly asked for real-world examples to make abstract ideas concrete.' },
+      { icon: '⚙️', title: 'Quality Constraints', description: 'Added constraints to keep the response focused, accurate, and actionable.' }
+    ],
+    usage_tip: `Copy the boosted prompt and paste it directly into any AI chat (Claude, ChatGPT, Gemini). For best results with "${activeLevel}" level prompts, paste it as your very first message to set the context before asking follow-up questions.`
+  };
+}
+
+// ─── HISTORY ────────────────────────────────────────────
+function saveHistory(prompt, level, domain, parsed) {
+  const ts      = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+  const preview = prompt.slice(0, 40) + (prompt.length > 40 ? '…' : '');
+  historyData.unshift({ prompt, level, domain, parsed, ts, preview, score: parsed.overall_score || 84 });
+  if (historyData.length > 10) historyData.pop();
+  const box = document.getElementById('hist-list');
+  box.innerHTML = historyData.map((h,i) => `
+    <div class="hist-card" onclick="restoreHistory(${i})">
+      <div style="overflow:hidden;">
+        <div class="hist-topic">${h.preview}</div>
+        <div class="hist-meta">${h.level} · ${h.domain}</div>
+      </div>
+      <div class="hist-right">
+        <div class="hist-score">${h.score}%</div>
+        <div class="hist-time">${h.ts}</div>
+      </div>
+    </div>`).join('');
+}
+function restoreHistory(i) {
+  const h = historyData[i];
+  activeLevel = h.level; activeDomain = h.domain;
+  renderOutput(h.parsed, h.prompt);
+  switchTab('output', document.querySelectorAll('.tab-btn')[0]);
+}
+
+// ─── SKELETON ───────────────────────────────────────────
+function showSkeleton() {
+  document.getElementById('empty-state').style.display = 'none';
+  const area = document.getElementById('output-area');
+  area.style.display = 'block';
+  area.innerHTML = `
+  <div class="output-wrap">
+    <div class="score-card">
+      <div style="background:linear-gradient(135deg,#5b21b6,#7c3aed,#a78bfa);padding:20px 28px;display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div class="sk sk-line" style="width:130px;height:11px;background:rgba(255,255,255,.2);margin-bottom:10px;"></div>
+          <div class="sk sk-line" style="width:80px;height:36px;background:rgba(255,255,255,.3);margin-bottom:8px;"></div>
+          <div class="sk sk-line" style="width:110px;height:10px;background:rgba(255,255,255,.2);margin-bottom:0;"></div>
+        </div>
+        <div style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.15);" class="sk"></div>
+      </div>
+      <div style="padding:16px 28px;">
+        ${['90%','75%','85%','70%'].map(w => `
+          <div style="margin-bottom:12px;">
+            <div class="sk sk-line" style="width:${w};background:var(--lav-light);height:10px;"></div>
+            <div class="sk sk-line" style="width:100%;height:6px;background:var(--lav-light);border-radius:999px;margin-bottom:0;"></div>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      ${[1,2].map(() => `
+        <div style="background:var(--white);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;">
+          <div style="height:44px;background:var(--bg2);border-bottom:1.5px solid var(--border2);"></div>
+          <div style="padding:16px 18px;">${[95,88,92,80,75,70].map(w=>`<div class="sk sk-line" style="width:${w}%;background:var(--lav-light);"></div>`).join('')}</div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ─── UTILS ──────────────────────────────────────────────
+function setStatus(s) {
+  const dot = document.getElementById('status-dot');
+  const txt = document.getElementById('status-text');
+  if (s === 'live') { dot.className='status-dot live'; txt.className='status-text live'; txt.textContent='Boosting…'; }
+  else { dot.className='status-dot'; txt.className='status-text'; txt.textContent='Done'; }
+}
+function copyContent() {
+  if (!lastBoosted) { showToast('Boost a prompt first.', '#ef4444'); return; }
+  navigator.clipboard.writeText(lastBoosted).then(() => showToast('✓ Boosted prompt copied!', '#059669'));
+}
+function toggleKey() {
+  const inp = document.getElementById('f-apikey');
+  const btn = document.getElementById('key-toggle');
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = 'Hide'; }
+  else { inp.type = 'password'; btn.textContent = 'Show'; }
+}
+function showToast(msg, color) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.borderColor = color||'#059669'; t.style.color = color||'#059669';
+  t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2600);
+}
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function clearAll() {
+  document.getElementById('f-prompt').value = '';
+  document.getElementById('char-count').textContent = '0 chars';
+  document.getElementById('empty-state').style.display = 'flex';
+  document.getElementById('output-area').style.display = 'none';
+  document.getElementById('prompt-display').textContent = 'Boost a prompt to see the meta-prompt here.';
+  setStatus('done'); document.getElementById('status-text').textContent = 'Ready';
+  lastBoosted = '';
+}
+</script>
+</body>
+</html>

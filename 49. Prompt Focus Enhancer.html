@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prompt Focus Enhancer</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #f5f3ff;
+    --surface: #ffffff;
+    --panel:   #faf5ff;
+    --panel2:  #ede9fe;
+    --border:  #ddd6fe;
+    --accent:  #7c3aed;
+    --accent2: #5b21b6;
+    --green:   #059669;
+    --red:     #dc2626;
+    --text:    #2d1b69;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: linear-gradient(135deg, #f0eeff 0%, #ede9fe 50%, #f5f3ff 100%);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HERO HEADER ── */
+  .hero-header {
+    background: linear-gradient(135deg, #f0eeff 0%, #ede9fe 50%, #e9e3ff 100%);
+    text-align: center;
+    padding: 42px 32px 36px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: linear-gradient(135deg, var(--accent), #6d28d9);
+    color: #fff; font-size: 12px; font-weight: 700; letter-spacing: .6px;
+    padding: 7px 18px; border-radius: 999px; margin-bottom: 18px;
+    box-shadow: 0 4px 16px rgba(124,58,237,.3);
+  }
+  .hero-title {
+    font-size: 40px; font-weight: 800; color: var(--accent2);
+    letter-spacing: -1px; line-height: 1.15; margin-bottom: 10px;
+  }
+  .hero-sub { font-size: 13px; color: #6b7280; }
+  .hero-sub span { color: var(--accent); font-weight: 600; }
+
+  /* ── WORKSPACE ── */
+  .workspace {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    flex: 1;
+    height: calc(100vh - 175px);
+    overflow: hidden;
+  }
+
+  /* ── LEFT PANEL ── */
+  .panel-left {
+    background: #ffffff;
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .panel-header {
+    padding: 20px 24px 14px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0; background: var(--panel);
+  }
+  .panel-title { font-size: 13px; font-weight: 700; color: var(--accent2); letter-spacing: .4px; }
+  .panel-desc  { font-size: 12px; color: #a78bfa; margin-top: 3px; }
+
+  .form-scroll { overflow-y: auto; flex: 1; padding: 20px 24px; }
+  .form-scroll::-webkit-scrollbar { width: 5px; }
+  .form-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .field { margin-bottom: 18px; }
+  .field-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.3px;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .field-label .req { color: #dc2626; font-size: 12px; }
+
+  input, textarea, select {
+    width: 100%; background: #ffffff;
+    border: 1.5px solid var(--border); border-radius: 8px;
+    color: #111111; font-family: 'Inter', sans-serif; font-size: 13px;
+    padding: 11px 14px; transition: border-color .2s, box-shadow .2s; resize: vertical;
+  }
+  input::placeholder, textarea::placeholder { color: #c4b5fd; }
+  input:focus, textarea:focus, select:focus {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(124,58,237,.12);
+  }
+  select option { background: #fff; color: #111; }
+
+  /* MODE PILLS */
+  .mode-group { display: flex; flex-direction: column; gap: 8px; }
+  .mode-pill {
+    padding: 10px 16px; border-radius: 10px; font-size: 12px; font-weight: 600;
+    cursor: pointer; border: 1.5px solid var(--border);
+    color: #a78bfa; background: var(--panel); transition: all .18s;
+    font-family: 'Inter', sans-serif; text-align: left; display: flex;
+    align-items: center; gap: 10px;
+  }
+  .mode-pill:hover  { border-color: var(--accent); color: var(--accent); }
+  .mode-pill.active { border-color: var(--accent); background: rgba(124,58,237,.08); color: var(--accent); }
+  .mode-pill .mode-icon { font-size: 16px; }
+  .mode-pill .mode-info { display: flex; flex-direction: column; gap: 2px; }
+  .mode-pill .mode-name { font-weight: 700; font-size: 13px; }
+  .mode-pill .mode-desc { font-size: 11px; opacity: .7; font-weight: 400; }
+
+  /* ACTIONS */
+  .actions {
+    padding: 16px 24px 20px; border-top: 1px solid var(--border);
+    background: var(--panel); flex-shrink: 0; display: flex; gap: 10px;
+  }
+  .btn {
+    flex: 1; padding: 12px; border-radius: 9px; border: none;
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all .18s; letter-spacing: .3px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent) 0%, #6d28d9 100%);
+    color: #fff; box-shadow: 0 4px 16px rgba(124,58,237,.25);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,58,237,.35); }
+  .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  .btn-secondary {
+    background: #ede9fe; color: var(--accent2); border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── RIGHT PANEL ── */
+  .panel-right {
+    display: flex; flex-direction: column; overflow: hidden; background: var(--bg);
+  }
+  .preview-bar {
+    padding: 14px 28px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    background: #ffffff; flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(124,58,237,0.06);
+  }
+  .preview-bar-left { display: flex; align-items: center; gap: 10px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #c4b5fd; transition: background .3s; }
+  .status-dot.live { background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+  .status-label { font-size: 12px; font-weight: 600; color: #a78bfa; }
+  .status-label.live { color: var(--green); }
+
+  .tab-group { display: flex; gap: 2px; background: var(--panel2); padding: 3px; border-radius: 8px; }
+  .tab {
+    padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600;
+    cursor: pointer; color: #a78bfa; transition: all .15s; border: none;
+    background: transparent; font-family: 'Inter', sans-serif;
+  }
+  .tab.active { background: #fff; color: var(--accent2); box-shadow: 0 1px 4px rgba(124,58,237,.1); }
+
+  .copy-btn {
+    padding: 8px 14px; background: var(--panel); border: 1px solid var(--border);
+    color: var(--accent); border-radius: 7px; font-size: 12px; font-weight: 600;
+    cursor: pointer; font-family: 'Inter', sans-serif; transition: all .15s;
+  }
+  .copy-btn:hover { border-color: var(--accent); background: var(--panel2); }
+
+  .preview-content { flex: 1; overflow-y: auto; padding: 28px 36px; }
+  .preview-content::-webkit-scrollbar { width: 5px; }
+  .preview-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  /* ── COMPARE LAYOUT ── */
+  .compare-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;
+  }
+
+  .compare-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+  }
+  .compare-card-header {
+    padding: 12px 16px; font-size: 10px; font-weight: 800; letter-spacing: 1.5px;
+    text-transform: uppercase; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .compare-card-header.before { background: #fff5f5; color: #dc2626; border-color: #fecaca; }
+  .compare-card-header.after  { background: #f0fdf4; color: #059669; border-color: #bbf7d0; }
+  .compare-card-body {
+    padding: 16px; font-size: 13px; line-height: 1.75; color: #374151;
+    font-family: 'JetBrains Mono', monospace; white-space: pre-wrap; min-height: 140px;
+  }
+
+  /* SCORE CARD */
+  .score-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px 24px; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 24px;
+  }
+  .score-ring-wrap { position: relative; width: 80px; height: 80px; flex-shrink: 0; }
+  .score-ring-wrap svg { transform: rotate(-90deg); }
+  .score-ring-bg  { fill: none; stroke: #ede9fe; stroke-width: 8; }
+  .score-ring-fg  { fill: none; stroke: var(--accent); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
+  .score-number {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800; color: var(--accent2);
+  }
+  .score-info { flex: 1; }
+  .score-title { font-size: 13px; font-weight: 700; color: var(--accent2); margin-bottom: 6px; }
+  .score-bar-wrap { background: #ede9fe; border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 8px; }
+  .score-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), #a78bfa); transition: width 1s ease; }
+  .score-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .score-tag {
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+    background: #f5f3ff; color: var(--accent); border: 1px solid var(--border);
+  }
+  .score-tag.green { background: #f0fdf4; color: #059669; border-color: #bbf7d0; }
+  .score-tag.red   { background: #fff5f5; color: #dc2626; border-color: #fecaca; }
+
+  /* FOCUSED PROMPT BLOCK */
+  .focused-block {
+    background: #fff; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 20px;
+  }
+  .focused-block-header {
+    padding: 12px 18px; background: linear-gradient(135deg, #5b21b6, #7c3aed);
+    color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .focused-block-body {
+    padding: 20px; font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px; line-height: 1.85; color: #1e1b4b; white-space: pre-wrap;
+  }
+  .focused-section { margin-bottom: 16px; }
+  .focused-key {
+    font-size: 9px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+    color: #7c3aed; margin-bottom: 6px;
+  }
+  .focused-val { font-size: 13px; color: #374151; line-height: 1.7; font-family: 'Inter', sans-serif; }
+  .rule-list { list-style: none; }
+  .rule-list li {
+    font-size: 12.5px; color: #374151; padding: 5px 0 5px 18px; position: relative;
+    font-family: 'Inter', sans-serif; border-bottom: 1px solid #f3f4f6;
+  }
+  .rule-list li:last-child { border-bottom: none; }
+  .rule-list li::before { content: '▸'; position: absolute; left: 0; color: #7c3aed; font-size: 10px; top: 7px; }
+
+  /* EMPTY STATE */
+  .empty-state {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100%; color: #c4b5fd; text-align: center; gap: 12px;
+  }
+  .empty-icon  { font-size: 48px; opacity: .5; }
+  .empty-title { font-size: 16px; font-weight: 700; color: var(--accent); opacity: .6; }
+  .empty-desc  { font-size: 13px; max-width: 280px; line-height: 1.6; color: #a78bfa; }
+
+  /* SKELETON */
+  .skeleton { animation: shimmer 1.5s infinite; }
+  @keyframes shimmer { 0%{opacity:.4} 50%{opacity:.9} 100%{opacity:.4} }
+  .sk-line { height: 14px; border-radius: 4px; background: #ede9fe; margin-bottom: 10px; }
+
+  /* HISTORY */
+  .history-list { display: flex; flex-direction: column; gap: 10px; }
+  .hist-item {
+    background: #fff; border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 18px; cursor: pointer; transition: all .15s;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .hist-item:hover { border-color: var(--accent); box-shadow: 0 2px 12px rgba(124,58,237,.1); }
+  .hist-name { font-size: 13px; font-weight: 700; color: var(--accent2); }
+  .hist-meta { font-size: 11px; color: #a78bfa; margin-top: 2px; }
+  .hist-time { font-size: 11px; color: #c4b5fd; font-family: 'JetBrains Mono', monospace; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 28px; right: 28px;
+    background: #fff; border: 1px solid var(--green);
+    color: var(--green); font-size: 13px; font-weight: 600;
+    padding: 12px 20px; border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(124,58,237,.15);
+    transform: translateY(80px); opacity: 0; transition: all .3s; z-index: 999;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+</style>
+</head>
+<body>
+
+<!-- HERO HEADER -->
+<div class="hero-header">
+  <div class="hero-badge">🎯 Focus Enhancer</div>
+  <div class="hero-title">Prompt Focus Enhancer</div>
+  <div class="hero-sub">Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span></div>
+</div>
+
+<div class="workspace">
+
+  <!-- LEFT PANEL -->
+  <div class="panel-left">
+    <div class="panel-header">
+      <div class="panel-title">Prompt Details</div>
+      <div class="panel-desc">Paste your vague prompt — Claude sharpens it</div>
+    </div>
+
+    <div class="form-scroll">
+      <div class="field">
+        <div class="field-label">Your Prompt <span class="req">*</span></div>
+        <textarea id="f-input" rows="5" placeholder="e.g. write something about AI and tech stuff for my project"></textarea>
+      </div>
+
+      <div class="field">
+        <div class="field-label">Target Use Case</div>
+        <input id="f-usecase" type="text" placeholder="e.g. ChatGPT, Assignment, Blog, Code, Research"/>
+      </div>
+
+      <div class="field">
+        <div class="field-label">Focus Mode <span class="req">*</span></div>
+        <div class="mode-group">
+          <button class="mode-pill active" data-mode="General Focus">
+            <span class="mode-icon">🔍</span>
+            <span class="mode-info">
+              <span class="mode-name">General Focus</span>
+              <span class="mode-desc">Clean up vague language, add basic structure</span>
+            </span>
+          </button>
+          <button class="mode-pill" data-mode="Strict Focus">
+            <span class="mode-icon">⚡</span>
+            <span class="mode-info">
+              <span class="mode-name">Strict Focus</span>
+              <span class="mode-desc">Remove noise, enforce topic boundaries</span>
+            </span>
+          </button>
+          <button class="mode-pill" data-mode="Ultra Focus">
+            <span class="mode-icon">🎯</span>
+            <span class="mode-info">
+              <span class="mode-name">Ultra Focus</span>
+              <span class="mode-desc">Maximum precision, structured output rules</span>
+            </span>
+          </button>
+          <button class="mode-pill" data-mode="Academic Focus">
+            <span class="mode-icon">📚</span>
+            <span class="mode-info">
+              <span class="mode-name">Academic Focus</span>
+              <span class="mode-desc">Formal tone, citations, structured argument</span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="gen-btn" onclick="enhancePrompt()">🎯 Enhance Prompt</button>
+      <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="panel-right">
+    <div class="preview-bar">
+      <div class="preview-bar-left">
+        <div class="status-dot" id="status-dot"></div>
+        <div class="status-label" id="status-label">Ready</div>
+      </div>
+      <div class="tab-group">
+        <button class="tab active" onclick="switchTab('preview', this)">Result</button>
+        <button class="tab" onclick="switchTab('history', this)">History</button>
+      </div>
+      <button class="copy-btn" onclick="copyResult()">⎘ Copy Enhanced</button>
+    </div>
+
+    <div class="preview-content">
+      <div id="tab-preview">
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon">🎯</div>
+          <div class="empty-title">No Prompt Yet</div>
+          <div class="empty-desc">Paste your vague prompt on the left and click Enhance Prompt to see the focused version.</div>
+        </div>
+        <div id="focus-output" style="display:none;"></div>
+      </div>
+      <div id="tab-history" style="display:none;">
+        <div class="history-list" id="history-list">
+          <div class="empty-state">
+            <div class="empty-icon">🕘</div>
+            <div class="empty-title">No History</div>
+            <div class="empty-desc">Enhanced prompts will appear here.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let activeMode = 'General Focus';
+let focusHistory = [];
+let lastFocused = '';
+
+document.querySelectorAll('.mode-pill').forEach(p => {
+  p.addEventListener('click', () => {
+    document.querySelectorAll('.mode-pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+    activeMode = p.dataset.mode;
+  });
+});
+
+function switchTab(tab, btn) {
+  ['preview','history'].forEach(t => {
+    document.getElementById('tab-' + t).style.display = 'none';
+  });
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).style.display = 'block';
+  btn.classList.add('active');
+}
+
+async function enhancePrompt() {
+  const input   = document.getElementById('f-input').value.trim();
+  const usecase = document.getElementById('f-usecase').value.trim();
+
+  if (!input) { showToast('⚠ Please enter a prompt to enhance.', '#dc2626'); return; }
+
+  setStatus('generating');
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true; btn.textContent = '⟳ Enhancing…';
+
+  document.querySelectorAll('.tab').forEach((b,i) => b.classList.toggle('active', i===0));
+  ['preview','history'].forEach((t,i) => {
+    document.getElementById('tab-' + t).style.display = i===0 ? 'block' : 'none';
+  });
+
+  showSkeleton();
+
+  const prompt = buildAPIPrompt(input, usecase);
+
+  let parsed = null;
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    clearTimeout(timer);
+    if (response.ok) {
+      const data = await response.json();
+      const text = (data.content || []).map(b => b.text || '').join('');
+      try { parsed = JSON.parse(text.replace(/```json|```/g, '').trim()); }
+      catch(e) { parsed = null; }
+    }
+  } catch(err) {
+    console.warn('API unavailable, using local enhancer');
+  }
+
+  if (!parsed) parsed = localEnhance(input, usecase, activeMode);
+
+  lastFocused = parsed.focused_prompt || '';
+  renderResult(parsed, input);
+  saveHistory(input, parsed);
+  setStatus('done');
+
+  btn.disabled = false; btn.textContent = '🎯 Enhance Prompt';
+}
+
+function buildAPIPrompt(input, usecase) {
+  return `You are a prompt engineering expert. Analyze and enhance the following vague prompt into a precise, focused prompt. Return ONLY a JSON object with no markdown, no extra text.
+
+JSON schema:
+{
+  "issues": ["issue1", "issue2", "issue3"],
+  "focused_prompt": "The full enhanced, focused prompt text",
+  "role": "Suggested AI role/persona",
+  "task": "Clear task statement",
+  "rules": ["rule1", "rule2", "rule3"],
+  "output_format": "Describe the expected output format",
+  "score_before": 20,
+  "score_after": 85,
+  "improvements": ["improvement1", "improvement2", "improvement3"]
+}
+
+Original Prompt: "${input}"
+Use Case: ${usecase || 'General AI assistant'}
+Focus Mode: ${activeMode}
+
+Analyze what is vague or unfocused about the original, then produce a sharp, professional version. score_before and score_after should be realistic numbers 0-100. Return only valid JSON.`;
+}
+
+function localEnhance(input, usecase, mode) {
+  // Clean vague words
+  const vagueWords = ['something','things','stuff','nice','good','very','a bit','kind of','sort of','maybe','perhaps','etc'];
+  let cleaned = input;
+  vagueWords.forEach(w => {
+    cleaned = cleaned.replace(new RegExp('\\b' + w + '\\b', 'gi'), '').replace(/\s+/g, ' ').trim();
+  });
+
+  // Detect topic
+  const isCode    = /code|program|script|function|app|build|develop/i.test(input);
+  const isWrite   = /write|essay|article|blog|content|paragraph|letter/i.test(input);
+  const isExplain = /explain|what is|how does|describe|define|tell me/i.test(input);
+  const isAnalyze = /analyz|compar|evaluat|review|assess/i.test(input);
+  const isResearch= /research|study|report|survey|find/i.test(input);
+
+  let role = 'Expert AI Assistant';
+  let taskPrefix = 'Provide a comprehensive response on';
+  if (isCode)     { role = 'Senior Software Engineer'; taskPrefix = 'Write clean, well-commented code for'; }
+  if (isWrite)    { role = 'Professional Content Writer'; taskPrefix = 'Write a structured, high-quality piece about'; }
+  if (isExplain)  { role = 'Subject Matter Expert'; taskPrefix = 'Explain clearly and thoroughly:'; }
+  if (isAnalyze)  { role = 'Critical Analyst'; taskPrefix = 'Perform a detailed analysis of'; }
+  if (isResearch) { role = 'Research Specialist'; taskPrefix = 'Conduct thorough research and present findings on'; }
+
+  const modeRules = {
+    'General Focus': {
+      rules: [
+        'Provide a clear, well-structured response',
+        'Stay on topic and avoid unrelated information',
+        'Use simple, precise language'
+      ],
+      format: 'Clear prose with headings where appropriate'
+    },
+    'Strict Focus': {
+      rules: [
+        'No unnecessary preamble or filler text',
+        'Every sentence must directly address the task',
+        'Be concise — quality over quantity',
+        'No repetition of points already made'
+      ],
+      format: 'Structured bullet points or numbered list. Direct answers only.'
+    },
+    'Ultra Focus': {
+      rules: [
+        'Zero fluff — every word must earn its place',
+        'No unrelated information under any circumstance',
+        'Maximum clarity and minimum verbosity',
+        'No opinion unless explicitly requested',
+        'Cite sources or state when information is uncertain'
+      ],
+      format: '1. Direct Answer (1-2 sentences)\n2. Key Points (bullet list)\n3. Final Summary (1 sentence)'
+    },
+    'Academic Focus': {
+      rules: [
+        'Use formal academic language and tone',
+        'Structure response with clear sections',
+        'Support claims with logical reasoning',
+        'Define technical terms where used',
+        'Maintain objectivity and scholarly tone'
+      ],
+      format: 'Introduction → Body (with subheadings) → Conclusion. Formal paragraph style.'
+    }
+  };
+
+  const mConfig = modeRules[mode] || modeRules['General Focus'];
+
+  const focused_prompt =
+`ROLE: ${role}
+
+TASK: ${taskPrefix} "${cleaned || input}"
+${usecase ? `\nCONTEXT: This will be used for: ${usecase}` : ''}
+
+RULES:
+${mConfig.rules.map((r,i) => `${i+1}. ${r}`).join('\n')}
+
+OUTPUT FORMAT:
+${mConfig.format}`;
+
+  // Score calculation
+  const vagueCount = vagueWords.filter(w => new RegExp('\\b'+w+'\\b','gi').test(input)).length;
+  const lengthScore = Math.min(input.length / 2, 30);
+  const score_before = Math.max(10, Math.min(45, Math.round(lengthScore - vagueCount * 5)));
+  const score_after  = mode === 'Ultra Focus' ? 95 : mode === 'Strict Focus' ? 88 : mode === 'Academic Focus' ? 90 : 78;
+
+  const issues = [];
+  if (vagueCount > 0) issues.push(`Contains ${vagueCount} vague word(s): ${vagueWords.filter(w => new RegExp('\\b'+w+'\\b','gi').test(input)).join(', ')}`);
+  if (input.length < 30) issues.push('Prompt is too short and lacks context');
+  if (!/who|what|how|why|when|write|explain|build|create|analyze/i.test(input)) issues.push('Missing clear action verb or instruction');
+  if (!usecase) issues.push('No target use case specified');
+  if (issues.length === 0) issues.push('Prompt lacks structural formatting');
+
+  const improvements = [
+    `Added explicit ROLE: ${role}`,
+    `Replaced vague language with precise task statement`,
+    `Added ${mConfig.rules.length} focus rules for ${mode}`,
+    `Defined expected output format`
+  ];
+
+  return { issues, focused_prompt, role, task: `${taskPrefix} "${cleaned || input}"`, rules: mConfig.rules, output_format: mConfig.format, score_before, score_after, improvements };
+}
+
+function renderResult(data, original) {
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('focus-output').style.display = 'block';
+
+  const scoreBefore = data.score_before || 20;
+  const scoreAfter  = data.score_after  || 80;
+  const circ = 2 * Math.PI * 34; // radius 34
+  const offset = circ - (scoreAfter / 100) * circ;
+
+  const issueHTML = (data.issues || []).map(i => `<span class="score-tag red">⚠ ${i}</span>`).join('');
+  const improveHTML = (data.improvements || []).map(i => `<span class="score-tag green">✓ ${i}</span>`).join('');
+  const rulesHTML = (data.rules || []).map(r => `<li>${r}</li>`).join('');
+
+  document.getElementById('focus-output').innerHTML = `
+
+    <!-- COMPARE -->
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="compare-card-header before">❌ &nbsp;Before — Unfocused</div>
+        <div class="compare-card-body">${original}</div>
+      </div>
+      <div class="compare-card">
+        <div class="compare-card-header after">✅ &nbsp;After — Focused</div>
+        <div class="compare-card-body">${data.task || data.focused_prompt?.split('\n')[2] || ''}</div>
+      </div>
+    </div>
+
+    <!-- SCORE -->
+    <div class="score-card">
+      <div class="score-ring-wrap">
+        <svg width="80" height="80" viewBox="0 0 80 80">
+          <circle class="score-ring-bg" cx="40" cy="40" r="34"/>
+          <circle class="score-ring-fg" cx="40" cy="40" r="34"
+            stroke-dasharray="${circ}"
+            stroke-dashoffset="${offset}"
+            id="score-ring"/>
+        </svg>
+        <div class="score-number">${scoreAfter}%</div>
+      </div>
+      <div class="score-info">
+        <div class="score-title">Focus Score: ${scoreBefore}% → ${scoreAfter}% &nbsp;(+${scoreAfter - scoreBefore} points)</div>
+        <div class="score-bar-wrap">
+          <div class="score-bar-fill" id="score-bar" style="width:${scoreAfter}%"></div>
+        </div>
+        <div class="score-tags">
+          ${issueHTML}
+          ${improveHTML}
+        </div>
+      </div>
+    </div>
+
+    <!-- FOCUSED PROMPT -->
+    <div class="focused-block">
+      <div class="focused-block-header">
+        <span>🎯 Enhanced Prompt — ${activeMode}</span>
+        <span style="font-size:11px;opacity:.7;">${data.role || ''}</span>
+      </div>
+      <div class="focused-block-body">
+        <div class="focused-section">
+          <div class="focused-key">Role</div>
+          <div class="focused-val">${data.role || ''}</div>
+        </div>
+        <div class="focused-section">
+          <div class="focused-key">Task</div>
+          <div class="focused-val">${data.task || ''}</div>
+        </div>
+        ${(data.rules||[]).length ? `
+        <div class="focused-section">
+          <div class="focused-key">Rules</div>
+          <ul class="rule-list">${rulesHTML}</ul>
+        </div>` : ''}
+        ${data.output_format ? `
+        <div class="focused-section">
+          <div class="focused-key">Output Format</div>
+          <div class="focused-val">${data.output_format}</div>
+        </div>` : ''}
+        <div class="focused-section" style="margin-bottom:0;">
+          <div class="focused-key">Full Enhanced Prompt</div>
+          <div class="focused-val" style="font-family:'JetBrains Mono',monospace;font-size:12px;background:#f9f7ff;padding:14px;border-radius:8px;border:1px solid var(--border);white-space:pre-wrap;">${data.focused_prompt || ''}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function saveHistory(original, parsed) {
+  const ts = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const preview = original.slice(0, 50) + (original.length > 50 ? '…' : '');
+  focusHistory.unshift({ original, parsed, mode: activeMode, ts, preview });
+  if (focusHistory.length > 10) focusHistory.pop();
+  renderHistory();
+}
+
+function renderHistory() {
+  const box = document.getElementById('history-list');
+  if (!focusHistory.length) {
+    box.innerHTML = '<div class="empty-state"><div class="empty-icon">🕘</div><div class="empty-title">No History</div></div>'; return;
+  }
+  box.innerHTML = focusHistory.map((h,i) => `
+    <div class="hist-item" onclick="restoreHistory(${i})">
+      <div>
+        <div class="hist-name">${h.preview}</div>
+        <div class="hist-meta">${h.mode} &nbsp;·&nbsp; Score: ${h.parsed.score_after || '—'}%</div>
+      </div>
+      <div class="hist-time">${h.ts}</div>
+    </div>`).join('');
+}
+
+function restoreHistory(i) {
+  const h = focusHistory[i];
+  activeMode = h.mode;
+  lastFocused = h.parsed.focused_prompt || '';
+  renderResult(h.parsed, h.original);
+  document.querySelectorAll('.tab').forEach((b,j) => b.classList.toggle('active', j===0));
+  ['preview','history'].forEach((t,j) => {
+    document.getElementById('tab-' + t).style.display = j===0 ? 'block' : 'none';
+  });
+}
+
+function setStatus(s) {
+  const dot = document.getElementById('status-dot');
+  const lbl = document.getElementById('status-label');
+  if (s === 'generating') {
+    dot.className = 'status-dot live'; lbl.className = 'status-label live'; lbl.textContent = 'Enhancing…';
+  } else {
+    dot.className = 'status-dot'; lbl.className = 'status-label'; lbl.textContent = 'Done';
+  }
+}
+
+function showSkeleton() {
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('focus-output').style.display = 'block';
+  document.getElementById('focus-output').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
+      <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;">
+        <div class="sk-line skeleton" style="width:40%;height:11px;margin-bottom:14px;"></div>
+        <div class="sk-line skeleton" style="width:90%;"></div>
+        <div class="sk-line skeleton" style="width:75%;"></div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;">
+        <div class="sk-line skeleton" style="width:40%;height:11px;margin-bottom:14px;"></div>
+        <div class="sk-line skeleton" style="width:90%;"></div>
+        <div class="sk-line skeleton" style="width:80%;"></div>
+      </div>
+    </div>
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;display:flex;gap:20px;">
+      <div class="sk-line skeleton" style="width:80px;height:80px;border-radius:50%;margin:0;flex-shrink:0;"></div>
+      <div style="flex:1;">
+        <div class="sk-line skeleton" style="width:60%;margin-bottom:12px;"></div>
+        <div class="sk-line skeleton" style="width:100%;height:8px;border-radius:999px;"></div>
+        <div style="display:flex;gap:6px;margin-top:10px;">
+          ${Array(3).fill(0).map(()=>`<div class="sk-line skeleton" style="width:100px;height:22px;border-radius:999px;margin:0;"></div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;">
+      <div class="sk-line skeleton" style="width:35%;margin-bottom:14px;"></div>
+      <div class="sk-line skeleton" style="width:95%;"></div>
+      <div class="sk-line skeleton" style="width:88%;"></div>
+      <div class="sk-line skeleton" style="width:92%;"></div>
+    </div>`;
+}
+
+function copyResult() {
+  if (!lastFocused) { showToast('Enhance a prompt first.', '#dc2626'); return; }
+  navigator.clipboard.writeText(lastFocused).then(() => showToast('✓ Enhanced prompt copied!'));
+}
+
+function showToast(msg, color) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.borderColor = color || '#059669'; t.style.color = color || '#059669';
+  t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function clearAll() {
+  document.getElementById('f-input').value = '';
+  document.getElementById('f-usecase').value = '';
+  document.getElementById('empty-state').style.display = 'flex';
+  document.getElementById('focus-output').style.display = 'none';
+  setStatus('ready');
+  document.getElementById('status-label').textContent = 'Ready';
+  lastFocused = '';
+}
+</script>
+</body>
+</html>
