@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Constraint Generator</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#f2effd;
+    min-height:100vh;
+    padding:40px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.badge{
+    display:inline-block;
+    background:#7c3aed;
+    color:white;
+    padding:8px 18px;
+    border-radius:25px;
+    font-size:12px;
+    letter-spacing:2px;
+    margin-bottom:15px;
+}
+
+.header h1{
+    color:#6d28d9;
+    font-size:48px;
+    margin-bottom:10px;
+}
+
+.header p{
+    color:#666;
+}
+
+.card{
+    background:white;
+    border:1px solid #d8b4fe;
+    border-radius:25px;
+    padding:25px;
+    margin-bottom:20px;
+}
+
+label{
+    display:block;
+    color:#6d28d9;
+    font-weight:700;
+    margin-bottom:10px;
+    letter-spacing:1px;
+    font-size:13px;
+}
+
+textarea{
+    width:100%;
+    height:150px;
+    padding:15px;
+    border-radius:15px;
+    border:1px solid #d8b4fe;
+    resize:none;
+    outline:none;
+    background:#faf8ff;
+}
+
+.buttons{
+    margin-top:20px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:none;
+    padding:12px 24px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.primary{
+    background:#7c3aed;
+    color:white;
+}
+
+.primary:hover{
+    background:#6d28d9;
+}
+
+.secondary{
+    background:#ede9fe;
+    color:#6d28d9;
+}
+
+.secondary:hover{
+    background:#ddd6fe;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.stat{
+    background:white;
+    border:1px solid #d8b4fe;
+    border-radius:15px;
+    text-align:center;
+    padding:20px;
+}
+
+.stat h3{
+    color:#6d28d9;
+    font-size:28px;
+}
+
+.constraints-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.constraint-box{
+    background:#faf8ff;
+    border:1px solid #d8b4fe;
+    border-radius:15px;
+    padding:20px;
+    min-height:300px;
+}
+
+.constraint-item{
+    background:white;
+    border-left:5px solid #7c3aed;
+    padding:12px;
+    margin-bottom:10px;
+    border-radius:8px;
+}
+
+.constraint-item:hover{
+    transform:translateX(4px);
+    transition:.3s;
+}
+
+.footer{
+    margin-top:40px;
+    text-align:center;
+    color:#666;
+    border-top:1px solid #d8b4fe;
+    padding-top:20px;
+}
+
+@media(max-width:900px){
+
+    .constraints-grid{
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .header h1{
+        font-size:34px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div class="badge">PROMPT ENGINEERING</div>
+        <h1>Constraint Generator</h1>
+        <p>Generate useful constraints for prompts and AI tasks</p>
+    </div>
+
+    <div class="card">
+
+        <label>ENTER TASK OR PROMPT</label>
+
+        <textarea
+            id="taskInput"
+            placeholder="Example: Write a blog post about Artificial Intelligence">
+        </textarea>
+
+        <div class="buttons">
+
+            <button class="primary" onclick="generateConstraints()">
+                Generate Constraints
+            </button>
+
+            <button class="secondary" onclick="copyConstraints()">
+                Copy
+            </button>
+
+            <button class="secondary" onclick="clearAll()">
+                Clear
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="stats">
+
+        <div class="stat">
+            <h3 id="totalConstraints">0</h3>
+            <p>Total Constraints</p>
+        </div>
+
+        <div class="stat">
+            <h3 id="taskLength">0</h3>
+            <p>Input Characters</p>
+        </div>
+
+        <div class="stat">
+            <h3 id="generationCount">0</h3>
+            <p>Generations</p>
+        </div>
+
+    </div>
+
+    <div class="constraints-grid">
+
+        <div class="card">
+
+            <h2 style="color:#6d28d9;margin-bottom:15px;">
+                Suggested Constraints
+            </h2>
+
+            <div id="constraintsList">
+                Constraints will appear here...
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <h2 style="color:#6d28d9;margin-bottom:15px;">
+                Generated Prompt Rules
+            </h2>
+
+            <div class="constraint-box" id="rulesBox">
+                Generate constraints to see prompt rules.
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+    Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+   </div>
+
+</div>
+
+<script>
+
+let generationCounter = 0;
+
+function generateConstraints(){
+
+    const input =
+    document.getElementById("taskInput").value.trim();
+
+    if(input === ""){
+        alert("Please enter a task or prompt.");
+        return;
+    }
+
+    const constraints = [
+        "Maximum 500 words",
+        "Use clear and professional language",
+        "Include a proper introduction",
+        "Provide relevant examples",
+        "Use bullet points where appropriate",
+        "Avoid repetitive content",
+        "Target beginner-level audience",
+        "Include a concise conclusion",
+        "Maintain logical structure",
+        "Use correct grammar and spelling"
+    ];
+
+    const list =
+    document.getElementById("constraintsList");
+
+    list.innerHTML = "";
+
+    constraints.forEach(item => {
+
+        list.innerHTML += `
+            <div class="constraint-item">
+                ✓ ${item}
+            </div>
+        `;
+
+    });
+
+    document.getElementById("rulesBox").innerHTML =
+
+`CONSTRAINT RULES
+
+1. Keep response under 500 words.
+
+2. Use professional tone.
+
+3. Include practical examples.
+
+4. Ensure clarity and readability.
+
+5. Structure content with headings.
+
+6. Avoid unnecessary repetition.
+
+7. End with a conclusion section.
+
+8. Follow proper grammar rules.
+
+9. Focus on the given topic only.
+
+10. Maintain consistency throughout the response.`;
+
+    generationCounter++;
+
+    document.getElementById("totalConstraints")
+        .textContent = constraints.length;
+
+    document.getElementById("taskLength")
+        .textContent = input.length;
+
+    document.getElementById("generationCount")
+        .textContent = generationCounter;
+}
+
+function copyConstraints(){
+
+    const text =
+    document.getElementById("rulesBox").innerText;
+
+    navigator.clipboard.writeText(text);
+
+    alert("Constraints copied successfully!");
+}
+
+function clearAll(){
+
+    document.getElementById("taskInput").value = "";
+
+    document.getElementById("constraintsList").innerHTML =
+        "Constraints will appear here...";
+
+    document.getElementById("rulesBox").innerHTML =
+        "Generate constraints to see prompt rules.";
+
+    document.getElementById("totalConstraints").textContent = "0";
+    document.getElementById("taskLength").textContent = "0";
+}
+
+</script>
+
+</body>
+</html>

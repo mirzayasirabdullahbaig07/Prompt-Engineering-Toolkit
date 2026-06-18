@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chain of Thought Builder</title>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #e8e8f8;
+  min-height: 100vh;
+  padding: 40px 20px 60px;
+  color: #2d2d5e;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.badge {
+  display: inline-block;
+  background: #7c3aed;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  padding: 6px 18px;
+  border-radius: 999px;
+  margin-bottom: 16px;
+}
+
+.header h1 {
+  font-size: 38px;
+  font-weight: 800;
+  color: #5b21b6;
+}
+
+.header p {
+  font-size: 15px;
+  color: #6b7280;
+}
+
+/* Card */
+.card {
+  background: #fff;
+  border: 1.5px solid #e0dff5;
+  border-radius: 16px;
+  padding: 28px 32px;
+  max-width: 900px;
+  margin: 0 auto 28px;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: #7c3aed;
+  margin-bottom: 10px;
+}
+
+/* Inputs */
+textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1.5px solid #ddd8f5;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 14px;
+  font-family: monospace;
+  background: #fafafa;
+}
+
+/* Buttons */
+.btn-primary {
+  background: #5b21b6;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 26px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1.5px solid #c4b5fd;
+  color: #5b21b6;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Output */
+.output {
+  background: #fff;
+  border: 1.5px solid #e0dff5;
+  border-radius: 16px;
+  padding: 20px;
+  min-height: 160px;
+  white-space: pre-wrap;
+}
+
+.step {
+  background: #f5f3ff;
+  border-left: 4px solid #7c3aed;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.final {
+  margin-top: 14px;
+  padding: 12px;
+  background: #ede9fe;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+/* History */
+.history-item {
+  background: #f5f3ff;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  margin-top: 40px;
+  padding: 18px 10px;
+  border-top: 1.5px solid #e0dff5;
+  background: linear-gradient(135deg, #faf5ff, #f3f0ff);
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.footer span {
+  color: #7c3aed;
+  font-weight: 700;
+}
+
+.footer small {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  color: #9ca3af;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <div class="badge">🧠 AI Builder</div>
+  <h1>Chain of Thought Builder</h1>
+  <p>Break problems into structured reasoning steps</p>
+</div>
+
+<div class="card">
+  <div class="section-label">System Prompt</div>
+  <textarea id="systemPrompt" rows="3"
+  placeholder="e.g. You are a reasoning assistant that explains step-by-step"></textarea>
+</div>
+
+<div class="card">
+  <div class="section-label">User Problem</div>
+  <textarea id="userPrompt" rows="3"
+  placeholder="e.g. If a train travels 60km in 1 hour, how far in 5 hours?"></textarea>
+
+  <br><br>
+  <button class="btn-primary" onclick="run()">Generate Steps</button>
+  <button class="btn-secondary" onclick="clearAll()">Clear</button>
+</div>
+
+<div class="card">
+  <div class="section-label">Output</div>
+  <div class="output" id="output">
+    Your reasoning steps will appear here...
+  </div>
+</div>
+
+<div class="card">
+  <div class="section-label">History</div>
+  <div id="history"></div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+  <small>Chain of Thought Builder • AI Reasoning Tool v1.0</small>
+</div>
+
+<script>
+let history = [];
+
+function run() {
+  const system = document.getElementById("systemPrompt").value;
+  const user = document.getElementById("userPrompt").value;
+
+  if (!user) return alert("Enter a problem first!");
+
+  document.getElementById("output").innerText = "Thinking... 🤔";
+
+  setTimeout(() => {
+    const text = generateMockReasoning(user);
+    renderOutput(text);
+    saveHistory(user, text);
+  }, 800);
+}
+
+/* ── MOCK AI ENGINE ── */
+function generateMockReasoning(input) {
+
+  const text = input.toLowerCase();
+  let steps = [];
+
+  if (text.includes("train") || text.includes("speed") || text.includes("km")) {
+    steps = [
+      "Step 1: Identify given values from the problem",
+      "Step 2: Use formula Distance = Speed × Time",
+      "Step 3: Multiply speed with time duration",
+      "Step 4: Perform calculation carefully",
+      "Final Answer: Result obtained using distance formula"
+    ];
+  }
+
+  else if (text.includes("ai") || text.includes("education")) {
+    steps = [
+      "Step 1: Understand the concept of AI in education",
+      "Step 2: Identify key applications (learning, grading, personalization)",
+      "Step 3: Analyze benefits for students and teachers",
+      "Step 4: Consider future impact",
+      "Final Answer: AI significantly improves modern education systems"
+    ];
+  }
+
+  else if (text.includes("explain") || text.includes("what")) {
+    steps = [
+      "Step 1: Break down the concept into simple parts",
+      "Step 2: Identify key idea and keywords",
+      "Step 3: Explain using simple language and examples",
+      "Final Answer: Concept explained clearly in simple terms"
+    ];
+  }
+
+  else {
+    steps = [
+      "Step 1: Understand the problem statement",
+      "Step 2: Identify key information",
+      "Step 3: Break into smaller logical parts",
+      "Step 4: Apply step-by-step reasoning",
+      "Final Answer: Solution generated using logical thinking"
+    ];
+  }
+
+  return steps.join("\n");
+}
+
+/* ── OUTPUT ── */
+function renderOutput(text) {
+  const lines = text.split("\n");
+
+  let html = "";
+  let final = "";
+
+  lines.forEach(line => {
+    if (line.toLowerCase().includes("final")) {
+      final = line;
+    } else if (line.trim()) {
+      html += `<div class="step">${line}</div>`;
+    }
+  });
+
+  document.getElementById("output").innerHTML =
+    html + `<div class="final">${final}</div>`;
+}
+
+/* ── HISTORY ── */
+function saveHistory(prompt, response) {
+  history.unshift({ prompt, response });
+  renderHistory();
+}
+
+function renderHistory() {
+  const box = document.getElementById("history");
+  box.innerHTML = "";
+
+  history.forEach(h => {
+    const div = document.createElement("div");
+    div.className = "history-item";
+    div.innerHTML = "📝 " + h.prompt;
+    div.onclick = () => renderOutput(h.response);
+    box.appendChild(div);
+  });
+}
+
+/* ── CLEAR ── */
+function clearAll() {
+  document.getElementById("userPrompt").value = "";
+  document.getElementById("output").innerText = "";
+}
+</script>
+
+</body>
+</html>

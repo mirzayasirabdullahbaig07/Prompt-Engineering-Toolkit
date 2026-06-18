@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Step Prompt Builder</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#f2effd;
+    min-height:100vh;
+    padding:40px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.badge{
+    display:inline-block;
+    background:#7c3aed;
+    color:white;
+    padding:8px 18px;
+    border-radius:25px;
+    font-size:12px;
+    letter-spacing:2px;
+    margin-bottom:15px;
+}
+
+.header h1{
+    color:#6d28d9;
+    font-size:48px;
+    margin-bottom:10px;
+}
+
+.header p{
+    color:#666;
+}
+
+.card{
+    background:white;
+    border:1px solid #d8b4fe;
+    border-radius:25px;
+    padding:25px;
+    margin-bottom:20px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+label{
+    display:block;
+    margin-bottom:8px;
+    color:#6d28d9;
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:1px;
+}
+
+input, textarea, select{
+    width:100%;
+    padding:12px;
+    border:1px solid #d8b4fe;
+    border-radius:12px;
+    background:#faf8ff;
+    outline:none;
+}
+
+textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+.buttons{
+    margin-top:20px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:none;
+    padding:12px 24px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.primary{
+    background:#7c3aed;
+    color:white;
+}
+
+.primary:hover{
+    background:#6d28d9;
+}
+
+.secondary{
+    background:#ede9fe;
+    color:#6d28d9;
+}
+
+.secondary:hover{
+    background:#ddd6fe;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.stat{
+    background:white;
+    border:1px solid #d8b4fe;
+    border-radius:15px;
+    padding:20px;
+    text-align:center;
+}
+
+.stat h3{
+    color:#6d28d9;
+    font-size:28px;
+}
+
+.output-box{
+    background:#faf8ff;
+    border:1px solid #d8b4fe;
+    border-radius:15px;
+    padding:20px;
+    min-height:250px;
+    white-space:pre-wrap;
+}
+
+.footer{
+    margin-top:40px;
+    text-align:center;
+    color:#666;
+    border-top:1px solid #d8b4fe;
+    padding-top:20px;
+}
+
+@media(max-width:900px){
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .header h1{
+        font-size:34px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div class="badge">PROMPT ENGINEERING</div>
+        <h1>Multi-Step Prompt Builder</h1>
+        <p>Build powerful AI prompts through guided steps</p>
+    </div>
+
+    <div class="card">
+
+        <div class="form-grid">
+
+            <div>
+                <label>GOAL / TASK</label>
+                <textarea id="goal"
+                placeholder="What should AI do?"></textarea>
+            </div>
+
+            <div>
+                <label>ROLE / PERSONA</label>
+                <textarea id="role"
+                placeholder="Act as..."></textarea>
+            </div>
+
+            <div>
+                <label>CONTEXT</label>
+                <textarea id="context"
+                placeholder="Background information"></textarea>
+            </div>
+
+            <div>
+                <label>CONSTRAINTS</label>
+                <textarea id="constraints"
+                placeholder="Word limit, tone, etc."></textarea>
+            </div>
+
+            <div>
+                <label>OUTPUT FORMAT</label>
+                <select id="format">
+                    <option>Blog Post</option>
+                    <option>Email</option>
+                    <option>Report</option>
+                    <option>JSON</option>
+                    <option>Table</option>
+                    <option>FAQ</option>
+                </select>
+            </div>
+
+            <div>
+                <label>EXAMPLES</label>
+                <textarea id="examples"
+                placeholder="Provide examples"></textarea>
+            </div>
+
+        </div>
+
+        <div class="buttons">
+
+            <button class="primary"
+            onclick="generatePrompt()">
+                Generate Prompt
+            </button>
+
+            <button class="secondary"
+            onclick="copyPrompt()">
+                Copy
+            </button>
+
+            <button class="secondary"
+            onclick="clearAll()">
+                Clear
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="stats">
+
+        <div class="stat">
+            <h3 id="stepCount">6</h3>
+            <p>Prompt Sections</p>
+        </div>
+
+        <div class="stat">
+            <h3 id="wordCount">0</h3>
+            <p>Prompt Words</p>
+        </div>
+
+        <div class="stat">
+            <h3 id="charCount">0</h3>
+            <p>Characters</p>
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h2 style="color:#6d28d9;margin-bottom:15px;">
+            Generated Prompt
+        </h2>
+
+        <div id="output" class="output-box">
+Your generated prompt will appear here...
+        </div>
+
+    </div>
+
+    <div class="footer">
+    Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+   </div>
+
+</div>
+
+<script>
+
+function generatePrompt(){
+
+    const goal =
+    document.getElementById("goal").value.trim();
+
+    const role =
+    document.getElementById("role").value.trim();
+
+    const context =
+    document.getElementById("context").value.trim();
+
+    const constraints =
+    document.getElementById("constraints").value.trim();
+
+    const format =
+    document.getElementById("format").value;
+
+    const examples =
+    document.getElementById("examples").value.trim();
+
+    const prompt =
+
+`ROLE:
+${role}
+
+TASK:
+${goal}
+
+CONTEXT:
+${context}
+
+CONSTRAINTS:
+${constraints}
+
+OUTPUT FORMAT:
+${format}
+
+EXAMPLES:
+${examples}`;
+
+    document.getElementById("output")
+    .textContent = prompt;
+
+    document.getElementById("wordCount")
+    .textContent =
+    prompt.split(/\s+/).filter(Boolean).length;
+
+    document.getElementById("charCount")
+    .textContent =
+    prompt.length;
+}
+
+function copyPrompt(){
+
+    const text =
+    document.getElementById("output").innerText;
+
+    navigator.clipboard.writeText(text);
+
+    alert("Prompt copied successfully!");
+}
+
+function clearAll(){
+
+    document.getElementById("goal").value="";
+    document.getElementById("role").value="";
+    document.getElementById("context").value="";
+    document.getElementById("constraints").value="";
+    document.getElementById("examples").value="";
+
+    document.getElementById("output").textContent =
+    "Your generated prompt will appear here...";
+
+    document.getElementById("wordCount").textContent="0";
+    document.getElementById("charCount").textContent="0";
+}
+
+</script>
+
+</body>
+</html>

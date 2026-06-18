@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Few-Shot Prompt Generator</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#f2effd;
+    min-height:100vh;
+    padding:40px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.badge{
+    display:inline-block;
+    background:#7c3aed;
+    color:white;
+    padding:8px 18px;
+    border-radius:25px;
+    font-size:12px;
+    letter-spacing:2px;
+    margin-bottom:15px;
+}
+
+.header h1{
+    color:#6d28d9;
+    font-size:48px;
+    margin-bottom:10px;
+}
+
+.header p{
+    color:#666;
+}
+
+.card{
+    background:white;
+    border:1px solid #d8b4fe;
+    border-radius:25px;
+    padding:25px;
+    margin-bottom:20px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+label{
+    display:block;
+    margin-bottom:8px;
+    color:#6d28d9;
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:1px;
+}
+
+input, textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid #d8b4fe;
+    border-radius:12px;
+    background:#faf8ff;
+    outline:none;
+}
+
+textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+.buttons{
+    margin-top:20px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:none;
+    padding:12px 24px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.primary{
+    background:#7c3aed;
+    color:white;
+}
+
+.primary:hover{
+    background:#6d28d9;
+}
+
+.secondary{
+    background:#ede9fe;
+    color:#6d28d9;
+}
+
+.secondary:hover{
+    background:#ddd6fe;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.stat{
+    background:white;
+    border:1px solid #d8b4fe;
+    border-radius:15px;
+    padding:20px;
+    text-align:center;
+}
+
+.stat h3{
+    color:#6d28d9;
+    font-size:28px;
+}
+
+.output-box{
+    background:#faf8ff;
+    border:1px solid #d8b4fe;
+    border-radius:15px;
+    padding:20px;
+    min-height:300px;
+    white-space:pre-wrap;
+}
+
+.footer{
+    margin-top:40px;
+    text-align:center;
+    color:#666;
+    border-top:1px solid #d8b4fe;
+    padding-top:20px;
+}
+
+@media(max-width:900px){
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .header h1{
+        font-size:34px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div class="badge">PROMPT ENGINEERING</div>
+        <h1>Few-Shot Prompt Generator</h1>
+        <p>Create AI prompts using example-based learning</p>
+    </div>
+
+    <div class="card">
+
+        <div class="form-grid">
+
+            <div>
+                <label>TASK DESCRIPTION</label>
+                <textarea id="task"
+                placeholder="Describe the AI task"></textarea>
+            </div>
+
+            <div>
+                <label>NEW INPUT TO PROCESS</label>
+                <textarea id="newInput"
+                placeholder="Enter the new input"></textarea>
+            </div>
+
+            <div>
+                <label>EXAMPLE 1</label>
+                <textarea id="example1"
+                placeholder="Input: ...&#10;Output: ..."></textarea>
+            </div>
+
+            <div>
+                <label>EXAMPLE 2</label>
+                <textarea id="example2"
+                placeholder="Input: ...&#10;Output: ..."></textarea>
+            </div>
+
+        </div>
+
+        <div class="buttons">
+
+            <button class="primary"
+            onclick="generatePrompt()">
+                Generate Prompt
+            </button>
+
+            <button class="secondary"
+            onclick="copyPrompt()">
+                Copy Prompt
+            </button>
+
+            <button class="secondary"
+            onclick="clearAll()">
+                Clear
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="stats">
+
+        <div class="stat">
+            <h3 id="promptCount">0</h3>
+            <p>Generated Prompts</p>
+        </div>
+
+        <div class="stat">
+            <h3>2</h3>
+            <p>Training Examples</p>
+        </div>
+
+        <div class="stat">
+            <h3 id="wordCount">0</h3>
+            <p>Words</p>
+        </div>
+
+        <div class="stat">
+            <h3 id="charCount">0</h3>
+            <p>Characters</p>
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h2 style="color:#6d28d9;margin-bottom:15px;">
+            Generated Few-Shot Prompt
+        </h2>
+
+        <div id="output" class="output-box">
+Your generated few-shot prompt will appear here...
+        </div>
+
+    </div>
+
+    <div class="footer">
+    Developed by <span>Hamna Munir</span> | <span>Mirza Yasir Abdullah Baig</span>
+   </div>
+
+</div>
+
+<script>
+
+let generatedPrompts = 0;
+
+function generatePrompt(){
+
+    const task =
+    document.getElementById("task").value.trim();
+
+    const example1 =
+    document.getElementById("example1").value.trim();
+
+    const example2 =
+    document.getElementById("example2").value.trim();
+
+    const newInput =
+    document.getElementById("newInput").value.trim();
+
+    if(task === ""){
+        alert("Please enter a task description.");
+        return;
+    }
+
+    const prompt =
+
+`TASK:
+${task}
+
+EXAMPLE 1:
+${example1}
+
+EXAMPLE 2:
+${example2}
+
+NOW PROCESS THIS INPUT:
+${newInput}
+
+Follow the same pattern shown in the examples and generate the appropriate output.`;
+
+    document.getElementById("output")
+    .textContent = prompt;
+
+    generatedPrompts++;
+
+    document.getElementById("promptCount")
+    .textContent = generatedPrompts;
+
+    document.getElementById("wordCount")
+    .textContent =
+    prompt.split(/\s+/).filter(Boolean).length;
+
+    document.getElementById("charCount")
+    .textContent =
+    prompt.length;
+}
+
+function copyPrompt(){
+
+    const text =
+    document.getElementById("output").innerText;
+
+    navigator.clipboard.writeText(text);
+
+    alert("Prompt copied successfully!");
+}
+
+function clearAll(){
+
+    document.getElementById("task").value="";
+    document.getElementById("example1").value="";
+    document.getElementById("example2").value="";
+    document.getElementById("newInput").value="";
+
+    document.getElementById("output").textContent =
+    "Your generated few-shot prompt will appear here...";
+
+    document.getElementById("wordCount").textContent="0";
+    document.getElementById("charCount").textContent="0";
+}
+
+</script>
+
+</body>
+</html>
