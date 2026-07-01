@@ -7,7 +7,7 @@
 
 # 🧠 Prompt Engineering Toolkit
 
-### A collection of 50 fully functional, browser-based AI prompt engineering tools — built with pure HTML, inline CSS, and JavaScript.
+### A collection of 50 fully functional, browser-based AI prompt engineering tools — built with pure HTML, inline CSS, and JavaScript
 
 **Developers:** Hamna Munir &nbsp;&amp;&nbsp; Mirza Yasir Abdullah Baig  
 **Domain:** Prompt Engineering &nbsp;|&nbsp; **Stack:** HTML · CSS · JavaScript (No frameworks, no dependencies)
