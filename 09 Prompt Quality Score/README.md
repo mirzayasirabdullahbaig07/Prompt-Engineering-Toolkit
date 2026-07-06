@@ -13,7 +13,7 @@
 ---
 
 ### 🚀 Live Demo
-https://your-live-demo-link.com
+[promptqualityscore](https://promptqualityscore.netlify.app/)
 
 ### 🎥 Video Demo
 https://your-video-link.com
