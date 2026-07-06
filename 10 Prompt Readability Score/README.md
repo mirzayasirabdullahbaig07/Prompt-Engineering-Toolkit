@@ -13,7 +13,7 @@
 ---
 
 ### 🚀 Live Demo
-[prompt readability score](https://promptreadabilityscore.netlify.app/)
+[promptreadabilityscore](https://promptreadabilityscore.netlify.app/)
 
 ### 🎥 Video Demo
 https://your-video-link.com
