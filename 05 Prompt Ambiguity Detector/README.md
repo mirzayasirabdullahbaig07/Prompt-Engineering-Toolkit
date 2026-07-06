@@ -13,7 +13,7 @@
 ---
 
 ### 🚀 Live Demo
-https://your-live-demo-link.com
+[promptambiguitydetector](https://promptambiguitydetector.netlify.app/)
 
 ### 🎥 Video Demo
 https://your-video-link.com
