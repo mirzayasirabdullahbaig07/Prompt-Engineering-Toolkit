@@ -13,7 +13,7 @@
 ---
 
 ### 🚀 Live Demo
-https://your-live-demo-link.com
+[missingcontextdetector](https://missingcontextdetector.netlify.app/)
 
 ### 🎥 Video Demo
 https://your-video-link.com
