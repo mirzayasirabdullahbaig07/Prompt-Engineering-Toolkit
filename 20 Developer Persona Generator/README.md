@@ -6,14 +6,12 @@ An interactive AI-powered web application that generates structured **Developer 
 
 ## 🚀 Live Demo
 
-🌐 **Live Website:**  
 [developerpersonagenerator](https://developerpersonagenerator.netlify.app/)
 
 ---
 
 ## 🎥 Project Demo
 
-📺 **Watch Demo Video:**  
 https://your-video-link.com/
 
 ---
