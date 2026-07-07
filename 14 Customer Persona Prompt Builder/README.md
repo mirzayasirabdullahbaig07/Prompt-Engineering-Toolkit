@@ -37,8 +37,6 @@ Customer Persona Prompt Builder is a lightweight web application that generates 
 
 [customerpersonapromptbuilder](https://customerpersonapromptbuilder.netlify.app/)
 
-> Replace this with your deployed Vercel, Netlify, or GitHub Pages URL.
-
 ---
 
 # 🎥 Demo Video
