@@ -40,7 +40,7 @@ The tool provides a visual structure flow with validation indicators to help use
 
 🔗 **Live Application**
 
-https://your-live-demo-link.vercel.app
+[promptstructurevalidator](https://promptstructurevalidator.netlify.app/)
 
 *(Replace with your deployed URL.)*
 
