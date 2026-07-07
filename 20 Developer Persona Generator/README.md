@@ -7,7 +7,7 @@ An interactive AI-powered web application that generates structured **Developer 
 ## 🚀 Live Demo
 
 🌐 **Live Website:**  
-https://your-live-demo-link.netlify.app/
+[developerpersonagenerator](https://developerpersonagenerator.netlify.app/)
 
 ---
 
