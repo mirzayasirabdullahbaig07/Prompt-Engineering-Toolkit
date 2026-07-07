@@ -9,6 +9,7 @@ An interactive AI-powered web application that generates structured **Researcher
 🌐 **Live Website:**  
 [researcherpersonabuilder
 ](https://researcherpersonabuilder.netlify.app/)
+
 ---
 
 ## 🎥 Project Demo
