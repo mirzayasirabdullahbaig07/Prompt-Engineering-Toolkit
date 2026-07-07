@@ -99,7 +99,7 @@ No installation or dependencies are required.
 
 🔗 **Live Application**
 
-**https://your-live-demo-link.com**
+**[teacherpersonagenerator](https://teacherpersonagenerator.netlify.app/)**
 
 ---
 
