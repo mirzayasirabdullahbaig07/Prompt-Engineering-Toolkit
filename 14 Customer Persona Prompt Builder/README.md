@@ -47,7 +47,6 @@ Customer Persona Prompt Builder is a lightweight web application that generates 
 
 https://your-video-link.com
 
-> Replace this with your YouTube, Loom, or demo video link.
 
 ---
 
