@@ -35,8 +35,8 @@ Expert Persona Builder is a lightweight web-based tool that transforms a simple 
 
 🔗 **Live Application**
 
-https://your-live-demo-link.vercel.app
-
+[expertpersonabuilder
+](https://expertpersonabuilder.netlify.app/)
 > Replace with your deployed Vercel, Netlify, or GitHub Pages link.
 
 ---
