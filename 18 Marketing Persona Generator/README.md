@@ -64,7 +64,7 @@ Marketing-Persona-Generator/
 
 🌐 **Live Application**
 
-**https://your-live-demo-link.netlify.app/**
+**[marketingpersonagenerator](https://marketingpersonagenerator.netlify.app/)**
 
 > Replace this with your GitHub Pages, Netlify, or Vercel deployment link.
 
