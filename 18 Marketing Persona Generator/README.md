@@ -66,8 +66,6 @@ Marketing-Persona-Generator/
 
 **[marketingpersonagenerator](https://marketingpersonagenerator.netlify.app/)**
 
-> Replace this with your GitHub Pages, Netlify, or Vercel deployment link.
-
 ---
 
 # 🎥 Demo Video
