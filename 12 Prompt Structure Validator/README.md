@@ -42,8 +42,6 @@ The tool provides a visual structure flow with validation indicators to help use
 
 [promptstructurevalidator](https://promptstructurevalidator.netlify.app/)
 
-*(Replace with your deployed URL.)*
-
 ---
 
 ## 🎥 Demo Video
