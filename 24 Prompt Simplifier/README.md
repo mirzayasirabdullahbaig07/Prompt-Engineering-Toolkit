@@ -1,141 +1,202 @@
-### 🧩 Prompt Simplifier
+# 🧩 Prompt Simplifier
 
-An AI-inspired web application that converts complex prompts into simple, clear, and structured instructions for better readability and easier AI interaction.
+<p align="center">
+  Transform complex prompts into clear, concise, and structured instructions for better AI interactions.
+</p>
 
-### 🚀 Live Demo
+<p align="center">
+  <a href="https://promptsimplifier.netlify.app/" target="_blank">
+    <img src="https://img.shields.io/badge/🌐_Live_Demo-Visit_Website-6C63FF?style=for-the-badge" />
+  </a>
+  <a href="https://your-video-link.com/" target="_blank">
+    <img src="https://img.shields.io/badge/🎥_Demo-Watch_Video-red?style=for-the-badge" />
+  </a>
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" />
+</p>
 
-Live Website
+---
 
-[promptsimplifier](https://promptsimplifier.netlify.app/)
+## 📖 About The Project
 
-### 🎥 Project Demo
+**Prompt Simplifier** is an AI-inspired web application that converts long, complicated prompts into simple, easy-to-understand instructions.
 
-Watch Demo Video
+It identifies the core idea, removes unnecessary complexity, and generates a cleaner version while also explaining the simplification process step by step.
 
-[https://your-video-link.com/](https://your-video-link.com/)
+Whether you're writing prompts for ChatGPT, Claude, Gemini, or any other AI model, Prompt Simplifier helps you create prompts that are easier to read and more effective.
 
-### 📖 About The Project
+---
 
-The Prompt Simplifier helps users transform long or complicated prompts into shorter, clearer, and more readable instructions. It identifies the main idea, removes unnecessary complexity, and produces a simplified version while showing the breakdown process.
+## 🚀 Live Demo
 
-### ✨ Features
+🌐 **Website**
 
-* 🧩 Simplify complex prompts
+https://promptsimplifier.netlify.app/
 
-* 📌 View original prompt
+---
 
-* ✂️ Generate a simplified version
+## 🎥 Demo Video
 
-* 🧠 Step-by-step breakdown
+📺 Demo Video
 
-* 📱 Fully responsive design
+*Coming Soon*
 
-* 🎨 Modern purple gradient UI
+---
 
-* ⚡ Instant client-side processing
+# ✨ Features
 
-* 🚀 Lightweight and fast
+- 🧩 Simplify complex prompts instantly
+- 📝 Display the original prompt
+- ✂️ Generate a simplified version
+- 🧠 Step-by-step simplification breakdown
+- 🎨 Beautiful modern UI
+- 💜 Purple gradient design
+- 📱 Fully responsive layout
+- ⚡ Fast client-side processing
+- 🚀 Lightweight application
 
-### 🛠 Technologies Used
+---
 
-HTML5CSS3JavaScript (Vanilla)
+# 💡 How It Works
 
-### 📂 Project Structure
+1. Enter your prompt.
+2. Click **Simplify Prompt**.
+3. View the original prompt.
+4. Receive a simplified version.
+5. Review the breakdown explaining each simplification step.
 
+---
+
+# 🎯 Example
+
+### Original Prompt
+
+> Explain in detail the advanced applications of artificial intelligence in healthcare comprehensively.
+
+### Simplified Prompt
+
+> Explain the main applications of Artificial Intelligence in healthcare.
+
+---
+
+# 🛠️ Built With
+
+- HTML5
+- CSS3
+- JavaScript (Vanilla)
+
+---
+
+# 📂 Project Structure
+
+```text
 Prompt-Simplifier/
-
+│
 ├── index.html
-
 ├── README.md
-
 └── assets/
+```
 
-### 💡 How It Works
+---
 
-1. Enter a complex prompt.
+# 📱 Responsive Design
 
-2. Click Simplify Prompt.
+The application is optimized for:
 
-3. The app displays the Original Prompt.
+- 💻 Desktop
+- 🖥 Laptop
+- 📱 Mobile
+- 📟 Tablet
 
-4. Generates a Simplified Version.
+---
 
-5. Shows Breakdown Steps explaining the simplification process.
+# 🌟 Future Improvements
 
-### 🎯 Example
+- 📄 Export prompts as PDF
+- 📋 Copy to Clipboard
+- 🤖 AI-powered prompt simplification
+- 🌍 Multi-language support
+- 🌙 Dark Mode
+- 💾 Prompt history
+- 📊 Prompt readability score
+- 📥 Download simplified prompts
+- 🔄 Prompt comparison mode
 
-Original Prompt
+---
 
-Explain in detail the advanced applications of artificial intelligence in healthcare comprehensively.
+# 👨‍💻 Developers
 
-Simplified Prompt
+## Mirza Yasir Abdullah Baig
 
-Tell about the basic applications of artificial intelligence in healthcare clearly.
+- AI Engineer
+- Prompt Engineer
+- Full Stack Developer
 
-### 📱 Responsive Design
+---
 
-The application works smoothly on Desktop, Laptop, Tablet, and Mobile devices.
+## Hamna Munir
 
-### 🌟 Future Improvements
+- AI Engineer
+- Frontend Developer
+- UI/UX Designer
 
-* 📄 Export simplified prompt as PDF
+---
 
-* 📋 Copy to Clipboard
+# 🤝 Contributing
 
-* 🤖 AI-powered simplification
-
-* 🌍 Multi-language support
-
-* 🌙 Dark Mode
-
-* 💾 Save prompt history
-
-* 📊 Readability scoring
-
-### 👨‍💻 Engineers
-
-### Mirza Yasir Abdullah Baig
-
-AI Engineer
-
-Prompt Engineer
-
-Full Stack Developer
-
-### Hamna Munir
-
-AI Engineer
-
-Frontend Developer
-
-UI/UX Designer
-
-### 🤝 Contributing
+Contributions are welcome!
 
 1. Fork the repository
+2. Create a new branch
 
-2. Create a feature branch
+```bash
+git checkout -b feature-name
+```
 
 3. Commit your changes
 
-4. Push your branch
+```bash
+git commit -m "Add new feature"
+```
+
+4. Push to GitHub
+
+```bash
+git push origin feature-name
+```
 
 5. Open a Pull Request
 
-### ⭐ Support
+---
 
-If you found this project helpful, please give it a ⭐ Star on GitHub.
+# ⭐ Show Your Support
 
-### 📄 License
+If you found this project useful, please consider giving it a **⭐ Star** on GitHub.
 
-This project is licensed under the MIT License.
+It helps support the project and motivates us to build more AI tools.
 
-Developed with passion by
+---
 
-Mirza Yasir Abdullah Baig & Hamna Munir
+# 📄 License
 
-Before publishing, replace these placeholders:
+This project is licensed under the **MIT License**.
 
-Live Demo: [https://your-live-demo-link.netlify.app/](https://your-live-demo-link.netlify.app/)
+---
 
-Demo Video: [https://your-video-link.com/](https://your-video-link.com/)
+# 💙 Developed With Passion By
+
+### Mirza Yasir Abdullah Baig
+### Hamna Munir
+
+---
+
+## 🌐 Links
+
+**Live Website**
+
+[promptsimplifier](https://promptsimplifier.netlify.app/)
+
+**GitHub Repository**
+
+[https://github.com/mirzayasirabdullahbaig07/Prompt-Engineering-Toolkit/
+](https://github.com/mirzayasirabdullahbaig07/Prompt-Engineering-Toolkit/)
+**Demo Video**
