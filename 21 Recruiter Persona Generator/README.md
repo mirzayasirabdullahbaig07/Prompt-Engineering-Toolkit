@@ -15,7 +15,6 @@ An interactive AI-powered web application that generates structured **Recruiter 
 ## 🎥 Project Demo
 
 📺 **Watch Demo Video:**  
-https://your-video-link.com/
 
 ---
 
