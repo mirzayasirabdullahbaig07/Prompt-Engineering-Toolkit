@@ -6,7 +6,7 @@ A modern **Prompt Expander** web application that transforms short, simple promp
 
 ## 🌐 Live Demo
 
-🔗 **Live Application:** https://your-live-demo-link.vercel.app/
+🔗 **Live Application:** [Prompt Expander](https://promptexpander.netlify.app/)
 
 ---
 
