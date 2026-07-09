@@ -7,7 +7,7 @@ A modern and responsive web application for automatically generating evaluation 
 ## 🚀 Live Demo
 
 🔗 **Live Application:**
-https://your-live-demo-link.vercel.app/
+[evaluationcriteriabuilder](https://evaluationcriteriabuilder.netlify.app/)
 
 ---
 
