@@ -7,7 +7,7 @@ A modern and responsive web application that compares two AI prompts by analyzin
 ## 🚀 Live Demo
 
 🔗 **Live Application:**
-https://your-live-demo-link.vercel.app/
+[promptcomparator](https://promptcomparator.netlify.app/)
 
 ---
 
