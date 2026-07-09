@@ -6,11 +6,12 @@ A modern **Prompt Refiner** web application that enhances basic prompts into cle
 
 ## 🚀 Live Demo
 
-🔗 **Live Application:** https://your-live-demo-link.vercel.app/
+🔗 **Live Application:** [promptrefinerai](https://promptrefinerai.netlify.app/)
 
 ---
 
 ## 🎥 Project Demo
+
 
 📺 **Watch Video:** https://your-video-link.com/
 
