@@ -6,13 +6,14 @@ An interactive **Story Writer Persona Builder** that helps users generate AI-pow
 
 ## 🚀 Live Demo
 
-🔗 **Live Application:** https://your-live-demo-link.vercel.app/
+🔗 **Live Application:** [storywriterpersonabuilder](https://storywriterpersonabuilder.netlify.app/)
 
 ---
 
 ## 🎥 Project Demo
 
-📺 **Watch Video:** https://your-video-link.com/
+📺 **Watch Video:** 
+https://your-video-link.com/
 
 ---
 
