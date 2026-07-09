@@ -1,9 +1,3 @@
-Here’s a professional README.md for your Prompt Simplifier project. Replace the placeholder links with your actual live demo and video URLs.
-
-README preview:
-
-PROMPT DECONSTRUCTION ENGINEHTML5CSS3JavaScript
-
 ### 🧩 Prompt Simplifier
 
 An AI-inspired web application that converts complex prompts into simple, clear, and structured instructions for better readability and easier AI interaction.
@@ -12,7 +6,7 @@ An AI-inspired web application that converts complex prompts into simple, clear,
 
 Live Website
 
-[https://your-live-demo-link.netlify.app/](https://your-live-demo-link.netlify.app/)
+[promptsimplifier](https://promptsimplifier.netlify.app/)
 
 ### 🎥 Project Demo
 
