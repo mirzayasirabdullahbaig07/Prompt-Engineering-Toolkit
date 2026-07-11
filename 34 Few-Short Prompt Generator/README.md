@@ -7,14 +7,13 @@ A modern and interactive web application that helps users create **Few-Shot AI P
 ## 🌐 Live Demo
 
 🔗 **Live Application:**  
-https://your-live-demo-link.vercel.app
+[fewshotpromptgenerator](https://fewshotpromptgenerator.netlify.app)
 
 ---
 
 ## 🎥 Project Demo Video
 
 📺 **Watch Demo:**  
-https://your-video-link.com
 
 ---
 
