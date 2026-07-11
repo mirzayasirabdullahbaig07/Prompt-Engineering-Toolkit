@@ -6,7 +6,15 @@ Designed and developed by **Hamna Munir** and **Mirza Yasir Abdullah Baig**.
 
 ---
 
+# ✨ Live Demo
+
+[casestudypromptgenerator](https://casestudypromptgenerator.netlify.app)
+
+---
+
 # ✨ Features
+
+---
 
 * 📊 Generate structured case studies from any topic
 * 📝 Automatically creates:
