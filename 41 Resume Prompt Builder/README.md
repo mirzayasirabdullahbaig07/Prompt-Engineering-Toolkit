@@ -1,162 +1,262 @@
-# 📄 Cover Letter Prompt Generator
+# 📄 Resume Prompt Builder
 
-A modern and responsive **Cover Letter Prompt Generator** built using **HTML, CSS, and JavaScript**. This application helps users quickly generate professional cover letters by entering their name, job title, and relevant skills. It features a clean interface, instant generation, and a history panel for previously created cover letters.
+A modern, responsive **Resume Prompt Builder** built with **HTML, CSS, and Vanilla JavaScript**. This application helps users create professional, ATS-friendly resumes by entering their personal, educational, and professional details. The tool generates a polished resume preview along with an AI-ready prompt for further enhancement.
 
----
-
-## 🚀 Live Demo
-
-🔗 **Live Application:**  
-https://your-live-demo-link.com
+Designed and developed by **Hamna Munir** and **Mirza Yasir Abdullah Baig**.
 
 ---
 
-## 🎥 Demo Video
+## ✨ Live Demo
 
-📺 **Watch the Demo:**  
-https://your-video-link.com
-
----
-
-## ✨ Features
-
-- 📄 Generate professional cover letters instantly
-- 👤 Enter applicant name
-- 💼 Specify job title or position
-- 🛠 Add skills (comma-separated)
-- 📑 Well-structured cover letter output
-- 🕘 View generation history
-- 🧹 Clear inputs with one click
-- 🎨 Clean and responsive user interface
-- ⚡ Built with pure HTML, CSS, and JavaScript
-- 📱 Mobile-friendly design
+[resumepromptbuilder](https://resumepromptbuilder.netlify.app/)
 
 ---
 
-## 📸 Application Preview
+### ✨ Features
+
+- 📄 Generate professional resume templates instantly
+- 👤 Personalize resumes with applicant information
+- 💼 Add target job title and career objective
+- 🎓 Include education details
+- 🛠️ Add technical and professional skills
+- 💼 Showcase work experience and projects
+- 🏆 Highlight achievements and accomplishments
+- 🎨 Choose different resume tones:
+  - Professional
+  - Confident
+  - Creative
+  - Academic
+- 📋 Automatically generates structured resume sections:
+  - Professional Summary
+  - Skills
+  - Experience & Projects
+  - Education
+  - Achievements
+  - Declaration
+- 🤖 Generates an AI-ready resume prompt
+- 👀 Live resume preview
+- 📖 View generated prompt separately
+- 🕘 Stores the last 10 generated resumes
+- 📋 Restore previously generated resumes from history
+- 📄 Copy resume text with one click
+- 🎨 Clean, modern, and responsive interface
+- ⚡ Fast generation with offline fallback support
+- 🧹 One-click clear functionality
+
+---
+
+# 📸 User Interface
+
+The application is organized into three major workspaces.
+
+## Hero Header
+
+Displays:
+
+- Project title
+- Developer information
+
+---
+
+## Resume Details Panel
+
+Users can enter:
+
+- Full Name
+- Job Title
+- Email Address
+- Phone Number
+- Location
+- LinkedIn / Portfolio
+- Education
+- Technical Skills
+- Experience / Projects
+- Achievements
+- Resume Tone
+
+Example:
 
 ```
-📄 Cover Letter Prompt Generator
+Name: Hamna Munir
+Job Title: AI Engineer
+Education:
+BS Computer Science
 
-✔ Enter Your Name
-✔ Enter Job Title
-✔ Enter Skills
-✔ Generate Professional Cover Letter
-✔ View Previous Cover Letters
+Skills:
+Python, TensorFlow, React, SQL
+
+Experience:
+AI Internship at ABC Company
+
+Achievements:
+Winner - AI Hackathon 2025
 ```
 
 ---
 
-## 🛠 Technologies Used
+## Action Buttons
 
-- HTML5
-- CSS3
-- JavaScript (Vanilla JS)
+Two primary actions are available:
+
+- **Generate Resume** – Creates a professional resume preview.
+- **Clear** – Clears all entered information.
 
 ---
 
-## 📂 Project Structure
+## Preview Section
 
-```text
-Cover-Letter-Prompt-Generator/
+Displays a fully formatted professional resume including:
+
+- Resume Header
+- Contact Information
+- Professional Summary
+- Skills
+- Experience & Projects
+- Education
+- Achievements
+- Declaration
+
+---
+
+## Prompt Tab
+
+Displays the complete AI prompt used to generate the professional resume.
+
+Users can easily copy or customize this prompt for any AI assistant.
+
+---
+
+## History
+
+The application automatically stores the **last 10 generated resumes**.
+
+Users can instantly restore any previous resume with a single click.
+
+---
+
+# 📋 Generated Resume Structure
+
+Every generated resume follows this format:
+
+- Header
+- Contact Information
+- Professional Summary
+- Skills
+- Experience & Projects
+- Education
+- Achievements
+- Declaration
+
+The generated resume provides an ATS-friendly structure that can be further customized.
+
+---
+
+# 🚀 How It Works
+
+1. Enter your personal information.
+2. Specify your target job title.
+3. Add education details.
+4. Enter technical skills.
+5. Describe your work experience or projects.
+6. Add achievements (optional).
+7. Choose your preferred resume tone.
+8. Click **Generate Resume**.
+9. Review the professional resume preview.
+10. View the AI prompt.
+11. Access previously generated resumes through the History tab.
+
+---
+
+# 📂 Project Structure
+
+```
+Resume-Prompt-Builder/
 │
 ├── index.html
 ├── README.md
-└── assets/
-    ├── screenshots/
-    └── demo-video/
 ```
 
----
-
-## ⚙️ Getting Started
-
-### Clone the Repository
-
-```bash
-git clone https://github.com/your-username/cover-letter-prompt-generator.git
-```
-
-### Run the Project
-
-Simply open the `index.html` file in your preferred web browser.
-
-No installation or dependencies are required.
+The project is fully contained within a single HTML file with embedded CSS and JavaScript.
 
 ---
 
-## 📋 How It Works
+# 🎨 Technologies Used
 
-1. Enter your **Name**.
-2. Enter the **Job Title** you are applying for.
-3. Add your **Skills** (comma separated).
-4. Click **Generate Cover Letter**.
-5. View the generated cover letter instantly.
-6. Access previous generations from the **History** section.
-
----
-
-## 🎯 Future Enhancements
-
-- 🤖 AI-powered cover letter generation
-- 📄 Export as PDF
-- 📋 Copy to Clipboard
-- 📝 Multiple cover letter templates
-- 🎨 Dark Mode
-- 📂 Download as DOCX
-- 🏢 Company-specific customization
-- 🌍 Multi-language support
+- HTML5
+- CSS3
+- Vanilla JavaScript
+- Google Fonts
+- Claude API Integration (optional)
+- No external frameworks required
 
 ---
 
-## 👨‍💻 Engineers
+# 💡 Use Cases
 
-### Mirza Yasir Abdullah Baig
-- Software Engineer
-- Frontend Developer
-- AI Prompt Engineer
+This project is ideal for:
+
+- Job seekers
+- University students
+- Fresh graduates
+- Internship applicants
+- Career development workshops
+- Resume writing practice
+- Portfolio projects
+- Educational demonstrations
+
+---
+
+# 🌟 Future Improvements
+
+Possible future enhancements include:
+
+- AI-powered resume optimization
+- ATS score checker
+- Multiple resume templates
+- Resume keyword suggestions
+- Industry-specific resume formats
+- PDF export
+- Microsoft Word export
+- Dark mode
+- Rich text editing
+- Resume analytics
+- Cloud storage
+- Multi-language support
+- Print-friendly formatting
+
+---
+
+# 📱 Responsive Design
+
+The application is designed to work seamlessly on:
+
+- Desktop computers
+- Laptops
+- Tablets
+- Mobile devices
+
+---
+
+# 📄 License
+
+This project is intended for educational, demonstration, and personal use.
+
+---
+
+# 👨‍💻 Developers
 
 ### Hamna Munir
-- Software Engineer
-- UI/UX Designer
-- Prompt Engineer
+
+### Mirza Yasir Abdullah Baig
 
 ---
 
-## 🤝 Contributing
+# ⭐ Acknowledgements
 
-Contributions are welcome!
-
-1. Fork this repository.
-2. Create a feature branch.
-3. Commit your changes.
-4. Push your branch.
-5. Open a Pull Request.
+This project was created to simplify the process of building professional resumes. It combines an intuitive interface with structured resume generation and AI-ready prompting, allowing users to create polished resumes quickly for internships, jobs, and professional opportunities.
 
 ---
 
-## 📄 License
+# 🚀 Start Building Your Resume
 
-This project is licensed under the **MIT License**.
-
----
-
-## ⭐ Support
-
-If you found this project helpful, please consider giving it a **⭐ Star** on GitHub.
-
----
-
-## 📬 Contact
-
-**Project Engineers**
-
-- **Mirza Yasir Abdullah Baig**
-- **Hamna Munir**
-
----
-
-> **Note:** Replace the placeholder links below with your actual project URLs before publishing.
-
-- **Live Demo:** https://your-live-demo-link.com
-- **Demo Video:** https://your-video-link.com
+Enter your professional details, click **Generate Resume**, and instantly create a polished, ATS-friendly resume along with an AI-ready prompt that can be further customized for your dream job.
