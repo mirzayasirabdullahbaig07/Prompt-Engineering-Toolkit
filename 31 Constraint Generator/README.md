@@ -84,7 +84,7 @@ Write a blog post about Artificial Intelligence.
 
 🔗 **Live Website**
 
-> https://your-live-demo-link.netlify.app
+> [constraintgenerator](https://constraintgenerator.netlify.app/)
 
 ---
 
@@ -92,7 +92,6 @@ Write a blog post about Artificial Intelligence.
 
 📺 **Watch Here**
 
-> https://your-video-link.com
 
 ---
 
