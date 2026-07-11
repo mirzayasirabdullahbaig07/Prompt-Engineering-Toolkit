@@ -7,14 +7,13 @@ A modern and responsive web application that helps users generate structured out
 ## 🚀 Live Demo
 
 🔗 **Live Application:**
-https://your-live-demo-link.vercel.app/
+[outputformatgenerator](https://outputformatgenerator.netlify.app)
 
 ---
 
 ## 🎥 Project Demo Video
 
 📺 **Watch the Demo:**
-https://your-video-link.com/
 
 ---
 
