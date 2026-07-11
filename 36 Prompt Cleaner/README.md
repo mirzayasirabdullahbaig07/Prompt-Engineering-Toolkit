@@ -7,14 +7,14 @@ Prompt Cleaner Pro is a modern web-based AI prompt optimization tool that analyz
 ## 🚀 Live Demo
 
 🔗 **Live Website:**  
-https://your-live-demo-link.netlify.app
+[promptcleaner](https://promptcleaner.netlify.app
+)
 
 ---
 
 ## 🎥 Video Demonstration
 
 📺 **Project Video:**  
-https://your-youtube-video-link
 
 ---
 
