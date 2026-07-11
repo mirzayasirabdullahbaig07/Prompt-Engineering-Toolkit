@@ -7,14 +7,13 @@ A modern and interactive web application that helps users generate **step-by-ste
 ## 🌐 Live Demo
 
 🔗 **Live Application:**  
-https://your-live-demo-link.vercel.app
+[chainofthoughtbuilder](https://chainofthoughtbuilder.netlify.app)
 
 ---
 
 ## 🎥 Project Demo Video
 
 📺 **Watch Demo:**  
-https://your-video-link.com
 
 ---
 
