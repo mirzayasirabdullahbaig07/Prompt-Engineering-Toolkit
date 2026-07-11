@@ -8,6 +8,13 @@ Designed and developed by **Hamna Munir** and **Mirza Yasir Abdullah Baig**.
 
 # ✨ Features
 
+[coverletterpromptgenerator](https://coverletterpromptgenerator.netlify.app/)
+
+---
+
+
+# ✨ Features
+
 * 📄 Generate professional cover letters instantly
 * 👤 Personalize letters with applicant information
 * 💼 Specify the job title or position
