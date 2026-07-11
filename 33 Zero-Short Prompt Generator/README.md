@@ -123,7 +123,7 @@ Generate the final output directly.
 
 🔗 **Live Website**
 
-> https://your-live-demo-link.netlify.app
+> [zeroshotpromptgenerator](https://zeroshotpromptgenerator.netlify.app)
 
 ---
 
@@ -132,7 +132,6 @@ Generate the final output directly.
 📺 **Watch Here**
 
 > https://your-video-link.com
-
 ---
 
 ## 📸 Screenshot
