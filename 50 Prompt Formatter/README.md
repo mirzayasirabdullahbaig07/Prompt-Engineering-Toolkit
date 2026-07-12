@@ -29,17 +29,6 @@ The application analyzes user input, assigns an AI role, improves prompt quality
 
 ---
 
-## 📸 Preview
-
-> Add screenshots here
-
-```
-/screenshots/home.png
-/screenshots/result.png
-```
-
----
-
 # 🚀 Live Demo
 
 👉 **Live Website**
@@ -47,7 +36,7 @@ The application analyzes user input, assigns an AI role, improves prompt quality
 **Add your deployed link here**
 
 ```
-https://your-live-demo-link.com
+[promptformatter](https://promptformatter.netlify.app/)
 ```
 
 ---
