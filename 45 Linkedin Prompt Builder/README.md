@@ -14,7 +14,7 @@ Generate high-quality LinkedIn posts, headlines, networking messages, about sect
 
 ### 🌐 Live Demo
 
-**🔗 Live Website:** https://your-live-link.com
+**🔗 Live Website:** [linkpromptgenerator](https://linkpromptgenerator.netlify.app/)
 
 ### 🎥 Project Demo
 
