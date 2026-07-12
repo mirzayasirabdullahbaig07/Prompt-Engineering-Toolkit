@@ -6,7 +6,7 @@ An AI-powered **Instagram Prompt Generator** that helps users create engaging In
 
 ## 🚀 Live Demo
 
-🔗 **Live Application:** https://your-live-demo-link.com
+🔗 **Live Application:** [instapromptgenerator](https://instapromptgenerator.netlify.app/)
 
 ---
 
