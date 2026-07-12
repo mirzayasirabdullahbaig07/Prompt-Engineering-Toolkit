@@ -7,14 +7,13 @@ A modern, responsive **Email Prompt Generator** that helps users create professi
 ## 🚀 Live Demo
 
 🔗 **Live Application:**  
-https://your-live-link.vercel.app
+[emailpromptbuilder](https://emailpromptbuilder.netlify.app/)
 
 ---
 
 ## 🎥 Demo Video
 
 ▶️ **Project Walkthrough:**  
-https://your-video-link.com
 
 ---
 
