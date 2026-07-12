@@ -6,7 +6,7 @@ A modern, responsive **AI-powered Blog Prompt Generator** that helps users creat
 
 ## 🚀 Live Demo
 
-🔗 **Live Application:** https://your-live-link.com
+🔗 **Live Application:** [blogpromptgenerator](https://blogpromptgenerator.netlify.app/)
 
 ---
 
