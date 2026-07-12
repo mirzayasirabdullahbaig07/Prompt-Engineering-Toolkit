@@ -210,7 +210,7 @@ assets/screenshots/output.png
 
 # 🌐 Live Demo
 
-> Replace with your deployment URL.
+> [youtubepromptgenerator](https://youtubepromptgenerator.netlify.app/)
 
 **Live Website**
 
