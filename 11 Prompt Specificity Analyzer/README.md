@@ -17,7 +17,7 @@
 [promptspecificityanalyzer](https://promptspecificityanalyzer.netlify.app/)
 
 ### 🎥 Video Demo
-https://your-video-link.com
+https://github.com/user-attachments/assets/26749b53-7fba-4c19-b6f8-e2b36ba8a590
 
 ### 📂 Repository
 https://github.com/mirzayasirabdullahbaig07/Prompt-Engineering-Toolkit
