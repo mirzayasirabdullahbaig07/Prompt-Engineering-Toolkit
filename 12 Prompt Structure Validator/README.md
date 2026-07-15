@@ -30,15 +30,7 @@ The tool provides a visual structure flow with validation indicators to help use
 
 ---
 
-## 📷 Preview
-
-<img width="100%" alt="Prompt Structure Validator Preview" src="images/preview.png">
-
----
-
 ## 🚀 Live Demo
-
-🔗 **Live Application**
 
 [promptstructurevalidator](https://promptstructurevalidator.netlify.app/)
 
@@ -46,11 +38,7 @@ The tool provides a visual structure flow with validation indicators to help use
 
 ## 🎥 Demo Video
 
-📺 **Watch the Demo**
-
-https://your-video-link.com
-
-*(Replace with your YouTube or demo video URL.)*
+https://github.com/user-attachments/assets/309b7e06-ad22-4ebd-9dbd-667c7ad48f38
 
 ---
 
