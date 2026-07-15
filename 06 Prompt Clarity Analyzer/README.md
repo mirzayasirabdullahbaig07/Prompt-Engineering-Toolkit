@@ -16,7 +16,7 @@
 [promptclarityanalyzer](https://promptclarityanalyzer.netlify.app/)
 
 ### 🎥 Video Demo
-https://your-video-link.com
+https://github.com/user-attachments/assets/ec67d8ff-ccc6-4024-bd64-acd6148c0a9c
 
 ### 📂 Repository
 https://github.com/mirzayasirabdullahbaig07/Prompt-Engineering-Toolkit
