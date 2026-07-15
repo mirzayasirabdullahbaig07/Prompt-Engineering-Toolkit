@@ -105,9 +105,7 @@ No installation or dependencies are required.
 
 ## 🎥 Demo Video
 
-📺 **Watch Demo**
-
-**https://your-video-link.com**
+https://github.com/user-attachments/assets/0fafff02-5cea-41eb-9467-224495a6f152
 
 ---
 
