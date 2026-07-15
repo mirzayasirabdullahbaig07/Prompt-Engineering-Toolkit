@@ -16,7 +16,7 @@
 [promptqualityscore](https://promptqualityscore.netlify.app/)
 
 ### 🎥 Video Demo
-https://your-video-link.com
+https://github.com/user-attachments/assets/ecbec682-1562-40b4-9cd7-d71e7f9d42d9
 
 ### 📂 Repository
 https://github.com/mirzayasirabdullahbaig07/Prompt-Engineering-Toolkit
