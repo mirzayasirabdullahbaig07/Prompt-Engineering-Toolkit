@@ -16,7 +16,7 @@
 [promptambiguitydetector](https://promptambiguitydetector.netlify.app/)
 
 ### 🎥 Video Demo
-https://your-video-link.com
+https://github.com/user-attachments/assets/01f8d29a-7ae8-4ce2-92a1-a4fd15d65716
 
 ### 📂 Repository
 https://github.com/mirzayasirabdullahbaig07/Prompt-Engineering-Toolkit
