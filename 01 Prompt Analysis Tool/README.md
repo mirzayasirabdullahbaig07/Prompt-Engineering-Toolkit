@@ -16,7 +16,7 @@
 **[https://promptanalysistool.netlify.app/](https://promptanalysistool.netlify.app/)**
 
 ### 🎥 Video Demo
-**https://github.com/user-attachments/assets/4a50e2d6-c105-46f9-9011-2ca83ee159b8**
+https://github.com/user-attachments/assets/4a50e2d6-c105-46f9-9011-2ca83ee159b8
 
 ### 📂 Repository
 **https://github.com/mirzayasirabdullahbaig07/Prompt-Engineering-Toolkit**
