@@ -4,7 +4,7 @@
 <img src="https://img.shields.io/badge/Tech-HTML%20%7C%20CSS%20%7C%20JavaScript-a855f7?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/License-MIT-c084fc?style=for-the-badge"/>
 
-# 🌡️ AI Temperature Controller
+# 🌡️ Prompt Clarity Analyzer
 
 ### Understand and experiment with AI temperature settings to control creativity, randomness, and response consistency in Large Language Models (LLMs).
 
@@ -27,7 +27,7 @@ https://github.com/mirzayasirabdullahbaig07/Prompt-Engineering-Toolkit
 
 # 📌 About
 
-The **AI Temperature Controller** is an interactive browser-based tool that helps users understand how the **temperature** parameter influences AI-generated responses. By adjusting the temperature value, users can explore the balance between deterministic, focused outputs and more creative, diverse responses.
+The **Prompt Clarity Analyzer** is an interactive browser-based tool that helps users understand how the **temperature** parameter influences AI-generated responses. By adjusting the temperature value, users can explore the balance between deterministic, focused outputs and more creative, diverse responses.
 
 The tool provides real-time explanations, recommended use cases, and visual feedback for different temperature levels, making it an excellent learning resource for prompt engineering and generative AI.
 
@@ -37,7 +37,7 @@ Built entirely using **HTML**, **CSS**, and **Vanilla JavaScript**, the applicat
 
 # ✨ Features
 
-- 🌡️ Interactive Temperature Slider
+- 🌡️ Prompt Clarity Analyzer
 - 🤖 AI Creativity Level Visualization
 - 🎯 Response Consistency Indicator
 - 🎨 Creativity vs. Precision Comparison
@@ -62,7 +62,7 @@ No installation required.
 
 ---
 
-# 📊 Temperature Levels
+# 📊 Prompt Clarity Analyzer Levels
 
 The tool demonstrates how different temperature values affect AI responses.
 
