@@ -16,7 +16,7 @@
 [promptlengthoptimizer](https://promptlengthoptimizer.netlify.app/)
 
 ### 🎥 Video Demo
-https://your-video-link.com
+https://github.com/user-attachments/assets/97df3b3e-352f-4939-9ebd-fb8b06f53037
 
 ### 📂 Repository
 https://github.com/mirzayasirabdullahbaig07/Prompt-Engineering-Toolkit
