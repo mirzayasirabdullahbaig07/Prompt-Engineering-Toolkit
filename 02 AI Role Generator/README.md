@@ -16,7 +16,7 @@
 [airolegenerator](https://airolegenerator.netlify.app/)
 
 ### 🎥 Video Demo
-https://your-video-link.com
+https://github.com/user-attachments/assets/6bb449c2-559a-48b6-ac43-a48b3373ba50
 
 ### 📂 Repository
 https://github.com/mirzayasirabdullahbaig07/Prompt-Engineering-Toolkit
