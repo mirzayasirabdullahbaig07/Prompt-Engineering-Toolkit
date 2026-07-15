@@ -25,29 +25,16 @@ Expert Persona Builder is a lightweight web-based tool that transforms a simple 
 
 ---
 
-## 📷 Preview
-
-<img width="100%" alt="Expert Persona Builder Preview" src="images/preview.png">
-
----
-
 # 🚀 Live Demo
-
-🔗 **Live Application**
 
 [expertpersonabuilder
 ](https://expertpersonabuilder.netlify.app/)
-> Replace with your deployed Vercel, Netlify, or GitHub Pages link.
 
 ---
 
 # 🎥 Demo Video
 
-📺 **Watch the Project Demo**
-
-https://your-video-link.com
-
-> Replace with your YouTube or Loom video.
+https://github.com/user-attachments/assets/58dd544a-e4f3-4381-821f-eeb251ca91d3
 
 ---
 
