@@ -16,7 +16,7 @@
 [promptreadabilityscore](https://promptreadabilityscore.netlify.app/)
 
 ### 🎥 Video Demo
-https://your-video-link.com
+https://github.com/user-attachments/assets/f2e20cf9-7d08-4015-942c-c41197e6960c
 
 ### 📂 Repository
 https://github.com/mirzayasirabdullahbaig07/Prompt-Engineering-Toolkit
