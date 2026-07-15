@@ -25,12 +25,6 @@ Customer Persona Prompt Builder is a lightweight web application that generates 
 
 ---
 
-## 📷 Preview
-
-<img width="100%" alt="Customer Persona Prompt Builder Preview" src="images/preview.png">
-
----
-
 # 🚀 Live Demo
 
 🔗 **Live Application**
@@ -41,9 +35,7 @@ Customer Persona Prompt Builder is a lightweight web application that generates 
 
 # 🎥 Demo Video
 
-📺 **Watch the Project Demo**
-
-https://your-video-link.com
+https://github.com/user-attachments/assets/482bf9a9-5068-4398-a1e4-a4d9a72347c4
 
 
 ---
