@@ -16,7 +16,7 @@
 [goalclaritychecker](https://goalclaritychecker.netlify.app/)
 
 ### 🎥 Video Demo
-https://your-video-link.com
+https://github.com/user-attachments/assets/49e952f9-3a02-4771-b5c5-87586865c0b4
 
 ### 📂 Repository
 https://github.com/mirzayasirabdullahbaig07/Prompt-Engineering-Toolkit
