@@ -6,14 +6,13 @@ A modern and interactive web application that helps users generate **step-by-ste
 
 ## 🌐 Live Demo
 
-🔗 **Live Application:**  
 [chainofthoughtbuilder](https://chainofthoughtbuilder.netlify.app)
 
 ---
 
 ## 🎥 Project Demo Video
 
-📺 **Watch Demo:**  
+https://github.com/user-attachments/assets/03db18fe-8dd7-4856-b25b-54535d732f3f
 
 ---
 
