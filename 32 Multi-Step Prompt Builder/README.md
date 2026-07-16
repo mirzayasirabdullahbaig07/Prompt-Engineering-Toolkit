@@ -133,28 +133,18 @@ EXAMPLES:
 
 ## 🌐 Live Demo
 
-🔗 **Live Website**
 
-> [multisteppromptbuilder](https://multisteppromptbuilder.netlify.app/)
+
+[multisteppromptbuilder](https://multisteppromptbuilder.netlify.app/)
 
 ---
 
 ## 🎥 Project Demo Video
 
-📺 **Watch Here**
-> https://your-video-link.com
+https://github.com/user-attachments/assets/e5452b52-4a0c-4624-84ac-55af13710125
 
 ---
 
-## 📸 Screenshot
-
-Add a screenshot after deployment.
-
-```
-images/screenshot.png
-```
-
----
 
 ## 👨‍💻 Engineers
 
