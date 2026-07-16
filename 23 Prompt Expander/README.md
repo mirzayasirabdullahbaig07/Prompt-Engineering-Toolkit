@@ -6,13 +6,13 @@ A modern **Prompt Expander** web application that transforms short, simple promp
 
 ## 🌐 Live Demo
 
-🔗 **Live Application:** [Prompt Expander](https://promptexpander.netlify.app/)
+[Prompt Expander](https://promptexpander.netlify.app/)
 
 ---
 
 ## 🎥 Project Demo
 
-📺 **Watch Video:** https://your-video-link.com/
+https://github.com/user-attachments/assets/ccb8a508-bbb1-4568-b946-a88f12475c47
 
 ---
 
