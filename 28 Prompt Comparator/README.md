@@ -6,15 +6,13 @@ A modern and responsive web application that compares two AI prompts by analyzin
 
 ## 🚀 Live Demo
 
-🔗 **Live Application:**
 [promptcomparator](https://promptcomparator.netlify.app/)
 
 ---
 
 ## 🎥 Project Demo Video
 
-📺 **Watch the Demo:**
-https://your-video-link.com/
+https://github.com/user-attachments/assets/296f4630-db77-405a-9bbf-0e6523d2b12a
 
 ---
 
