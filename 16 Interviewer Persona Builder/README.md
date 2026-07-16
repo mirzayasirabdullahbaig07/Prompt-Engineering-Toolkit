@@ -61,17 +61,14 @@ Interviewer-Persona-Builder/
 
 ## 🚀 Live Demo
 
-🌐 **Live Website**
-
-> [interviewerpersonabuilder](https://interviewerpersonabuilder.netlify.app/)
+[interviewerpersonabuilder](https://interviewerpersonabuilder.netlify.app/)
 
 ---
 
 ## 🎥 Project Video
 
-📺 **Watch Demo**
+https://github.com/user-attachments/assets/33874ffe-4622-4b92-a8d3-014913c2cbe7
 
-> https://youtube.com/your-video-link
 
 ---
 
