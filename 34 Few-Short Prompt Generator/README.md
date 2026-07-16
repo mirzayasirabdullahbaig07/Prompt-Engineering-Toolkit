@@ -6,14 +6,13 @@ A modern and interactive web application that helps users create **Few-Shot AI P
 
 ## 🌐 Live Demo
 
-🔗 **Live Application:**  
 [fewshotpromptgenerator](https://fewshotpromptgenerator.netlify.app)
 
 ---
 
 ## 🎥 Project Demo Video
 
-📺 **Watch Demo:**  
+https://github.com/user-attachments/assets/feb554bb-9f88-4110-b04e-4128da56edc9
 
 ---
 
