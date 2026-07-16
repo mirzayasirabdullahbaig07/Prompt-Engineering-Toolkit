@@ -6,15 +6,13 @@ An interactive AI-powered web application that generates structured **Recruiter 
 
 ## 🚀 Live Demo
 
-🌐 **Live Website:**  
-
 [recruiterpersonagenerator](https://recruiterpersonagenerator.netlify.app/)
 
 ---
 
 ## 🎥 Project Demo
 
-📺 **Watch Demo Video:**  
+https://github.com/user-attachments/assets/d53d9fdc-8a65-43a3-b2b9-dcb57eb1bd3b
 
 ---
 
