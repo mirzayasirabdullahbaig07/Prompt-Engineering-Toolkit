@@ -12,7 +12,7 @@ A modern and responsive web application for automatically generating evaluation 
 
 ## 🎥 Project Demo Video
 
-https://github.com/user-attachments/assets/296f4630-db77-405a-9bbf-0e6523d2b12a
+https://github.com/user-attachments/assets/d99b4fad-bc4c-4440-934b-d86e198453a9
 
 ---
 
