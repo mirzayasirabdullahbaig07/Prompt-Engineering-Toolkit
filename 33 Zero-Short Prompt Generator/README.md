@@ -121,26 +121,14 @@ Generate the final output directly.
 
 ## 🌐 Live Demo
 
-🔗 **Live Website**
 
-> [zeroshotpromptgenerator](https://zeroshotpromptgenerator.netlify.app)
+[zeroshotpromptgenerator](https://zeroshotpromptgenerator.netlify.app)
 
 ---
 
 ## 🎥 Project Demo Video
 
-📺 **Watch Here**
-
-> https://your-video-link.com
----
-
-## 📸 Screenshot
-
-Add a screenshot after deployment.
-
-```
-images/screenshot.png
-```
+https://github.com/user-attachments/assets/496d2c19-b41b-43c2-843a-69234c72c3b1
 
 ---
 
