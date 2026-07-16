@@ -62,7 +62,6 @@ Marketing-Persona-Generator/
 
 # 🚀 Live Demo
 
-🌐 **Live Application**
 
 **[marketingpersonagenerator](https://marketingpersonagenerator.netlify.app/)**
 
@@ -70,11 +69,7 @@ Marketing-Persona-Generator/
 
 # 🎥 Demo Video
 
-📺 **Project Walkthrough**
-
-**https://youtube.com/your-demo-video**
-
-> Replace this with your YouTube demonstration video.
+https://github.com/user-attachments/assets/f3a5d993-cada-4603-b0a8-0500d211dc9d
 
 ---
 
