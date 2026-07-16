@@ -82,16 +82,13 @@ Write a blog post about Artificial Intelligence.
 
 ## 🌐 Live Demo
 
-🔗 **Live Website**
-
-> [constraintgenerator](https://constraintgenerator.netlify.app/)
+[constraintgenerator](https://constraintgenerator.netlify.app/)
 
 ---
 
 ## 🎥 Project Demo Video
 
-📺 **Watch Here**
-
+https://github.com/user-attachments/assets/67928083-23a8-4d51-aacf-b84c64f85d7d
 
 ---
 
