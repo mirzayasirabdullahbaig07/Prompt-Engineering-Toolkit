@@ -30,7 +30,6 @@ Whether you're working with **ChatGPT**, **Claude**, **Gemini**, **DeepSeek**, *
 
 # 🚀 Live Demo
 
-🌐 **Website**
 
 [promptversiontracker](https://promptversiontracker.netlify.app/)
 
@@ -38,9 +37,8 @@ Whether you're working with **ChatGPT**, **Claude**, **Gemini**, **DeepSeek**, *
 
 # 🎥 Demo Video
 
-📺 **Watch the Project Demo**
+https://github.com/user-attachments/assets/0ddd50ad-8f49-4a53-9977-b054f339277e
 
-Coming Soon
 
 ---
 
