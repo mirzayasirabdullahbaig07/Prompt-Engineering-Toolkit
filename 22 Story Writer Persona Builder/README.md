@@ -12,8 +12,7 @@ An interactive **Story Writer Persona Builder** that helps users generate AI-pow
 
 ## 🎥 Project Demo
 
-📺 **Watch Video:** 
-https://your-video-link.com/
+https://github.com/user-attachments/assets/85ef0a6b-853f-4af0-b7d8-2dc9725f41ed
 
 ---
 
