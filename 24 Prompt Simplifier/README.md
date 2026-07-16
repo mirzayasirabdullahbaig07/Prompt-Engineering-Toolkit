@@ -28,7 +28,6 @@ Whether you're writing prompts for ChatGPT, Claude, Gemini, or any other AI mode
 
 ## 🚀 Live Demo
 
-🌐 **Website**
 
 https://promptsimplifier.netlify.app/
 
@@ -36,9 +35,7 @@ https://promptsimplifier.netlify.app/
 
 ## 🎥 Demo Video
 
-📺 Demo Video
-
-*Coming Soon*
+https://github.com/user-attachments/assets/8c3ed3cd-c7b3-4a13-afb7-c16247b782b2
 
 ---
 
