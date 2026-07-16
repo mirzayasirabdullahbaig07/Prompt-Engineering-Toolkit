@@ -6,16 +6,13 @@ A modern and interactive **Prompt Testing Sandbox** built with **HTML, CSS, and 
 
 ## 🚀 Live Demo
 
-🔗 **Live Application:**  
 [prompttestingsandbox](https://prompttestingsandbox.netlify.app/)
 
 ---
 
 ## 🎥 Project Demo Video
 
-📺 **Watch Demo:**  
-
-https://your-video-link.com
+https://github.com/user-attachments/assets/f01b878c-1535-442e-b869-96096ce5796e
 
 ---
 
