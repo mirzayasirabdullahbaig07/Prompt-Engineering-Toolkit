@@ -88,7 +88,7 @@ Write a blog post about Artificial Intelligence.
 
 ## 🎥 Project Demo Video
 
-https://github.com/user-attachments/assets/67928083-23a8-4d51-aacf-b84c64f85d7d
+https://github.com/user-attachments/assets/578325dc-8fb1-41bc-8ff0-f5f7c73fbb92
 
 ---
 
