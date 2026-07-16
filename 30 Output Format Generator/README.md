@@ -6,14 +6,13 @@ A modern and responsive web application that helps users generate structured out
 
 ## 🚀 Live Demo
 
-🔗 **Live Application:**
 [outputformatgenerator](https://outputformatgenerator.netlify.app)
 
 ---
 
 ## 🎥 Project Demo Video
 
-📺 **Watch the Demo:**
+https://github.com/user-attachments/assets/67928083-23a8-4d51-aacf-b84c64f85d7d
 
 ---
 
