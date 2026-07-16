@@ -6,15 +6,13 @@ A modern and responsive web application for automatically generating evaluation 
 
 ## 🚀 Live Demo
 
-🔗 **Live Application:**
 [evaluationcriteriabuilder](https://evaluationcriteriabuilder.netlify.app/)
 
 ---
 
 ## 🎥 Project Demo Video
 
-📺 **Watch the Demo:**
-https://your-video-link.com/
+https://github.com/user-attachments/assets/296f4630-db77-405a-9bbf-0e6523d2b12a
 
 ---
 
