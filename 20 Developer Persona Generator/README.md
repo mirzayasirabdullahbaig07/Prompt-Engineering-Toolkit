@@ -12,7 +12,7 @@ An interactive AI-powered web application that generates structured **Developer 
 
 ## 🎥 Project Demo
 
-https://your-video-link.com/
+https://github.com/user-attachments/assets/97ceef53-311a-460d-9c92-044bf38b5177
 
 ---
 
