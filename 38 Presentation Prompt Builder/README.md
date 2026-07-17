@@ -11,8 +11,7 @@ A modern **Presentation Prompt Builder** web application that helps users genera
 ---
 
 ## 🎥 Project Demo
-
-📺 **Watch Video:** https://your-video-link.com/
+https://github.com/user-attachments/assets/d8b921f1-c179-4b80-af44-a975a5dc9bda
 
 ---
 
