@@ -1,262 +1,215 @@
-# 📸 Instagram Prompt Generator
+# 🚀 Presentation Prompt Builder
 
-A modern, responsive **Instagram Content & Prompt Generator** built with **HTML, CSS, and JavaScript**. The application allows users to create high-quality Instagram content prompts and preview the generated output in a beautiful Instagram-inspired interface.
+A modern **Presentation Prompt Builder** web application that helps users generate detailed, AI-ready presentation prompts for business, education, research, marketing, startups, and professional presentations. Designed for educators, students, professionals, developers, content creators, and AI enthusiasts, this tool transforms simple presentation ideas into structured prompts that can be used with ChatGPT, Gemini, Claude, Microsoft Copilot, and other AI assistants.
 
-Designed and developed by **Hamna Munir** and **Mirza Yasir Abdullah Baig**.
+---
+
+## 🌐 Live Demo
+
+🔗 **Live Application:** https://your-live-demo-link.vercel.app/
+
+---
+
+## 🎥 Project Demo
+
+📺 **Watch Video:** https://your-video-link.com/
+
+---
+
+# 📖 About The Project
+
+Creating a high-quality presentation requires proper planning, structure, and clear communication. **Presentation Prompt Builder** simplifies this process by automatically generating detailed AI prompts that help users create professional slide decks.
+
+Simply enter your presentation topic, audience, presentation type, number of slides, tone, and additional instructions. The application instantly generates a comprehensive AI-ready prompt that can be used with modern AI tools to create engaging presentations.
 
 ---
 
 # ✨ Features
 
-* 🎯 Generate Instagram content from a simple topic
-* 📝 Supports multiple content formats:
-
-  * Caption
-  * Reel Script
-  * Story Ideas
-  * Carousel
-* 🎨 Multiple writing tones:
-
-  * Friendly
-  * Aesthetic
-  * Motivational
-  * Viral
-  * Funny
-* 🌍 Multi-language support
-
-  * English
-  * Urdu
-  * Roman Urdu
-  * Hinglish
-* 👥 Target audience customization
-* 📂 Niche-specific content generation
-* 💡 Extra instruction support
-* 📋 One-click copy to clipboard
-* 🕘 Content history
-* 👀 Live Instagram-style preview
-* ⚡ Smart offline fallback generator when API is unavailable
-* 📄 View the exact AI prompt used for generation
+- 📊 AI Presentation Prompt Generation
+- 🎯 Presentation Topic Planning
+- 👥 Audience Targeting
+- 📑 Slide Structure Generation
+- 🎤 Speaker Notes Suggestions
+- 🎨 Visual Content Recommendations
+- 💡 AI-Ready Prompt Creation
+- 💻 Responsive User Interface
+- 🎨 Modern Purple Gradient Design
+- ⚡ Instant Prompt Generation
 
 ---
 
-# 📸 User Interface
+# 🛠️ Built With
 
-The application consists of two main panels.
-
-## Left Panel
-
-Input all content details:
-
-* Post Topic
-* Niche / Theme
-* Target Audience
-* Language
-* Content Type
-* Tone
-* Extra Instructions
-
-Buttons:
-
-* ✦ Generate Content
-* Clear
-
----
-
-## Right Panel
-
-Contains three tabs:
-
-### Preview
-
-Displays the generated Instagram content including:
-
-* Hook
-* Main Content
-* Call-to-Action
-* Hashtags
-
-in an Instagram-inspired layout.
-
-### Prompt
-
-Shows the exact prompt sent to the AI model.
-
-### History
-
-Stores up to the last **10 generated posts** for quick access.
-
----
-
-# 🚀 Content Types
-
-The generator supports:
-
-* 📝 Instagram Caption
-* 🎬 Reel Script
-* 📱 Story Ideas
-* 🖼 Carousel Post
-
-Each content type is generated using a different prompt structure.
-
----
-
-# 🎭 Available Tones
-
-* Friendly
-* Aesthetic
-* Motivational
-* Viral
-* Funny
-
-The selected tone affects:
-
-* Hook
-* Writing style
-* CTA
-* Overall personality
-
----
-
-# 🌐 Language Support
-
-Choose between:
-
-* English
-* Urdu
-* Roman Urdu
-* Hinglish
-
----
-
-# 🧠 Smart Fallback System
-
-If the Claude API is unavailable, the application automatically switches to its built-in intelligent generator.
-
-The fallback system creates:
-
-* Hooks
-* Captions
-* Reel scripts
-* Story ideas
-* Carousel slides
-* CTAs
-* Hashtags
-
-without requiring any API connection.
-
----
-
-# 📋 Generated Output
-
-Each generated post includes:
-
-* Attention-grabbing Hook
-* Main Content
-* Call-to-Action (CTA)
-* Relevant Hashtags
-
-The content is also available as plain text for easy copying.
+- HTML5
+- CSS3
+- JavaScript (ES6)
 
 ---
 
 # 📂 Project Structure
 
 ```text
-Instagram-Prompt-Generator/
+Presentation-Prompt-Builder/
 │
-├── index.html
+├── Presentation_Prompt_Builder.html
 ├── README.md
 ```
 
-The project is fully contained within a single HTML file using:
+---
 
-* HTML
-* CSS
-* Vanilla JavaScript
+# 🚀 Getting Started
 
-No external frameworks are required.
+## Clone Repository
+
+```bash
+git clone https://github.com/yourusername/presentation-prompt-builder.git
+```
+
+## Navigate
+
+```bash
+cd presentation-prompt-builder
+```
+
+## Run
+
+Simply open **Presentation_Prompt_Builder.html** in your preferred web browser.
+
+No installation required.
 
 ---
 
-# 🎨 Technologies Used
+# 💡 How It Works
 
-* HTML5
-* CSS3
-* Vanilla JavaScript
-* Google Fonts
-* Fetch API
-* Anthropic Claude API (optional)
-
----
-
-# ⚙️ How It Works
-
-1. Enter your post topic.
-2. Fill in optional information such as niche and audience.
-3. Select the content type.
-4. Choose a writing tone.
-5. Click **Generate Content**.
-6. The application:
-
-   * Builds an AI prompt.
-   * Attempts to generate content using Claude.
-   * Falls back to the built-in generator if the API is unavailable.
-7. View the formatted preview.
-8. Copy the content or revisit it from the History tab.
+1. Enter the presentation topic.
+2. Specify the target audience.
+3. Choose the number of slides.
+4. Select the presentation tone.
+5. Define the presentation type.
+6. Add optional instructions.
+7. Click **Generate Prompt**.
+8. Copy the generated AI-ready presentation prompt and use it with your favorite AI assistant.
 
 ---
 
-# 🔌 Claude API Integration
+# 🎯 Example
 
-The application attempts to generate content using the Anthropic Messages API.
+### Input
 
-If the API request fails or is unavailable, the application seamlessly switches to the built-in smart generator, ensuring uninterrupted functionality.
+```text
+Presentation Topic:
+Artificial Intelligence in Healthcare
+
+Audience:
+University Students
+
+Presentation Type:
+Educational Seminar
+
+Slides:
+10
+
+Tone:
+Professional
+```
+
+### Generated Output
+
+```text
+Create a 10-slide educational seminar presentation on Artificial Intelligence in Healthcare for university students.
+
+Include:
+
+• Title Slide
+• Agenda
+• Introduction
+• Key Concepts
+• Real-World Applications
+• Benefits
+• Challenges
+• Future Trends
+• Conclusion
+• Q&A Slide
+
+Also include speaker notes, visual suggestions, key takeaways, and maintain a professional tone throughout the presentation.
+```
 
 ---
 
 # 📱 Responsive Design
 
-The interface includes:
+The application is fully responsive and works seamlessly across:
 
-* Responsive layout
-* Scrollable panels
-* Modern purple-themed design
-* Interactive buttons
-* Toast notifications
-* Loading skeletons
-* Live generation status
+- Desktop
+- Laptop
+- Tablet
+- Mobile Devices
+
+---
+
+# 📸 Preview
+
+The Presentation Prompt Builder features a clean and modern interface with three intelligent stages:
+
+- 📝 Presentation Configuration
+- ⚙️ AI Prompt Generation
+- 🚀 Ready-to-Use Presentation Prompt
+
+---
+
+# 👨‍💻 Engineers
+
+### Mirza Yasir Abdullah Baig
+
+### Hamna Munir
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome!
+
+1. Fork the repository
+
+2. Create your feature branch
+
+```bash
+git checkout -b feature-name
+```
+
+3. Commit your changes
+
+```bash
+git commit -m "Added new feature"
+```
+
+4. Push to GitHub
+
+```bash
+git push origin feature-name
+```
+
+5. Open a Pull Request
+
+---
+
+# ⭐ Support
+
+If you like this project, please consider giving it a ⭐ on GitHub.
 
 ---
 
 # 📄 License
 
-This project is intended for educational, demonstration, and personal use.
+This project is licensed under the **MIT License**.
 
 ---
 
-# 👨‍💻 Developers
+# 🙏 Acknowledgements
 
-**Hamna Munir**
-
-**Mirza Yasir Abdullah Baig**
+Developed with ❤️ to simplify presentation planning and AI-powered content creation, making professional presentations easier for educators, students, developers, researchers, businesses, marketers, and AI enthusiasts.
 
 ---
 
-# ⭐ Future Improvements
-
-* Image prompt generation
-* AI hashtag optimization
-* Multiple caption variations
-* Emoji customization
-* Scheduling support
-* Export to PDF
-* Dark mode
-* Save projects locally
-* Instagram API integration
-* AI image generation support
-
----
-
-## 💜 Enjoy Creating Instagram Content!
-
-Create engaging captions, reels, stories, and carousel posts with a clean, modern interface and intelligent content generation.
+**Happy Presentation Building! 📊🚀**
