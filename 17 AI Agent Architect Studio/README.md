@@ -6,7 +6,7 @@ A modern **AI Agent Architect Studio** web application that helps users design i
 
 ## 🌐 Live Demo
 
-🔗 **Live Application:** https://your-live-demo-link.vercel.app/
+[https://aiagentarchitectstudio.netlify.app/](https://aiagentarchitectstudio.netlify.app/)
 
 ---
 
