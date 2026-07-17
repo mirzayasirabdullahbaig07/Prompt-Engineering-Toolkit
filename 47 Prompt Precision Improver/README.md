@@ -8,15 +8,14 @@ Built with a clean, responsive interface, the application analyzes prompt qualit
 
 ## 🌐 Live Demo
 
-👉 **Live Website:**  
+ 
 [promptprecisionimprover](https://promptprecisionimprover.netlify.app/)
 
 ---
 
 ## 🎥 Demo Video
 
-📹 **Watch Demo:**  
-YOUR_VIDEO_LINK_HERE
+https://github.com/user-attachments/assets/2e639ff9-b5c5-4b1b-8d18-b80d44a0d3d9
 
 ---
 
