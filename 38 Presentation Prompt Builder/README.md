@@ -6,7 +6,7 @@ A modern **Presentation Prompt Builder** web application that helps users genera
 
 ## 🌐 Live Demo
 
-🔗 **Live Application:** https://your-live-demo-link.vercel.app/
+[https://presentationpromptbuilder.netlify.app/](https://presentationpromptbuilder.netlify.app/)
 
 ---
 
