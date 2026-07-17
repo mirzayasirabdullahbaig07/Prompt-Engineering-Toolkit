@@ -6,7 +6,6 @@ Research Prompt Generator is a modern web-based application that helps users cre
 
 ## 🚀 Live Demo
 
-🔗 **Live Website:**  
 [researchpromptgenerator](https://researchpromptgenerator.netlify.app
 )
 
@@ -14,7 +13,7 @@ Research Prompt Generator is a modern web-based application that helps users cre
 
 ## 🎥 Video Demonstration
 
-📺 **Project Video:**  
+https://github.com/user-attachments/assets/ee2eb108-72b6-45d5-82d5-45679fd471c5
 
 ---
 
