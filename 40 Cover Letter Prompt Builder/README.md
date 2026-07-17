@@ -10,6 +10,11 @@ Designed and developed by **Hamna Munir** and **Mirza Yasir Abdullah Baig**.
 
 [coverletterpromptgenerator](https://coverletterpromptgenerator.netlify.app/)
 
+
+## ✨ Video Demo
+
+https://github.com/user-attachments/assets/4e663193-dfe5-4495-bf36-6c8238f58b3d
+
 ---
 
 
