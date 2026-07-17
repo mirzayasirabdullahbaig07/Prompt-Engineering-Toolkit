@@ -196,39 +196,17 @@ No installation required.
 
 ---
 
-# 📸 Screenshots
-
-Add screenshots here.
-
-```
-assets/screenshots/home.png
-
-assets/screenshots/output.png
-```
-
----
 
 # 🌐 Live Demo
 
-> [youtubepromptgenerator](https://youtubepromptgenerator.netlify.app/)
+[youtubepromptgenerator](https://youtubepromptgenerator.netlify.app/)
 
-**Live Website**
-
-```
-https://your-live-demo-link.vercel.app
-```
 
 ---
 
 # 🎥 Demo Video
 
-> Replace with your demo video link.
-
-**Watch Demo**
-
-```
-https://youtu.be/your-video-link
-```
+https://github.com/user-attachments/assets/c7782cf3-f87f-40fb-8fd8-a6d81aa2bd3e
 
 ---
 
