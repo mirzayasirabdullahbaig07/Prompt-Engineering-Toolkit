@@ -14,11 +14,11 @@ Generate high-quality LinkedIn posts, headlines, networking messages, about sect
 
 ### 🌐 Live Demo
 
-**🔗 Live Website:** [linkpromptgenerator](https://linkpromptgenerator.netlify.app/)
+[linkpromptgenerator](https://linkpromptgenerator.netlify.app/)
 
 ### 🎥 Project Demo
 
-**▶️ Video Demo:** https://your-video-link.com
+https://github.com/user-attachments/assets/645db39f-2ae3-484f-a83d-188a27b89f77
 
 </div>
 
