@@ -10,6 +10,10 @@ Designed and developed by **Hamna Munir** and **Mirza Yasir Abdullah Baig**.
 
 [casestudypromptgenerator](https://casestudypromptgenerator.netlify.app)
 
+# ✨ Video Demo
+
+https://github.com/user-attachments/assets/9ccf85ff-8ccb-4bde-94c5-f6114441c18a
+
 ---
 
 # ✨ Features
