@@ -9,11 +9,12 @@ Generate detailed, structured, and context-aware prompts from simple user inputs
 ---
 
 ### 🌐 Live Demo
-👉 **[promptdetailbooster](https://promptdetailbooster.netlify.app
-))**
+[promptdetailbooster](https://promptdetailbooster.netlify.app
+)
 
 ### 🎥 Demo Video
-▶️ **[Watch Demo](YOUR_VIDEO_LINK_HERE)**
+
+https://github.com/user-attachments/assets/05f3bb18-3f17-4da7-8e15-2f0aed7352f8
 
 </div>
 
