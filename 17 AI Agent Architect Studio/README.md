@@ -222,7 +222,6 @@ This project is licensed under the **MIT License**.
 
 ---
 
-
 # 🙏 Acknowledgements
 
 Developed with ❤️ to simplify AI agent design, making intelligent automation more accessible for developers, startups, businesses, researchers, students, educators, and AI enthusiasts.
