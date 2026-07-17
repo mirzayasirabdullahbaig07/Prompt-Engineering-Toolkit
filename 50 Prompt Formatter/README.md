@@ -31,25 +31,13 @@ The application analyzes user input, assigns an AI role, improves prompt quality
 
 # 🚀 Live Demo
 
-👉 **Live Website**
-
-**Add your deployed link here**
-
-```
 [promptformatter](https://promptformatter.netlify.app/)
-```
 
 ---
 
 # 🎥 Demo Video
 
-Watch the complete walkthrough here:
-
-**Add your YouTube or Loom video here**
-
-```
-https://youtube.com/your-video
-```
+https://github.com/user-attachments/assets/b8e6d7e8-e03a-48a1-abbd-6d7c3e285dc5
 
 ---
 
