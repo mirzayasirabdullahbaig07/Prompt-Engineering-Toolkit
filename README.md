@@ -16,7 +16,7 @@
 
 [🚀 View Repository](https://github.com/Hamna-Munir/Prompt-Engineering-Toolkit) &nbsp;·&nbsp;
 [🐛 Report Bug](https://github.com/Hamna-Munir/Prompt-Engineering-Toolkit/issues) &nbsp;·&nbsp;
-[💡 Request Feature](https://github.com/Hamna-Munir/Prompt-Engineering-Toolkit/issues)
+[💡 Request Feature](https://github.com/Hamna-Munir/Prompt-Engineering-Toolkit/issues) &nbsp;·&nbsp;
 [💡 Youtube Playlist](https://www.youtube.com/playlist?list=PLPjZvV5ACr5s)
 
 </div>
