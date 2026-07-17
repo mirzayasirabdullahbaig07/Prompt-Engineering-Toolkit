@@ -49,17 +49,13 @@ The application analyzes the user's input, identifies weaknesses, assigns a focu
 
 # 🚀 Live Demo
 
-**Live Website**
-
-> 🔗 [promptfocusenhancer](https://promptfocusenhancer.netlify.app)
+[promptfocusenhancer](https://promptfocusenhancer.netlify.app)
 
 ---
 
 # 🎥 Demo Video
 
-**Project Demonstration**
-
-> ▶️ https://youtu.be/your-video-link
+https://github.com/user-attachments/assets/c33adee3-b882-4da9-9a9f-e5885c8e6118
 
 ---
 
