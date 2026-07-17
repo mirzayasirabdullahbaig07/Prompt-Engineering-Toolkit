@@ -12,7 +12,7 @@ A modern **AI Agent Architect Studio** web application that helps users design i
 
 ## 🎥 Project Demo
 
-📺 **Watch Video:** https://your-video-link.com/
+https://github.com/user-attachments/assets/931bb83e-9f7b-4c8c-b5d5-e92c3f00b935
 
 ---
 
