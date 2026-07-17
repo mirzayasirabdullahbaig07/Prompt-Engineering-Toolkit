@@ -6,14 +6,13 @@ A modern, responsive **Email Prompt Generator** that helps users create professi
 
 ## 🚀 Live Demo
 
-🔗 **Live Application:**  
 [emailpromptbuilder](https://emailpromptbuilder.netlify.app/)
 
 ---
 
 ## 🎥 Demo Video
 
-▶️ **Project Walkthrough:**  
+https://github.com/user-attachments/assets/7c5e17b8-a55a-4d3f-a709-30c44a4c9b7c
 
 ---
 
