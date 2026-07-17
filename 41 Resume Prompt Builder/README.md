@@ -10,6 +10,10 @@ Designed and developed by **Hamna Munir** and **Mirza Yasir Abdullah Baig**.
 
 [resumepromptbuilder](https://resumepromptbuilder.netlify.app/)
 
+## ✨ Video Demo
+
+https://github.com/user-attachments/assets/a61b6418-ebfb-47ca-9624-52a4e2cceab9
+
 ---
 
 ### ✨ Features
